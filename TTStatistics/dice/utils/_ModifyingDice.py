@@ -5,7 +5,7 @@ from scipy.signal import deconvolve
 from .._Dice import Dice
 
 #TODO what happens if you exceed the dice range with a cutoff? 
-def foldnegative(dice:Dice, cutoff:int = -1) -> Dice:
+def foldnegative(dice:Dice, cutoff:int = 0) -> Dice:
    """
    "Friend" function of dice
    rolls all negative into the lowest value
@@ -36,11 +36,11 @@ def foldpositive(dice:Dice, cutoff:int = 1):
 
 def remove_dice(dice, remove):
    dist, _ = deconvolve(dice.prop, remove.prop)
-
    D =  Dice(dice.length - remove.length
-            ,  startvalue = dice._X[0] - remove._X[0]
-            ,  distfunc = dist
+            ,  startvalue = dice._X[0] - remove.__X[0]
+            ,  dist = dist
    )
+   return D
 
 def _reroll(t, dice, basedie = None):
    """

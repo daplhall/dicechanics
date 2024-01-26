@@ -1,6 +1,7 @@
 from collections.abc import Iterable
 from numpy           import array, int32, float32, int64, float64,\
-                            sqrt, average, cumsum, copy, append,zeros,ndarray
+                            sqrt, average, cumsum, copy, append, zeros, ndarray, \
+                            issubdtype, integer, unique
 from scipy.signal    import fftconvolve
 
 
@@ -10,9 +11,9 @@ class Dice(object):
       Class that represents a dice of some form. It contains its PDF and CDF 
       and allows one to have an anydice like syntax to get the distribution for more than 1 dice rolled.
    """
-   def __init__(self, d = 1, startvalue = 1,**kwards):
+   def __init__(self, d = 1, dist = None, startvalue = 1,**kwards):
       self._identity = {}
-      if isinstance(d, (int,float, int64, float64,int32,float32)):
+      if dist is None and isinstance(d, (int,float, int64, float64,int32,float32)):
          # flat distribution
          self._X = array(range(startvalue,d+startvalue));
          self._P = array([1/d]*d);
@@ -30,15 +31,24 @@ class Dice(object):
          # self.__sf    = copy(d.__sf)
          self._mean     = d._mean
          self._var      = d._var
-      elif isinstance(d, Iterable):
-         ## For iterables such as list and tuples
-         self._P = array(d)
-         self._X = array(range(startvalue,startvalue+self._P.size));
-         self.length  = self._P.size
-         i = str(self._X.size)
-         self._identity = {i : 1}
-         self._update()
-      elif callable(d):
+      elif isinstance(dist, Iterable):
+         dist = array(dist)
+         if issubdtype(dist.dtype, integer):
+            l    = dist.size
+            x, c = unique(dist, return_counts = True)            
+            self._P = c/l
+            self._X = x
+            self.length = self._P.size
+            self._update()
+         else:
+            ## For iterables such as list and tuples
+            self._P = dist
+            self._X = array(range(startvalue,startvalue+self._P.size));
+            self.length  = self._P.size
+            i = str(self._X.size)
+            self._identity = {i : 1}
+            self._update()
+      elif callable(dist):
          # if d is a func
          self._X = array(range(startvalue,d+startvalue));
          self._P = d(self._X, d,**kwards)
@@ -313,11 +323,11 @@ class Dice(object):
          flat =  [item for sublist in count for item in sublist]
          Ps = [sum([self.pdf(i) for i in bracket]) for bracket in count]
          Pf = sum([self.pdf(i) for i in set(self.values)- set(flat)])
-         return Dice(startvalue = 0, d = append(Pf,Ps))
+         return Dice(startvalue = 0, dist = append(Pf,Ps))
       else:
          Ps = sum([self.pdf(i) for i in count])
          Pf = sum([self.pdf(i) for i in set(self.values)- set(count)])
-         return Dice(startvalue = 0, d = append(Pf,Ps))
+         return Dice(startvalue = 0, dist = append(Pf,Ps))
 
 if __name__ == '__main__':
    import matplotlib.pyplot as plt
