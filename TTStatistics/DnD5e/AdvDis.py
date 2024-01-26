@@ -30,8 +30,8 @@ def advantage(d: Dice) -> Dice:
    if not isinstance(d, Dice):
       raise ValueError
    newdice = Dice(d)
-   newdice._Dice__pdf_P[0]  = d.prop[0]**2
-   newdice._Dice__pdf_P[1:]= advdis(d)
+   newdice._P[0]  = d.prop[0]**2
+   newdice._P[1:]= advdis(d)
    newdice._Dice__cumsum()
    return newdice
 
@@ -52,7 +52,7 @@ def disadvantage(d: Dice) -> Dice:
    if not isinstance(d, Dice):
       raise ValueError
    newdice = Dice(d)
-   newdice._Dice__pdf_P[-1]  = d.prop[0]**2
-   newdice._Dice__pdf_P[:-1] = advdis(d)[::-1]
+   newdice._P[-1]  = d.prop[0]**2
+   newdice._P[:-1] = advdis(d)[::-1]
    newdice._Dice__cumsum()
    return newdice

@@ -5,18 +5,18 @@ from scipy.signal import deconvolve
 from .._Dice import Dice
 
 #TODO what happens if you exceed the dice range with a cutoff? 
-def foldnegative(dice:Dice, cutoff:int = 1) -> Dice:
+def foldnegative(dice:Dice, cutoff:int = -1) -> Dice:
    """
    "Friend" function of dice
    rolls all negative into the lowest value
    """
    summask = dice.values <= cutoff
-   Psum   = sum(dice._Dice__pdf_P[summask])
+   Psum   = sum(dice._P[summask])
    i0      = sum(summask)-1 # index of "0"
    newdice = Dice(dice.length - i0
-                  , startvalue = dice._Dice__pdf_X[0]+i0)
-   newdice._Dice__pdf_P[0] = Psum 
-   newdice._Dice__pdf_P[1:] = dice._Dice__pdf_P[i0+1:]
+                  , startvalue = dice._X[0]+i0)
+   newdice._P[0] = Psum 
+   newdice._P[1:] = dice._P[i0+1:]
    return newdice
 
 def foldpositive(dice:Dice, cutoff:int = 1):
@@ -27,19 +27,18 @@ def foldpositive(dice:Dice, cutoff:int = 1):
    eg. cutoff = 3 on a d6, then P(3)+P(4)+P(5)+P(6) is stored at 3.
    """
    summask = dice.values >= cutoff
-   Psum    = sum(dice._Dice__pdf_P[summask])
+   Psum    = sum(dice._P[summask])
    i0      = argmax(summask) # First instance of 1 in sunmask
-   newdice = Dice(i0 + 1
-                  , startvalue = dice._Dice__pdf_X[0])
-   newdice._Dice__pdf_P[-1]  = Psum
-   newdice._Dice__pdf_P[:-1] = dice._Dice__pdf_P[:i0]
+   newdice = Dice(i0 + 1, startvalue = dice.X[0])
+   newdice._P[-1]  = Psum
+   newdice._P[:-1] = dice._P[:i0]
    return newdice
 
 def remove_dice(dice, remove):
    dist, _ = deconvolve(dice.prop, remove.prop)
 
    D =  Dice(dice.length - remove.length
-            ,  startvalue = dice._Dice__pdf_X[0] - remove._Dice__pdf_X[0]
+            ,  startvalue = dice._X[0] - remove._X[0]
             ,  distfunc = dist
    )
 
