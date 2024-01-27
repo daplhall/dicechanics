@@ -1,8 +1,9 @@
 from collections.abc import Iterable
 from numpy           import array, int32, float32, int64, float64,\
                             sqrt, average, cumsum, copy, append, zeros, ndarray, \
-                            issubdtype, integer, unique
-from scipy.signal    import fftconvolve
+                            issubdtype, integer, unique, argmax
+from scipy.signal    import fftconvolve, deconvolve
+
 
 
 # TODO cases for int float etc is the default so it goes into an else
@@ -321,13 +322,77 @@ class Dice(object):
 
       if isinstance(count[0],Iterable):
          flat =  [item for sublist in count for item in sublist]
-         Ps = [sum([self.pdf(i) for i in bracket]) for bracket in count]
+         Ps = [sum([self.pdf(i) for i in bracket]) for bracket in set(count)]
          Pf = sum([self.pdf(i) for i in set(self.values)- set(flat)])
          return Dice(startvalue = 0, dist = append(Pf,Ps))
       else:
-         Ps = sum([self.pdf(i) for i in count])
+         Ps = sum([self.pdf(i) for i in set(count)])
          Pf = sum([self.pdf(i) for i in set(self.values)- set(count)])
          return Dice(startvalue = 0, dist = append(Pf,Ps))
+
+
+#TODO what happens if you exceed the dice range with a cutoff? 
+def foldnegative(dice:Dice, cutoff:int = 1) -> Dice:
+   """
+   "Friend" function of dice
+   rolls all negative into the lowest value
+   """
+   summask = dice.values <= cutoff
+   Psum   = sum(dice._P[summask])
+   i0      = sum(summask)-1 # index of "0"
+   newdice = Dice(dice.length - i0
+                  , startvalue = dice._X[0]+i0)
+   newdice._P[0] = Psum 
+   newdice._P[1:] = dice._P[i0+1:]
+   return newdice
+
+def foldpositive(dice:Dice, cutoff:int = 1):
+   """
+   "Firend" function to dice
+
+   Cutoff is where you say everything over this value, and store it in its location (given that the cutoff is defined in the range)
+   eg. cutoff = 3 on a d6, then P(3)+P(4)+P(5)+P(6) is stored at 3.
+   """
+   summask = dice.values >= cutoff
+   Psum    = sum(dice._P[summask])
+   i0      = argmax(summask) # First instance of 1 in sunmask
+   newdice = Dice(i0 + 1, startvalue = dice.X[0])
+   newdice._P[-1]  = Psum
+   newdice._P[:-1] = dice._P[:i0]
+   return newdice
+
+def remove_dice(dice, remove):
+   dist, _ = deconvolve(dice.prop, remove.prop)
+   D =  Dice(dice.length - remove.length
+            ,  startvalue = dice._X[0] - remove.__X[0]
+            ,  dist = dist
+   )
+   return D
+
+def _reroll(t, dice, basedie = None):
+   """
+   Calulates the properbility of rolling X=x if rerolling no x is allowed
+   so basilly you reroll what is not equal to the number you want. 
+   TODO  check of the sum of 2 wanted numbers is the same 
+   
+   Follows
+   P(t) = sum_i^t P(N,t)*P(N-i, t-i)
+   where N is the number of dice, and t is the wanted number
+   N-1 in the second factor is because if you roll a i succes then you need to roll i less dice the second time
+
+   found it here, but it is quite logical as we ask P(t = z), then we just need to add the properbility of every combination 
+   https://rpg.stackexchange.com/questions/201364/anydice-counting-successes-on-dice-and-rerolling-any-bonus-dice-below-the-t
+
+   """
+   if basedie is None:
+      basedie = dice
+   res = 0
+   for i in range(t + 1):
+      rm = basedie if i == 0 else remove_dice(dice,basedie)
+      res += dice.pdf(i)*rm.pdf(t-i)
+   return res
+
+
 
 if __name__ == '__main__':
    import matplotlib.pyplot as plt
