@@ -4,5 +4,5 @@ __all__ = []
 from .dice import *
 __all__.extend(dice.__all__)
 
-from .            import Cyberpunk
-from .            import DnD5e
+#from .            import Cyberpunk
+#from .            import DnD5e
