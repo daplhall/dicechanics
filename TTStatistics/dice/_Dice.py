@@ -271,7 +271,7 @@ class Dice(object):
       return
 
    def with_reroll(self, *redo, repeat = 1):
-      """
+      r"""
          TODO  can be optimzied in terms of algorithm and code length   
          Modifies 1 dice such that the values in redo couunt as a recount
 
