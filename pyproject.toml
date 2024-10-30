@@ -26,3 +26,9 @@ dependencies = [
 [project.urls]
 Homepage = "https://github.com/daplhall/TTStatistics"
 Issues = "https://github.com/daplhall/TTStatistics/issues"
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "TTStatistics/*",
+  "tests/*"
+]

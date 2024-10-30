@@ -1,5 +1,6 @@
 import requests
 import time 
+import numpy as np
 
 def anydice(query):
   req = requests.post('https://anydice.com/calculator_limited.php', 
@@ -20,7 +21,7 @@ def anydice(query):
      }, 
      data = "program=" + requests.utils.quote(query)
   )
-  time.sleep(400)
+  time.sleep(0.400)
   req_data = req.json()
   res = {}
   if 'error' in req_data:
@@ -29,5 +30,17 @@ def anydice(query):
     data = req_data["distributions"]['data']
     labels = req_data["distributions"]['labels']
     for values, key in zip(data, labels):
-        continue#TODO
+      faces = np.array([x[0] for x in values])
+      prop  = np.array([x[1] for x in values])/100
+      res[key] = {"values" : faces, "prop" : prop}
   return res
+
+
+if __name__ == '__main__':
+  data = anydice(
+    """
+      output 1d6 named "1d6"
+      output 2d6 named "2d6"
+    """
+  )
+  print("hello")
