@@ -1,5 +1,5 @@
 __all__ = ['advantage', 'disadvantage']
-from ..dice import Dice
+from ...dice import Dice
 
 def advdis(d):
    """

@@ -1,7 +1,7 @@
 __all__ = ['penetration']
 
 from numpy            import arange, sum, maximum, array
-from ..dice._analytical_pdf import dicepdf
+from ...dice._analytical_pdf import dicepdf
 
 def odl_penetration(sp,N,D,mod):
    """
