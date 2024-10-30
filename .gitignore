@@ -1,2 +1,3 @@
-ttenv/
+.venv/
+.vscode/
 dist/
