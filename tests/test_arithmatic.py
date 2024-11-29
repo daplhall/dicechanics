@@ -2,12 +2,9 @@ import unittest
 import numpy as np
 
 import TTStatistics as tts
+import dice_unittest
 
-class TestInterface(unittest.TestCase):
-	def assertSequenceAlmostEqual(self, s1, s2, decimal):
-		for i, j in zip(s1, s2):
-			self.assertAlmostEqual(i, j, decimal)
-
+class TestInterface(dice_unittest.TestCase):
 	def test_plus_int(self):
 		d6 = tts.Dice(6)
 		d = d6 + 1

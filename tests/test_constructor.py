@@ -2,11 +2,9 @@ import unittest
 import numpy as np
 
 import TTStatistics as tts
+import dice_unittest
 
-class TestInterface(unittest.TestCase):
-	def assertSequenceAlmostEqual(self, s1, s2, decimal):
-		for i, j in zip(s1, s2):
-			self.assertAlmostEqual(i, j, decimal)
+class TestInterface(dice_unittest.TestCase):
 
 	def Test_construct_number(self):
 		d = tts.Dice(5)

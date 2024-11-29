@@ -12,6 +12,10 @@ For this dice needs a few operator overloads
 > operator - compares the dice with a single number
 D.count(...)  - counts the faces given as arugment 
 
+# masking
+You need to beable to mask the faces with letters
+Dice("123213")
+
 # Constructors needs
 number - defines the highest numbered face and assumes a sequence from 1 to number
 text - defines the number of faces defined by a sequence eg "1,2,3..6,9", 
