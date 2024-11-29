@@ -32,7 +32,7 @@ def dice_parse(text:str) -> list:
 			c = s.split(':')
 			for i in range(int(c[1])):
 				a.append(float(c[0]) if '.' in c[0] 
-	     						else int(c[0]))
+							else int(c[0]))
 		else:
 			a.append(float(s) if '.' in s else int(s))
 	return a
