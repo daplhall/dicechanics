@@ -2,6 +2,12 @@
 The Module needs to expose the Dice class which needs to be used in the following way
 (N@D + D + Mod) > DC
 Such that you can easily write troll like operations
+
+# Attributes
+f - faces, should be masked if mask is given and sorted by mask
+p - properbilites, should be sorted like mask
+
+# Operators
 For this dice needs a few operator overloads
 @ operator - that "rolls"  N dice
 + operator - that adds a single number of anytype to the dice
@@ -14,7 +20,10 @@ D.count(...)  - counts the faces given as arugment
 
 # masking
 You need to beable to mask the faces with letters
-Dice("123213")
+```
+d = Dice("1,3,2", mask = ['A','B','C'])
+```
+then if you then call `d.f` you get the mask in the order of the dice
 
 # Constructors needs
 number - defines the highest numbered face and assumes a sequence from 1 to number
@@ -22,7 +31,6 @@ text - defines the number of faces defined by a sequence eg "1,2,3..6,9",
         which defines a sequence of [1,2,3,4,5,6,9]
         it also needs to count the number of elements eg "1,2,3,3,4,4"
         needs to calulate the properbilites of the dice pr number.
-
 
 # Children
 ## zDice
