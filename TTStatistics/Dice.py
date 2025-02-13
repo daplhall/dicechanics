@@ -1,8 +1,10 @@
 from scipy.signal import fftconvolve
 
 from ._textparser import parse_to_prop
+from ._math import add_unique
 
-convolve = fftconvolve
+def convolve(rhs, lhs):
+	return fftconvolve(rhs,lhs).tolist()
 
 class Dice(object):
 	def __init__(self, inp, /, mask = None):
@@ -23,14 +25,17 @@ class Dice(object):
 	def p(self):
 		return self._p
 
-
 	def __add__(self, rh):
+		res = Dice(0)	
 		if isinstance(rh, (int,float)):
-			self._f = [i + rh for i in self._f]
-		elif isinstance(rh, Dice):
-			pass	
+			res._f = [i + rh for i in self._f]
+			res._p = self._p
+		elif isinstance(rh, Dice): # NOTE this doesn't work when faces are not directly next to one another
+			res._p = convolve(self._p, rh._p)
+			res._f = add_unique(self._f, rh._f)
 		else:
 			raise Exception("Type is not supported in addtions")
+		return res
 
 class Zice(Dice):
 	def __init__(self, inp, /, mask = None):
