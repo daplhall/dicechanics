@@ -1,16 +1,17 @@
-def unique(array):
-	w = []
+import typing
+def unique(array:list) -> tuple[list,list]:
+	u = []
 	c = []
-	for v in array:
-		if v not in w:
-			w.append(v)
+	for e in array:
+		if e not in u:
+			u.append(e)
 			c.append(1)
 		else:
-			i = w.index(v)
+			i = u.index(e)
 			c[i] += 1
-	return w,c
+	return u,c
 
-def dice_parse(text:str) -> list:
+def parse_faces(text:str) -> list:
 	res = []
 	f = text.split(',')
 	for strf in f:
@@ -43,7 +44,7 @@ def parse_to_prop(text:str):
 	"""
 	if  any(c.isalpha() for c in text) or ';' in text: # the alpha check out be ommited.
 		raise Exception("illegal charaters in dice parsing")
-	raw_faces = dice_parse(text)
+	raw_faces = parse_faces(text)
 	raw_faces.sort()
 	f, c = unique(raw_faces)	
 	p = [i/sum(c) for i in c]
