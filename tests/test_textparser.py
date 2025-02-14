@@ -1,5 +1,5 @@
 import unittest
-from TTStatistics._textparser import *
+from TTStatistics._parser import *
 import dice_unittest
 
 class TestParser(dice_unittest.TestCase):
