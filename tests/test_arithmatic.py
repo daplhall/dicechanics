@@ -1,17 +1,17 @@
 import unittest
 import numpy as np
 
-import TTStatistics.Dice as tts
+import TTStatistics as tts
 import dice_unittest
 
 class TestInterface(dice_unittest.TestCase):
 	def test_plus_int(self):
-		d6 = tts.Dice(6)
+		d6 = tts.d(6)
 		d = d6 + 1
-		self.assertsequenceequal(d.f, [2,3,4,5,6,7])
+		self.assertSequenceEqual(d.f, [2,3,4,5,6,7])
 	
 	def test_plus_dice(self):
-		d6 = tts.Dice(6)
+		d6 = tts.d(6)
 		D = d6 + d6
 		self.assertSequenceEqual(
 			D.f, 
@@ -25,8 +25,8 @@ class TestInterface(dice_unittest.TestCase):
 		)
 
 	def test_plus_differnt(self):
-		d6 = tts.Dice(6)
-		dd = tts.Dice("2,4,6,8,20")
+		d6 = tts.d(6)
+		dd = tts.d("2,4,6,8,20")
 		D = d6 + dd
 		self.assertSequenceEqual(
 			D.f, 
@@ -41,7 +41,7 @@ class TestInterface(dice_unittest.TestCase):
 		)
 	
 	def test_plus_float(self):
-		d6 = tts.Dice(6)
+		d6 = tts.d(6)
 		d = d6 + 0.5
 		self.assertsequenceequal(
 			d.f, 
@@ -49,12 +49,12 @@ class TestInterface(dice_unittest.TestCase):
 		)
 	
 	def test_mult_int(self):
-		d6 = tts.Dice(6)
+		d6 = tts.d(6)
 		d = d6*2
 		self.assertsequenceequal(d.f, [2,4,6,8,10,12])
 
 	def test_mult_float(self):
-		d6 = tts.Dice(6)
+		d6 = tts.d(6)
 		d = d6*1.5
 		self.assertsequenceequal(
 			d.f, 
@@ -62,8 +62,8 @@ class TestInterface(dice_unittest.TestCase):
 		)
 
 	def test_divide_int_roundup(self):
-		control = tts.Dice("1,1,2,2,3,3")
-		d6 = tts.Dice(6, roundup = True)
+		control = tts.d("1,1,2,2,3,3")
+		d6 = tts.d(6, roundup = True)
 		d = d6/2
 		self.assertsequenceequal(d.f, np.array([1,2,3]))
 		self.assertSequenceAlmostEqual(
@@ -73,7 +73,7 @@ class TestInterface(dice_unittest.TestCase):
 		)
 
 	def test_divide_int(self):
-		d6 = tts.Dice(6)
+		d6 = tts.d(6)
 		d = d6/2
 		self.assertsequenceequal(d.f,[0,1,2,3])
 		self.assertSequenceAlmostEqual(
@@ -83,7 +83,7 @@ class TestInterface(dice_unittest.TestCase):
 		)
 
 	def test_divide_float(self):
-		d6 = tts.Dice(6)
+		d6 = tts.d(6)
 		d = d6/1.5
 		self.assertSequenceAlmostEqual(
 			d.f,
@@ -95,7 +95,7 @@ class TestInterface(dice_unittest.TestCase):
 		)
 
 	def test_matmult(self):
-		d6 = tts.Dice(6)
+		d6 = tts.d(6)
 		D = 2@d6
 		self.assertSequenceEqual(
 			D.f, 
