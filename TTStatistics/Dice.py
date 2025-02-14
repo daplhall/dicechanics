@@ -11,6 +11,7 @@ class Dice(object):
 		self._f, self._p, self._c = faces_to_prop(faces)		
 		self._derived_attr()
 		self._mask = mask if mask else None
+
 	def _derived_attr(self):
 		self._mean = sum([p*f for p, f in zip(self.c, self.p)])
 		self._cdf = self._cumulative()
@@ -42,7 +43,7 @@ class Dice(object):
 			for _ in range(c):
 				yield f
 				
-	def __contains__(self, value) -> bool:
+	def __contains__(self, value: any) -> bool:
 		return value in self._f
 
 	def __add__(self, rhs) -> Dice | Pool:
@@ -53,7 +54,7 @@ class Dice(object):
 		else:
 			raise Exception("TODO add error dice")
 		
-	def _cumulative(self):
+	def _cumulative(self) -> list:
 		res = []
 		for p in self.p:
 			if res:
