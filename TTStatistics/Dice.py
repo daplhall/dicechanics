@@ -1,17 +1,14 @@
 from itertools import product
-from ._parser import parse_to_prop, int_to_prop
+from TTStatistics._parser import faces_to_prop
+import TTStatistics as tts
 
 type Dice = Dice
+type Pool = tts.Pool
 
 class Dice(object):
 
-	def __init__(self, inp, /, mask = None):
-		if isinstance(inp, int):
-			self._f, self._p, self._c = int_to_prop(1, inp)
-		elif isinstance(inp, str):
-			self._f, self._p, self._c = parse_to_prop(inp)
-		else:
-			raise Exception("Input not supported")
+	def __init__(self, faces, /, mask = None):
+		self._f, self._p, self._c = faces_to_prop(faces)		
 		if mask:
 			self._mask = mask
 	@property
@@ -22,11 +19,6 @@ class Dice(object):
 	def p(self) -> list:
 		return self._p
 
-	def __add__(self, rhs) -> Dice:
-		raise NotImplemented()
+	def __add__(self, rhs) -> Dice | Pool:
 
-class Zice(Dice):
-	def __init__(self, inp, /, mask = None):
-		super().__init__(inp, mask)
-		if isinstance(inp, int):
-			self._f, self._p, self._c = int_to_prop(0, inp)
+		raise NotImplemented()
