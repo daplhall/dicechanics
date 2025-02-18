@@ -3,16 +3,19 @@ from itertools import product
 import operator as op
 from TTStatistics._parser import faces_to_prop
 from TTStatistics.types import primitives
+from TTStatistics._math import ceildiv
 import TTStatistics.Pool as Pool 
 
 type Dice = Dice
 type Pool = Pool.Pool
 
+
 class Dice(object):
-	def __init__(self, faces, /, mask = None, rounding = None):
+	def __init__(self, faces, /, mask = None, rounding = 'regular'):
 		self._f, self._p, self._c = faces_to_prop(faces)		
 		self._derived_attr()
 		self._mask = mask if mask else None
+		self._rounding = rounding
 
 	def _derived_attr(self):
 		self._mean = sum([p*f for p, f in zip(self.c, self.p)])
@@ -69,7 +72,15 @@ class Dice(object):
 		return self._binary_level0(rhs, op.mul)
 
 	def __truediv__(self, rhs: int | float | Dice | Pool) -> Dice | Pool:
-		return self._binary_level0(rhs, op.truediv)
+		if self._rounding == 'regular':
+			return self._binary_level0(rhs, op.truediv)
+		elif self._rounding == 'down':
+			return self._binary_level0(rhs, op.floordiv)
+		elif self._rounding == 'up':
+			return self._binary_level0(rhs, ceildiv)
+		else:
+			raise Exception("Rounding is defined as unsupporeted value::%s", self._rounding)
+
 
 	def _cumulative(self) -> list:
 		res = []

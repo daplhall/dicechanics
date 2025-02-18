@@ -10,3 +10,6 @@ def unique(array:list) -> tuple[list,list]:
 			i = u.index(e)
 			c[i] += 1
 	return u,c
+
+def ceildiv(lhs: int | float, rhs: int | float):
+	return -(lhs//-rhs)

@@ -92,9 +92,9 @@ class TestInterface(dice_unittest.TestCase):
 		d = d6/2
 		self.assertSequenceEqual(d.f,[0,1,2,3])
 		self.assertSequenceAlmostEqual(
-			d.f, 
+			d.p, 
 			[0.1667, 0.3333,0.3333,0.1667],
-			2
+			4
 		)
 
 	def test_divide_float(self):
