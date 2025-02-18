@@ -8,9 +8,6 @@ import TTStatistics.Pool as Pool
 type Dice = Dice
 type Pool = Pool.Pool
 
-
-
-
 class Dice(object):
 	def __init__(self, faces, /, mask = None, rounding = None):
 		self._f, self._p, self._c = faces_to_prop(faces)		
@@ -37,10 +34,7 @@ class Dice(object):
 		return self._cdf
 
 	def copy(self) -> Dice:
-		copy = Dice([])
-		copy._c = self.c
-		copy._p = self.p 
-		copy._f = self.f
+		copy = Dice(i for i in self)
 		return copy
 	
 	def _number_binary(self, rhs: int | float, operations:callable):
@@ -61,8 +55,6 @@ class Dice(object):
 			raise NotImplemented
 		else:
 			raise Exception("Unexpected type in dice level 0")
-		
-
 
 	def __add__(self, rhs: int | float | Dice | Pool) -> Dice | Pool:
 		"""

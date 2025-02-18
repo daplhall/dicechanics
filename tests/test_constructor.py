@@ -26,6 +26,14 @@ class TestConstructor(dice_unittest.TestCase):
 		self.assertSequenceEqual(d.f, [1,2,3,4])
 		self.assertSequenceAlmostEqual(d.p, [0.2,0.2,0.4,0.2], 2)
 	
+	def test_copy(self):
+		d = tts.d("1..5:4,20,20,31")
+		g = d.copy()
+		self.assertSequenceEqual(d.f, g.f)
+		self.assertSequenceEqual(d.c, g.c)
+		self.assertSequenceAlmostEqual(d.p, g.p, 10)
+
+	
 	
 
 if __name__ == '__main__':
