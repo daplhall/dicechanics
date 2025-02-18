@@ -1,13 +1,18 @@
 from typing import Generator
 from itertools import product
+import operator as op
 from TTStatistics._parser import faces_to_prop
+from TTStatistics.types import primitives
 import TTStatistics.Pool as Pool 
 
 type Dice = Dice
 type Pool = Pool.Pool
 
+
+
+
 class Dice(object):
-	def __init__(self, faces, /, mask = None):
+	def __init__(self, faces, /, mask = None, rounding = None):
 		self._f, self._p, self._c = faces_to_prop(faces)		
 		self._derived_attr()
 		self._mask = mask if mask else None
@@ -34,9 +39,12 @@ class Dice(object):
 	def copy(self) -> Dice:
 		copy = Dice([])
 		copy._c = self.c
-		copy._p = self.p # should be getters and setters, so it easily change stuff
+		copy._p = self.p 
 		copy._f = self.f
 		return copy
+	
+	def _number_binary(self, rhs: int | float, operations:callable):
+		return Dice(operations(i, rhs) for i in self)
 	
 	def __iter__(self) -> Generator[int | float]: # might need ot be text also when mask
 		for f, c in zip(self.f, self.c):
@@ -45,15 +53,32 @@ class Dice(object):
 				
 	def __contains__(self, value: any) -> bool:
 		return value in self._f
-
-	def __add__(self, rhs) -> Dice | Pool:
-		if isinstance(rhs, Dice):
-			return Pool((self, rhs))
-		elif isinstance(rhs, int):
-			return Dice(i+rhs for i in self) # We could copy self and just add rhs to faces
+	
+	def _binary_level0(self, rhs: int | float, ops: callable ) -> Dice | Pool:
+		if type(rhs) in primitives:
+			return Dice(ops(f, rhs) for f in self)
+		elif isinstance(rhs, Dice):
+			raise NotImplemented
 		else:
-			raise Exception("TODO add error dice")
+			raise Exception("Unexpected type in dice level 0")
 		
+
+
+	def __add__(self, rhs: int | float | Dice | Pool) -> Dice | Pool:
+		"""
+		only does level 0, if higher up we reverse the call.
+		"""
+		return self._binary_level0(rhs, op.add)
+	
+	def __sub__(self, rhs: int | float | Dice | Pool) -> Dice | Pool:
+		return self._binary_level0(rhs, op.sub)
+
+	def __mul__(self, rhs: int | float | Dice | Pool) -> Dice | Pool:
+		return self._binary_level0(rhs, op.mul)
+
+	def __truediv__(self, rhs: int | float | Dice | Pool) -> Dice | Pool:
+		return self._binary_level0(rhs, op.truediv)
+
 	def _cumulative(self) -> list:
 		res = []
 		for p in self.p:

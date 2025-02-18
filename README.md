@@ -3,14 +3,23 @@ The Module needs to expose the Dice class which needs to be used in the followin
 (N@D + D + Mod) > DC  
 Such that you can easily write troll like operations
 
+# Levels
+- Level 0: Dice operations
+- Level 1: Dice-Pool operations
+- Level 2: Pool-Pool operations
+- level 3: User defined operations functions (Icepool article )
+
+
 # Exposed Classes
 There are 2 types of classes in TTStatistics. The first is the Dice and the second is the Pool  
 In short the die is the representation of a single die, which have its own properties and base statistics.
 ## Dice
+Kwargs: mask, rounding['regular', 'up', 'down']
 ### Attributes
 f - faces, should be masked if mask is given and sorted by mask  
 c - the number of the faces. which when taking c/sum(c)
 p - properbilites, just a cached c/sum(c) as c only changes through operations
+
 
 ### Operators
 These operators generate either a pool if the thing is a die/pool and a die if its a number
