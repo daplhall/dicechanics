@@ -54,25 +54,28 @@ class Dice(object):
 				
 	def __contains__(self, value: any) -> bool:
 		return value in self._f
-	
+	# TODO i can do a rounding function that depeneds on the _rounding	
 	def _binary_level0(self, rhs: int | float, ops: callable ) -> Dice | Pool:
-		if type(rhs) in primitives:
+		if isinstance(rhs, primitives):
 			return Dice(ops(f, rhs) for f in self)
 		elif isinstance(rhs, Dice):
 			raise NotImplemented
-		else:
+		else: # This here should test the other way around.
 			raise Exception("Unexpected type in dice level 0")
 
 	def __add__(self, rhs: int | float | Dice | Pool) -> Dice | Pool:
 		"""
 		only does level 0, if higher up we reverse the call.
+		TODO rounding reaction
 		"""
 		return self._binary_level0(rhs, op.add)
 	
 	def __sub__(self, rhs: int | float | Dice | Pool) -> Dice | Pool:
+		# needs to reach to rounding
 		return self._binary_level0(rhs, op.sub)
 
 	def __mul__(self, rhs: int | float | Dice | Pool) -> Dice | Pool:
+		## Needs to react to rounding
 		return self._binary_level0(rhs, op.mul)
 
 	def __truediv__(self, rhs: int | float | Dice | Pool) -> Dice | Pool:
@@ -88,7 +91,7 @@ class Dice(object):
 
 	def _cumulative(self) -> list:
 		res = []
-		for p in self.p:
+		for p in self.p: ## can fold this out an call with iter to clean up the if statement
 			if res:
 				res.append(p + res[-1])
 			else:
