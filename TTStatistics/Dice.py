@@ -31,6 +31,10 @@ class Dice(object):
 	@property
 	def c(self) -> list:
 		return self._c
+	
+	@property
+	def mean(self) -> float:
+		return self._mean
 
 	@property
 	def cdf(self) -> list:
