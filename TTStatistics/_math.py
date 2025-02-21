@@ -1,3 +1,7 @@
+import math
+
+ceil = math.ceil
+floor = math.floor
 
 def unique(array:list) -> tuple[list,list]:
 	u = []

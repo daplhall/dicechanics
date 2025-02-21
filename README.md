@@ -14,7 +14,8 @@ Such that you can easily write troll like operations
 There are 2 types of classes in TTStatistics. The first is the Dice and the second is the Pool  
 In short the die is the representation of a single die, which have its own properties and base statistics.
 ## Dice
-Kwargs: mask, rounding['regular', 'up', 'down']
+Kwargs: mask, rounding['regular', 'up', 'down']  
+rounding -> in a pool the pool defines its own rounding seperate from the Dice in the bag
 ### Attributes
 f - faces, should be masked if mask is given and sorted by mask  
 c - the number of the faces. which when taking c/sum(c)

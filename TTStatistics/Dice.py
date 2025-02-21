@@ -3,7 +3,7 @@ from itertools import product
 import operator as op
 from TTStatistics._parser import faces_to_prop
 from TTStatistics.types import primitives
-from TTStatistics._math import ceildiv
+from TTStatistics._math import ceildiv, ceil, floor
 import TTStatistics.Pool as Pool 
 
 type Dice = Dice
@@ -11,15 +11,24 @@ type Pool = Pool.Pool
 
 
 class Dice(object):
+
 	def __init__(self, faces, /, mask = None, rounding = 'regular'):
 		self._f, self._p, self._c = faces_to_prop(faces)		
 		self._derived_attr()
 		self._mask = mask if mask else None
-		self._rounding = rounding
+		self._rounding = self._set_rounding(rounding)
 
 	def _derived_attr(self):
 		self._mean = sum([p*f for p, f in zip(self.c, self.p)])
 		self._cdf = self._cumulative()
+		
+	def _set_rounding(self, rounding):
+		if rounding == 'regular':
+			return lambda x: x
+		elif rounding == 'down':
+			return floor
+		elif rounding == 'up':
+			return ceil
 
 	@property
 	def f(self) -> list:
@@ -54,13 +63,20 @@ class Dice(object):
 				
 	def __contains__(self, value: any) -> bool:
 		return value in self._f
-	# TODO i can do a rounding function that depeneds on the _rounding	
-	def _binary_level0(self, rhs: int | float, ops: callable ) -> Dice | Pool:
+	
+	#TODO experiment with this just generating the faces, can be a genreator
+	def _binary_level0(self, rhs: int | float, ops: callable ) -> Dice:
+		return Dice(self._rounding(ops(f, rhs)) for f in self)
+
+	def _binary_level1(self, rhs: Dice, ops:callable) -> Pool:
+		raise NotImplemented
+	
+	def _binary_op(self, rhs: int | float | Dice, ops:callable) -> Dice | Pool:
 		if isinstance(rhs, primitives):
-			return Dice(ops(f, rhs) for f in self)
+			return self._binary_level0(rhs, ops)
 		elif isinstance(rhs, Dice):
-			raise NotImplemented
-		else: # This here should test the other way around.
+			return self._binary_level1(rhs, ops)
+		else: # TODO This here should test the other way around. maybe have a try catch
 			raise Exception("Unexpected type in dice level 0")
 
 	def __add__(self, rhs: int | float | Dice | Pool) -> Dice | Pool:
@@ -68,25 +84,19 @@ class Dice(object):
 		only does level 0, if higher up we reverse the call.
 		TODO rounding reaction
 		"""
-		return self._binary_level0(rhs, op.add)
+		return self._binary_op(rhs, op.add)
 	
 	def __sub__(self, rhs: int | float | Dice | Pool) -> Dice | Pool:
-		# needs to reach to rounding
-		return self._binary_level0(rhs, op.sub)
+		# needs to react to rounding
+		return self._binary_op(rhs, op.sub)
 
 	def __mul__(self, rhs: int | float | Dice | Pool) -> Dice | Pool:
 		## Needs to react to rounding
-		return self._binary_level0(rhs, op.mul)
+		return self._binary_op(rhs, op.mul)
 
 	def __truediv__(self, rhs: int | float | Dice | Pool) -> Dice | Pool:
-		if self._rounding == 'regular':
-			return self._binary_level0(rhs, op.truediv)
-		elif self._rounding == 'down':
-			return self._binary_level0(rhs, op.floordiv)
-		elif self._rounding == 'up':
-			return self._binary_level0(rhs, ceildiv)
-		else:
-			raise Exception("Rounding is defined as unsupporeted value::%s", self._rounding)
+		# needs to reach to rounding
+		return self._binary_op(rhs, op.truediv)
 
 
 	def _cumulative(self) -> list:
