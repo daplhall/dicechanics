@@ -97,7 +97,18 @@ class Dice(object):
 	def __truediv__(self, rhs: int | float | Dice | Pool) -> Dice | Pool:
 		# needs to reach to rounding
 		return self._binary_op(rhs, op.truediv)
+	
+	def _unary_level0(self, ops:callable) -> Dice:
+		return Dice(self._rounding(ops(i)) for i in self)
 
+	def __neg__(self) -> Dice:
+		return self._unary_level0(op.neg)
+	
+	def __pos__(self) -> Dice:
+		return self._unary_level0(op.pos)
+	
+	def __invert__(self) -> Dice:
+		return self._unary_level0(op.invert)
 
 	def _cumulative(self) -> list:
 		res = []
