@@ -66,9 +66,7 @@ class Dice(object):
 		return sqrt(self._var)
 
 	def copy(self) -> Dice:
-		copy = Dice(i for i in self)
-		return copy
-
+		return Dice(i for i in self)
 
 	def __iter__(self) -> Generator[int | float]: # might need ot be text also when mask
 		for f, c in zip(self.f, self.c):
@@ -141,7 +139,6 @@ class Dice(object):
 			res = res+self
 		return -res if neg else res
 
-	
 	def _unary_level0(self, ops:callable) -> Dice:
 		return Dice(self._rounding(ops(i)) for i in self)
 

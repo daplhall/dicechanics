@@ -16,6 +16,17 @@ fig, ax = plt.subplots()
 ax.plot(C.f, C.p)
 plt.show()
 ```
+```
+@Dice('3:6, 1..2')
+def mydice(outcome):
+	if outcome == 4:
+		return 4
+	elif outcome > 4:
+		return 3
+
+dice = mydice():
+```
+
 ### *Pool Example*
 ```
 import TTStatistic as tts
