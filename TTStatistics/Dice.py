@@ -167,9 +167,7 @@ class Dice(object):
 		return self._boolean_op(rhs, op.eq)
 	
 	def __rmatmul__(self, lhs: int) -> Dice:
-		neg = 0
-		if lhs < 0:
-			neg = 1		
+		if neg := lhs < 0:
 			lhs *= -1
 		res = self
 		for _ in range(lhs-1):
