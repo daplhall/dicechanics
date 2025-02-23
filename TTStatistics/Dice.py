@@ -12,25 +12,16 @@ type Pool = Pool.Pool
 
 class Dice(object):
 
-	def __init__(self, faces, /, mask = None, rounding = 'regular'):
+	def __init__(self, faces, /, mask = None, rounding = None):
 		self._f, self._p, self._c = faces_to_prop(faces)		
 		self._derived_attr()
 		self._mask = mask if mask else None
 		# TODO  make it so we just pass our floor and ceil functions instead of this
-		self._rounding = self._set_rounding(rounding)
+		self._rounding = rounding if rounding else lambda x: x
 
 	def _derived_attr(self):
 		self._mean = sum([p*f for p, f in zip(self.c, self.p)])
 		self._cdf = self._cumulative()
-		
-	def _set_rounding(self, rounding):
-
-		if rounding == 'regular':
-			return lambda x: x
-		elif rounding == 'down':
-			return floor
-		elif rounding == 'up':
-			return ceil
 		
 	def _simplify(self):
 		"""
