@@ -53,9 +53,6 @@ class Dice(object):
 		copy = Dice(i for i in self)
 		return copy
 	
-	def _number_binary(self, rhs: int | float, operations:callable):
-		return Dice(operations(i, rhs) for i in self)
-	
 	def __iter__(self) -> Generator[int | float]: # might need ot be text also when mask
 		for f, c in zip(self.f, self.c):
 			for _ in range(c):
@@ -63,6 +60,15 @@ class Dice(object):
 				
 	def __contains__(self, value: any) -> bool:
 		return value in self._f
+
+	def _cumulative(self) -> list:
+		res = []
+		for p in self.p: ## can fold this out an call with iter to clean up the if statement
+			if res:
+				res.append(p + res[-1])
+			else:
+				res.append(p)
+		return res
 	
 	#TODO experiment with this just generating the faces, can be a genreator
 	def _binary_level0(self, rhs: int | float, ops: callable ) -> Dice:
@@ -71,7 +77,7 @@ class Dice(object):
 	def _binary_level1(self, rhs: Dice, ops:callable) -> Pool:
 		raise NotImplemented
 	
-	def _binary_op(self, rhs: int | float | Dice, ops:callable) -> Dice | Pool:
+	def _binary_op(self, rhs: int | float | Dice, ops:callable) -> Dice:
 		if isinstance(rhs, primitives):
 			return self._binary_level0(rhs, ops)
 		elif isinstance(rhs, Dice):
@@ -128,28 +134,20 @@ class Dice(object):
 			raise Exception("Unexpected type in dice level 0")
 	
 	def __lt__(self, rhs: int | float | Dice):
-		return self._boolean_level0(rhs, op.lt)
+		return self._boolean_op(rhs, op.lt)
 
 	def __le__(self, rhs: int | float | Dice):
-		return self._boolean_level0(rhs, op.le)
+		return self._boolean_op(rhs, op.le)
 
 	def __ne__(self, rhs: int | float | Dice):
-		return self._boolean_level0(rhs, op.ne)
+		return self._boolean_op(rhs, op.ne)
 
 	def __ge__(self, rhs: int | float | Dice):
-		return self._boolean_level0(rhs, op.ge)
+		return self._boolean_op(rhs, op.ge)
 	
 	def __gt__(self, rhs: int | float | Dice):
-		return self._boolean_level0(rhs, op.gt)
+		return self._boolean_op(rhs, op.gt)
 
 	def __eq__(self, rhs: int | float | Dice):
-		return self._boolean_level0(rhs, op.eq)
-
-	def _cumulative(self) -> list:
-		res = []
-		for p in self.p: ## can fold this out an call with iter to clean up the if statement
-			if res:
-				res.append(p + res[-1])
-			else:
-				res.append(p)
-		return res
+		return self._boolean_op(rhs, op.eq)
+	

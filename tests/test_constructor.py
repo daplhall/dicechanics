@@ -4,7 +4,7 @@ import numpy as np
 import TTStatistics as tts
 import dice_unittest
 
-class TestConstructor(dice_unittest.TestCase):
+class TestDiceConstructor(dice_unittest.TestCase):
 	def test_construct_number(self):
 		d = tts.d(5)
 		self.assertSequenceEqual(d.f, [1,2,3,4,5])
@@ -33,7 +33,22 @@ class TestConstructor(dice_unittest.TestCase):
 		self.assertSequenceEqual(d.c, g.c)
 		self.assertSequenceAlmostEqual(d.p, g.p, 10)
 
-	
+class TestPool(dice_unittest.TestCase):
+	def test_constructor(self):
+		d6 = tts.d6
+		pool = tts.Pool([d6,d6])
+		self.assertSequenceEqual(pool.f, [2,3,4,5,6,7,8,9,10,11,12])
+		self.assertSequenceAlmostEqual(pool.f, 
+			[0.0278,0.0556,0.0833,0.1111,0.1389,
+				0.1667,0.1389,0.1111,0.0833,0.0556,0.0278],
+			4
+		)
+
+	def test_constructor_3dice(self):
+		d6 = tts.d6
+		d8 = tts.d8
+		pool = tts.Pool([d6, d8, d6])
+
 	
 
 if __name__ == '__main__':

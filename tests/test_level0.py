@@ -142,5 +142,57 @@ class TestLevel0_Dice(dice_unittest.TestCase):
 		self.assertSequenceAlmostEqual(d.p, [0.9,0.1], 2)
 		self.assertSequenceAlmostEqual(d.c, [9,1], 2)
 
+class TestLevel0_Pool(dice_unittest.TestCase):
+	def test_add_int(self):
+		pass
+
+	def test_add_float(self):
+		pass
+
+	def test_sub_int(self):
+		pass
+	
+	def test_sub_float(self):
+		pass
+	
+	def test_mult_int(self):
+		pass
+	
+	def test_mult_float(self):
+		pass
+
+	def test_mult_float_rounddown(self):
+		pass
+	
+	def test_div_float(self):
+		pass
+
+	def test_neg(self):
+		pass
+
+	def test_pos(self):
+		pass
+
+	def test_bitwise_or(self):
+		pass
+
+	def test_greater_than(self):
+		pass
+
+	def test_greater_equal_than(self):
+		pass
+
+	def test_less_than(self):
+		pass
+
+	def test_less_equal_then(self):
+		pass
+
+	def test_not_equal(self):
+		pass
+
+	def test_equal(self):
+		pass
+
 if __name__ == '__main__':
 	unittest.main()
