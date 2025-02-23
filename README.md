@@ -1,7 +1,7 @@
 # DiceStatistics a dice statistical tool
-DiceStatistics provides a interface in python for doing dice statistics, which produces exact statistics for dice properbility
+DiceStatistics provides a interface in python (inspired by anydice) for doing dice statistics, which produces exact statistics for dice properbility
 ## Usage
-2 classes are provided, a Dice class used for representing standard operations, and a Pool class which allows one to do custom operations based on the outcomes of each seperate dice.  
+2 classes are provided, a Dice class used for representing statistical data and simple arithmatics, and a Pool class which allows one to do custom operations based on the outcomes of multiple seperate dice (eg. keep the highest 3 of a pool of 4).  
 ### *Dice Example*:
 
 ```
