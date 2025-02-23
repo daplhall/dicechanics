@@ -26,10 +26,7 @@ class Dice(object):
 	def _cumulative(self) -> list:
 		res = []
 		for p in self.p: ## can fold this out an call with iter to clean up the if statement
-			if res:
-				res.append(p + res[-1])
-			else:
-				res.append(p)
+			res.append(p + res[-1] if res else p)
 		return res
 		
 	def _simplify(self):
