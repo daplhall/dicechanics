@@ -167,6 +167,9 @@ class Dice(object):
 		return self._boolean_op(rhs, op.eq)
 	
 	def __rmatmul__(self, lhs: int) -> Dice:
+		"""
+			Rolls self LHS times and adds them together
+		"""
 		if neg := lhs < 0:
 			lhs *= -1
 		res = self
