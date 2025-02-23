@@ -3,7 +3,7 @@ from itertools import product
 import operator as op
 from TTStatistics._parser import faces_to_prop
 from TTStatistics.types import primitives
-from TTStatistics._math import ceildiv, ceil, floor
+from TTStatistics._math import ceildiv, ceil, floor, GCD
 import TTStatistics.Pool as Pool 
 
 type Dice = Dice
@@ -16,6 +16,7 @@ class Dice(object):
 		self._f, self._p, self._c = faces_to_prop(faces)		
 		self._derived_attr()
 		self._mask = mask if mask else None
+		# TODO  make it so we just pass our floor and ceil functions instead of this
 		self._rounding = self._set_rounding(rounding)
 
 	def _derived_attr(self):
@@ -23,12 +24,26 @@ class Dice(object):
 		self._cdf = self._cumulative()
 		
 	def _set_rounding(self, rounding):
+
 		if rounding == 'regular':
 			return lambda x: x
 		elif rounding == 'down':
 			return floor
 		elif rounding == 'up':
 			return ceil
+		
+	def _simplify(self):
+		"""
+			Should not be used, for it reduced (2,2,2,2,4,6)to (1,1,1,1,2,3)
+			which is a wrong representation of the dice
+		"""
+		c = self._c
+		if len(c) > 1 and not c.count(c[0]) == len(c): #checks if the list contains different numbers
+			r = GCD(c[0], c[1])
+			for i in c[2:]:
+				r = GCD(r, i)
+			self._c = [c//r for c in self._c]
+
 
 	@property
 	def f(self) -> list:

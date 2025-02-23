@@ -17,3 +17,9 @@ def unique(array:list) -> tuple[list,list]:
 
 def ceildiv(lhs: int | float, rhs: int | float):
 	return -(lhs//-rhs)
+
+def GCD(a: int, b: int) -> int:
+	while b != 0:
+		r = a%b
+		a,b = b, r
+	return a
