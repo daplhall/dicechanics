@@ -3,7 +3,7 @@ from itertools import product
 import operator as op
 from TTStatistics._parser import faces_to_prop
 from TTStatistics.types import primitives
-from TTStatistics._math import ceildiv, ceil, floor, GCD
+from TTStatistics._math import GCD
 import TTStatistics.Pool as Pool 
 
 type Dice = Dice
