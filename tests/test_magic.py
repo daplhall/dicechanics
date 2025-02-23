@@ -1,6 +1,6 @@
 import unittest
 
-import TTStatistics as tts
+import DiceStatistics as tts
 import dice_unittest
 
 class TestDiceMagicMethods(dice_unittest.TestCase):

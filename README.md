@@ -1,5 +1,5 @@
-# TTStatistics a dice statistical tool
-TTStatistics provides a interface in python for doing dice statistics, which produces exact statistics for dice properbility
+# DiceStatistics a dice statistical tool
+DiceStatistics provides a interface in python for doing dice statistics, which produces exact statistics for dice properbility
 ## Usage
 2 classes are provided, a Dice class used for representing standard operations, and a Pool class which allows one to do custom operations based on the outcomes of each seperate dice.  
 ### *Dice Example*:

@@ -1,7 +1,7 @@
 import unittest
 import dice_unittest
 
-from TTStatistics import text_to_faces, faces_to_prop
+from DiceStatistics import text_to_faces, faces_to_prop
 
 class TestParser(dice_unittest.TestCase):
 	def test_parse(self):

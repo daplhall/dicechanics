@@ -1,6 +1,6 @@
 import unittest
 
-from TTStatistics._math import GCD
+from DiceStatistics._math import GCD
 import dice_unittest
 
 class TestLevel1(dice_unittest.TestCase):
