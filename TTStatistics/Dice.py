@@ -126,6 +126,7 @@ class Dice(object):
 	
 	def _boolean_level1(self, rhs: Dice, ops: callable)-> Dice:
 		c = []
+		return Dice([ops(l, i) for i in rhs for l in self])
 		for l in self:
 			c += [ops(l, i) for i in rhs]
 		return Dice(c)
