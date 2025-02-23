@@ -125,12 +125,7 @@ class Dice(object):
 		return Dice([ops(f, rhs) for f in self._f])
 	
 	def _boolean_level1(self, rhs: Dice, ops: callable)-> Dice:
-		c = []
-		return Dice([ops(l, i) for i in rhs for l in self])
-		for l in self:
-			c += [ops(l, i) for i in rhs]
-		return Dice(c)
-
+		return Dice([ops(*i) for i in product(self, rhs)])
 
 	def _boolean_op(self, rhs: int | float | Dice, ops: callable) -> Dice:
 		if isinstance(rhs, primitives):
