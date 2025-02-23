@@ -58,11 +58,11 @@ class Dice(object):
 		return self._cdf
 
 	@property
-	def var(self) -> list:
+	def var(self) -> float:
 		return self._var
 
 	@property
-	def std(self) -> list:
+	def std(self) -> float:
 		return sqrt(self._var)
 
 	def copy(self) -> Dice:
