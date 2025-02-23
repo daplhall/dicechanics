@@ -29,7 +29,7 @@ class Dice(object):
 			which is a wrong representation of the dice
 		"""
 		c = self._c
-		if len(c) > 1 and not c.count(c[0]) == len(c): #checks if the list contains different numbers
+		if len(c) > 1: 
 			r = GCD(c[0], c[1])
 			for i in c[2:]:
 				r = GCD(r, i)
@@ -80,7 +80,7 @@ class Dice(object):
 		return Dice(self._rounding(ops(f, rhs)) for f in self)
 
 	def _binary_level1(self, rhs: Dice, ops:callable) -> Pool:
-		return Dice(ops(*i)for i in product(self, rhs))
+		return Dice(self._rounding(ops(*i)) for i in product(self, rhs))
 	
 	def _binary_op(self, rhs: int | float | Dice, ops:callable) -> Dice:
 		if isinstance(rhs, primitives):
