@@ -28,8 +28,7 @@ class Dice(object):
 			Should not be used, for it reduced (2,2,2,2,4,6)to (1,1,1,1,2,3)
 			which is a wrong representation of the dice
 		"""
-		c = self._c
-		if len(c) > 1: 
+		if (c := self._c) and (len(c) > 1): 
 			r = GCD(c[0], c[1])
 			for i in c[2:]:
 				r = GCD(r, i)
