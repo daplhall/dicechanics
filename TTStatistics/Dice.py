@@ -35,7 +35,6 @@ class Dice(object):
 				r = GCD(r, i)
 			self._c = [c//r for c in self._c]
 
-
 	@property
 	def f(self) -> list:
 		return self._f
@@ -129,7 +128,11 @@ class Dice(object):
 		return Dice([0]*count0 + [1]*count1)
 	
 	def _boolean_level1(self, rhs: Dice, ops: callable)-> Dice:
-		raise NotImplemented
+		c = []
+		for l in self:
+			c += [ops(l, i) for i in rhs]
+		return Dice(c)
+
 
 	def _boolean_op(self, rhs: int | float | Dice, ops: callable) -> Dice:
 		if isinstance(rhs, primitives):

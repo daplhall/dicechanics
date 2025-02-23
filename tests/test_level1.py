@@ -95,6 +95,45 @@ class TestLevel1(dice_unittest.TestCase):
 			4
 		)
 
+	def test_greater_than(self):
+		d6 = tts.d(6)
+		D = d6>d6
+		self.assertSequenceEqual(D.f, [0, 1])
+		self.assertSequenceAlmostEqual(
+			D.p,
+			[0.5833, 0.4167],
+			4
+		)
+
+	def test_greater_equal_than(self):
+		d6 = tts.d(6)
+		D = d6>=d6
+		self.assertSequenceEqual(D.f, [0, 1])
+		self.assertSequenceAlmostEqual(
+			D.p,
+			[0.4167, 0.5833],
+			4
+		)
+
+	def test_not_equal_than(self):
+		d6 = tts.d(6)
+		D = d6!=d6
+		self.assertSequenceEqual(D.f, [0, 1])
+		self.assertSequenceAlmostEqual(
+			D.p,
+			[0.1667, 0.8333],
+			4
+		)
+		
+	def test_equal_than(self):
+		d6 = tts.d(6)
+		D = d6==d6
+		self.assertSequenceEqual(D.f, [0, 1])
+		self.assertSequenceAlmostEqual(
+			D.p,
+			[0.8333, 0.1667],
+			4
+		)
 
 if __name__ == '__main__':
 	unittest.main()
