@@ -75,7 +75,7 @@ class Dice(object):
 		return Dice(self._rounding(ops(f, rhs)) for f in self)
 
 	def _binary_level1(self, rhs: Dice, ops:callable) -> Pool:
-		raise NotImplemented
+		return Dice(ops(*i)for i in product(self, rhs))
 	
 	def _binary_op(self, rhs: int | float | Dice, ops:callable) -> Dice:
 		if isinstance(rhs, primitives):
@@ -133,21 +133,31 @@ class Dice(object):
 		else: # TODO This here should test the other way around. maybe have a try catch
 			raise Exception("Unexpected type in dice level 0")
 	
-	def __lt__(self, rhs: int | float | Dice):
+	def __lt__(self, rhs: int | float | Dice) -> Dice:
 		return self._boolean_op(rhs, op.lt)
 
-	def __le__(self, rhs: int | float | Dice):
+	def __le__(self, rhs: int | float | Dice) -> Dice:
 		return self._boolean_op(rhs, op.le)
 
-	def __ne__(self, rhs: int | float | Dice):
+	def __ne__(self, rhs: int | float | Dice) -> Dice:
 		return self._boolean_op(rhs, op.ne)
 
-	def __ge__(self, rhs: int | float | Dice):
+	def __ge__(self, rhs: int | float | Dice) -> Dice:
 		return self._boolean_op(rhs, op.ge)
 	
-	def __gt__(self, rhs: int | float | Dice):
+	def __gt__(self, rhs: int | float | Dice) -> Dice:
 		return self._boolean_op(rhs, op.gt)
 
-	def __eq__(self, rhs: int | float | Dice):
+	def __eq__(self, rhs: int | float | Dice) -> Dice:
 		return self._boolean_op(rhs, op.eq)
 	
+	def __rmatmul__(self, lhs: int) -> Dice:
+		neg = 0
+		if lhs < 0:
+			neg = 1		
+			lhs *= -1
+		res = self
+		for _ in range(lhs-1):
+			res = res+self
+		return -res if neg else res
+
