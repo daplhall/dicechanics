@@ -1,5 +1,6 @@
 from typing import Generator
 from itertools import product
+from math import sqrt
 import operator as op
 from TTStatistics._parser import faces_to_prop
 from TTStatistics.types import primitives
@@ -20,7 +21,8 @@ class Dice(object):
 		self._rounding = rounding if rounding else lambda x: x
 
 	def _derived_attr(self):
-		self._mean = sum([p*f for p, f in zip(self.c, self.p)])
+		self._mean = sum(p*f for p, f in zip(self.c, self.p))
+		self._var = sum(p*(x-self._mean)**2 for x, p in zip(self._f, self._p))
 		self._cdf = self._cumulative()
 
 	def _cumulative(self) -> list:
@@ -54,6 +56,14 @@ class Dice(object):
 	@property
 	def cdf(self) -> list:
 		return self._cdf
+
+	@property
+	def var(self) -> list:
+		return self._var
+
+	@property
+	def std(self) -> list:
+		return sqrt(self._var)
 
 	def copy(self) -> Dice:
 		copy = Dice(i for i in self)
