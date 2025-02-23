@@ -122,10 +122,10 @@ class Dice(object):
 		return self._unary_level0(op.invert)
 	
 	def _boolean_level0(self, rhs: int | float, ops: callable) -> Dice:
-		return Dice([ops(f, rhs) for f in self._f])
+		return Dice(ops(f, rhs) for f in self._f)
 	
 	def _boolean_level1(self, rhs: Dice, ops: callable)-> Dice:
-		return Dice([ops(*i) for i in product(self, rhs)])
+		return Dice(ops(*i) for i in product(self, rhs))
 
 	def _boolean_op(self, rhs: int | float | Dice, ops: callable) -> Dice:
 		if isinstance(rhs, primitives):
