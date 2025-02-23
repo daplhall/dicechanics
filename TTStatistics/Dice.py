@@ -108,19 +108,7 @@ class Dice(object):
 	def __truediv__(self, rhs: int | float | Dice | Pool) -> Dice | Pool:
 		# needs to reach to rounding
 		return self._binary_op(rhs, op.truediv)
-	
-	def _unary_level0(self, ops:callable) -> Dice:
-		return Dice(self._rounding(ops(i)) for i in self)
 
-	def __neg__(self) -> Dice:
-		return self._unary_level0(op.neg)
-	
-	def __pos__(self) -> Dice:
-		return self._unary_level0(op.pos)
-	
-	def __invert__(self) -> Dice:
-		return self._unary_level0(op.invert)
-	
 	def __lt__(self, rhs: int | float | Dice) -> Dice:
 		return self._binary_op(rhs, op.lt)
 
@@ -138,7 +126,7 @@ class Dice(object):
 
 	def __eq__(self, rhs: int | float | Dice) -> Dice:
 		return self._binary_op(rhs, op.eq)
-	
+
 	def __rmatmul__(self, lhs: int) -> Dice:
 		"""
 			Rolls self LHS times and adds them together
@@ -150,3 +138,16 @@ class Dice(object):
 			res = res+self
 		return -res if neg else res
 
+	
+	def _unary_level0(self, ops:callable) -> Dice:
+		return Dice(self._rounding(ops(i)) for i in self)
+
+	def __neg__(self) -> Dice:
+		return self._unary_level0(op.neg)
+	
+	def __pos__(self) -> Dice:
+		return self._unary_level0(op.pos)
+	
+	def __invert__(self) -> Dice:
+		return self._unary_level0(op.invert)
+	
