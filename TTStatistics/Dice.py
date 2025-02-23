@@ -121,37 +121,23 @@ class Dice(object):
 	def __invert__(self) -> Dice:
 		return self._unary_level0(op.invert)
 	
-	def _boolean_level0(self, rhs: int | float, ops: callable) -> Dice:
-		return Dice(ops(f, rhs) for f in self._f)
-	
-	def _boolean_level1(self, rhs: Dice, ops: callable)-> Dice:
-		return Dice(ops(*i) for i in product(self, rhs))
-
-	def _boolean_op(self, rhs: int | float | Dice, ops: callable) -> Dice:
-		if isinstance(rhs, primitives):
-			return self._boolean_level0(rhs, ops)
-		elif isinstance(rhs, Dice):
-			return self._boolean_level1(rhs, ops)
-		else: # TODO This here should test the other way around. maybe have a try catch
-			raise Exception("Unexpected type in dice level 0")
-	
 	def __lt__(self, rhs: int | float | Dice) -> Dice:
-		return self._boolean_op(rhs, op.lt)
+		return self._binary_op(rhs, op.lt)
 
 	def __le__(self, rhs: int | float | Dice) -> Dice:
-		return self._boolean_op(rhs, op.le)
+		return self._binary_op(rhs, op.le)
 
 	def __ne__(self, rhs: int | float | Dice) -> Dice:
-		return self._boolean_op(rhs, op.ne)
+		return self._binary_op(rhs, op.ne)
 
 	def __ge__(self, rhs: int | float | Dice) -> Dice:
-		return self._boolean_op(rhs, op.ge)
+		return self._binary_op(rhs, op.ge)
 	
 	def __gt__(self, rhs: int | float | Dice) -> Dice:
-		return self._boolean_op(rhs, op.gt)
+		return self._binary_op(rhs, op.gt)
 
 	def __eq__(self, rhs: int | float | Dice) -> Dice:
-		return self._boolean_op(rhs, op.eq)
+		return self._binary_op(rhs, op.eq)
 	
 	def __rmatmul__(self, lhs: int) -> Dice:
 		"""
