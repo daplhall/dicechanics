@@ -122,10 +122,7 @@ class Dice(object):
 		return self._unary_level0(op.invert)
 	
 	def _boolean_level0(self, rhs: int | float, ops: callable) -> Dice:
-		mask = [ops(f, rhs) for f in self._f]
-		count0 = sum([c if b == 0 else 0 for c, b in zip(self._c, mask)])
-		count1 = sum([c if b == 1 else 0 for c, b in zip(self._c, mask)])
-		return Dice([0]*count0 + [1]*count1)
+		return Dice([ops(f, rhs) for f in self._f])
 	
 	def _boolean_level1(self, rhs: Dice, ops: callable)-> Dice:
 		c = []
