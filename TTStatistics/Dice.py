@@ -22,6 +22,15 @@ class Dice(object):
 	def _derived_attr(self):
 		self._mean = sum([p*f for p, f in zip(self.c, self.p)])
 		self._cdf = self._cumulative()
+
+	def _cumulative(self) -> list:
+		res = []
+		for p in self.p: ## can fold this out an call with iter to clean up the if statement
+			if res:
+				res.append(p + res[-1])
+			else:
+				res.append(p)
+		return res
 		
 	def _simplify(self):
 		"""
@@ -56,7 +65,8 @@ class Dice(object):
 	def copy(self) -> Dice:
 		copy = Dice(i for i in self)
 		return copy
-	
+
+
 	def __iter__(self) -> Generator[int | float]: # might need ot be text also when mask
 		for f, c in zip(self.f, self.c):
 			for _ in range(c):
@@ -64,15 +74,6 @@ class Dice(object):
 				
 	def __contains__(self, value: any) -> bool:
 		return value in self._f
-
-	def _cumulative(self) -> list:
-		res = []
-		for p in self.p: ## can fold this out an call with iter to clean up the if statement
-			if res:
-				res.append(p + res[-1])
-			else:
-				res.append(p)
-		return res
 	
 	#TODO experiment with this just generating the faces, can be a genreator
 	def _binary_level0(self, rhs: int | float, ops: callable ) -> Dice:
