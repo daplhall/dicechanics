@@ -25,6 +25,11 @@ class TestDiceConstructor(dice_unittest.TestCase):
 		d = tts.d("1,2,3,3,4")
 		self.assertSequenceEqual(d.f, [1,2,3,4])
 		self.assertSequenceAlmostEqual(d.p, [0.2,0.2,0.4,0.2], 2)
+
+	def test_construct_iterable(self):
+		d = tts.d(i for i in range(1, 7))
+		self.assertSequenceEqual(d.f, [1,2,3,4,5,6])
+		self.assertSequenceAlmostEqual(d.p, [0.1667]*6, 4)
 	
 	def test_copy(self):
 		d = tts.d("1..5:4,20,20,31")

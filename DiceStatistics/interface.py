@@ -1,3 +1,4 @@
+from collections.abc import Iterable
 from DiceStatistics.Dice import Dice
 from DiceStatistics._parser import text_to_faces
 
@@ -7,6 +8,8 @@ def d(inpt: list | str, **kwards) -> Dice:
 	elif isinstance(inpt, str):
 		faces = text_to_faces(inpt)
 		return Dice(faces, **kwards)
+	elif isinstance(inpt, Iterable) :
+		return Dice(inpt, **kwards)
 	else:
 		raise Exception("Dice doens't support input type of %s"%(type(inpt)))
 
