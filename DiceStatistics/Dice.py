@@ -18,7 +18,6 @@ class Dice(object):
 		self._simplify()
 		self._derived_attr()
 		self._mask = mask if mask else None
-		# TODO  make it so we just pass our floor and ceil functions instead of this
 		self._rounding = rounding if rounding else lambda x: x
 
 	def _derived_attr(self):
@@ -99,22 +98,22 @@ class Dice(object):
 		else: # TODO This here should test the other way around. maybe have a try catch
 			raise Exception("Unexpected type in dice level 0")
 
-	def __add__(self, rhs: int | float | Dice | Pool) -> Dice | Pool:
+	def __add__(self, rhs: int | float | Dice ) -> Dice :
 		"""
 		only does level 0, if higher up we reverse the call.
 		TODO rounding reaction
 		"""
 		return self._binary_op(rhs, op.add)
 	
-	def __sub__(self, rhs: int | float | Dice | Pool) -> Dice | Pool:
+	def __sub__(self, rhs: int | float | Dice ) -> Dice :
 		# needs to react to rounding
 		return self._binary_op(rhs, op.sub)
 
-	def __mul__(self, rhs: int | float | Dice | Pool) -> Dice | Pool:
+	def __mul__(self, rhs: int | float | Dice ) -> Dice :
 		## Needs to react to rounding
 		return self._binary_op(rhs, op.mul)
 
-	def __truediv__(self, rhs: int | float | Dice | Pool) -> Dice | Pool:
+	def __truediv__(self, rhs: int | float | Dice ) -> Dice :
 		# needs to reach to rounding
 		return self._binary_op(rhs, op.truediv)
 
