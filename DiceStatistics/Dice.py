@@ -76,6 +76,39 @@ class Dice(object):
 	def min(self):
 		return min(self._f)
 	
+	def reroll(self, *redo, depth = 1):
+		"""
+		Rerolling in properbility terms are given as
+		P(n)*\sum_{i=0}^{n_r} P(R)^i
+		so
+			   |  P(n)^n_r                       for n in R
+		P(n,n_r) ={
+			   |  P(n)*\sum_{i=0}^{n_r} P(R)^i   else
+		the else part is a finite geomentric series with the convergence
+		1+r+r^2+r^3..r^n = (1-r^n)/(1-r)
+		
+		then to convert into counts we simply use
+		p(n) = c(n)/D
+		for the else part you can supsitute this into it
+		and get
+		c(n != R) = D^i*p(n!=R) = c(n) (D^i - c(R)^i)/(D - c(R))
+		 
+		"""
+		depth += 1
+		D = self._units
+		c_r = sum(
+			[c if f in redo else 0 for c, f in zip(self._c, self._f)]
+		)
+		F = (D**depth - c_r**depth)//(D - c_r)
+		res = []
+		for f, c, p in zip(self._f, self._c, self._p):
+			if f in redo:
+				res += [f]*c**depth
+			else:
+				res += [f]*c*F
+		return Dice(res)
+       
+
 	def __call__(self, func) :
 		def wrapper():
 			self.__init__(func(i) for i in self)
