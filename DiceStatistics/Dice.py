@@ -106,11 +106,11 @@ class Dice(object):
 		So we need to multiply all non redo time the demoninator of the dice that is replacing the roll
 		
 		think that reroll is just replacing a dice with the redo value
-		"""
+		
 		l = sum([c for c, f in zip(self._c, self._f) if f in redo])
 		f = list(filter(lambda x: x not in redo,(i for i in self)))
-		return Dice(f*self._units + l*[i for i in self])
-
+		return Dice(f*(self._units) + l**depth*[i for i in self])
+		"""
 		# Saving this legacy code for now
 		depth += 1
 		c_r = sum([c for c, f in zip(self._c, self._f) if f in redo])
