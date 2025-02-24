@@ -46,6 +46,18 @@ class TestDiceFeatures(dice_unittest.TestCase):
 			4
 		)
 
+	def test_count1(self):
+		d = tts.d10.count(5,6)
+		self.assertSequenceEqual(
+			d.f,
+			[0,1]
+		)
+		self.assertSequenceAlmostEqual(
+			d.p,
+			[0.8, 0.2],
+			4
+		)
+
 
 if __name__ == '__main__':
 	unittest.main()

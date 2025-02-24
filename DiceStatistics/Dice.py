@@ -93,6 +93,8 @@ class Dice(object):
 		for the else part you can supsitute this into it
 		and get
 		c(n != R) = D^i*p(n!=R) = c(n) (D^i - c(R)^i)/(D - c(R))
+		
+		[For p(n,n_r) to be a count we need the same "units" on both branches]
 		 
 		"""
 		depth += 1
@@ -100,9 +102,11 @@ class Dice(object):
 		F = (self._units**depth - c_r**depth)//(self._units - c_r)
 		res = []
 		for f, c in zip(self._f, self._c):
-			res += [f]*c**depth if f in redo else [f]*c*F
+			res += [f]*c**depth if f in redo else [f]*c*F #if this was a generator expression then we would save a bit on memory
 		return Dice(res)
-       
+	
+	def count(self, *count):
+		return Dice(i in count for i in self)
 
 	def __call__(self, func) :
 		def wrapper():
