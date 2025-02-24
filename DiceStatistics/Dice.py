@@ -96,7 +96,22 @@ class Dice(object):
 		
 		[For p(n,n_r) to be a count we need the same "units" on both branches]
 		 
+		 
+		on reroll once on d6 we get the same from
+		Q = tts.Dice([1,2,3,4,5]*6+[i for i in tts.d6])
+		for reroll 2d6 on a 6 on a d6
+		Q = tts.Dice([1,2,3,4,5]*36+[i for i in 2@tts.d6])
+		for reroll 6 replacing 5 and 6 with 1d6
+		C = tts.Dice([1,2,3,4]*6+2*[i for i in tts.d6])
+		So we need to multiply all non redo time the demoninator of the dice that is replacing the roll
+		
+		think that reroll is just replacing a dice with the redo value
 		"""
+		l = sum([c for c, f in zip(self._c, self._f) if f in redo])
+		f = list(filter(lambda x: x not in redo,(i for i in self)))
+		return Dice(f*self._units + l*[i for i in self])
+
+		# Saving this legacy code for now
 		depth += 1
 		c_r = sum([c for c, f in zip(self._c, self._f) if f in redo])
 		F = (self._units**depth - c_r**depth)//(self._units - c_r)
