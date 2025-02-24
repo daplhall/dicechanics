@@ -76,11 +76,45 @@ class Dice(object):
 	def min(self):
 		return min(self._f)
 	
-	def __call__(self, func):
+	def reroll(self, *redo, depth = 1):
+		"""
+		Rerolling in properbility terms are given as
+		P(n)*\sum_{i=0}^{n_r} P(R)^i
+		so
+			   |  P(n)^n_r                       for n in R
+		P(n,n_r) ={
+			   |  P(n)*\sum_{i=0}^{n_r} P(R)^i   else
+		the else part is a finite geomentric series with the convergence
+		1+r+r^2+r^3..r^n = (1-r^n)/(1-r)
+		
+		then to convert into counts we simply use
+		p(n) = c(n)/D
+		for the else part you can supsitute this into it
+		and get
+		c(n != R) = D^i*p(n!=R) = c(n) (D^i - c(R)^i)/(D - c(R))
+		 
+		"""
+		depth += 1
+		D = self._units
+		c_r = sum(
+			[c if f in redo else 0 for c, f in zip(self._c, self._f)]
+		)
+		F = (D**depth - c_r**depth)//(D - c_r)
+		res = []
+		for f, c, p in zip(self._f, self._c, self._p):
+			if f in redo:
+				res += [f]*c**depth
+			else:
+				res += [f]*c*F
+		return Dice(res)
+       
+
+	def __call__(self, func) :
 		def wrapper():
 			self.__init__(func(i) for i in self)
 			return self
 		return wrapper
+
 	def __iter__(self) -> Generator[int | float]: # might need ot be text also when mask
 		for f, c in zip(self.f, self.c):
 			for _ in range(c):
@@ -109,18 +143,31 @@ class Dice(object):
 		TODO rounding reaction
 		"""
 		return self._binary_op(rhs, op.add)
+
+	def __radd__(self, lhs: int | float | Dice)-> Dice:
+		return self._binary_op(lhs, op.add)
 	
 	def __sub__(self, rhs: int | float | Dice ) -> Dice :
 		# needs to react to rounding
 		return self._binary_op(rhs, op.sub)
 
+	def __rsub__(self, lhs: int | float | Dice)-> Dice:
+		return self._binary_op(-lhs, op.add)
+
 	def __mul__(self, rhs: int | float | Dice ) -> Dice :
 		## Needs to react to rounding
 		return self._binary_op(rhs, op.mul)
+	
+	def __rmul__(self, lhs: int | float | Dice) -> Dice:
+		return self._binary_op(lhs, op.mul)
 
 	def __truediv__(self, rhs: int | float | Dice ) -> Dice :
 		# needs to reach to rounding
 		return self._binary_op(rhs, op.truediv)
+	
+	def __floordiv__(self, rhs: int | float | Dice ) -> Dice :
+		# needs to reach to rounding
+		return self._binary_op(rhs, op.floordiv)
 
 	def __lt__(self, rhs: int | float | Dice) -> Dice:
 		return self._binary_op(rhs, op.lt)

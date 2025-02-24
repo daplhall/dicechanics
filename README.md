@@ -18,14 +18,15 @@ ax.plot(C.f, C.p)
 plt.show()
 ```
 ```
-@Dice('3:6, 1..2')
+import DiceStatistics as tts
+@tts.d('3:6, 1..2')
 def mydice(outcome):
 	if outcome == 4:
 		return 4
 	elif outcome > 4:
 		return 3
 
-dice = mydice():
+funky_dice = mydice():
 ```
 
 ### *Pool Example*

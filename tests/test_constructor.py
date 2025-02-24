@@ -67,6 +67,7 @@ class TestPool(dice_unittest.TestCase):
 		d6 = tts.d6
 		d8 = tts.d8
 		pool = tts.Pool([d6, d8, d6])
+		self.assertEqual(1,0)
 
 	
 

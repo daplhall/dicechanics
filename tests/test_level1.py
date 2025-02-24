@@ -182,6 +182,20 @@ class TestLevel1(dice_unittest.TestCase):
 			4
 		)
 
+	def test_rmatmul3(self):
+		f = tts.d('0,1')
+		g = tts.d('1,2,3')
+		D = f@g
+		self.assertSequenceEqual(
+			D.f, 
+			[0,1,2,3]
+		)
+		self.assertSequenceAlmostEqual(
+			D.p,
+			[0.5] + [0.1667]*3,
+			4
+		)
+
 
 if __name__ == '__main__':
 	unittest.main()
