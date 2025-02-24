@@ -97,9 +97,7 @@ class Dice(object):
 		"""
 		depth += 1
 		D = self._units
-		c_r = sum(
-			[c if f in redo else 0 for c, f in zip(self._c, self._f)]
-		)
+		c_r = sum([c for c, f in zip(self._c, self._f) if f in redo])
 		F = (D**depth - c_r**depth)//(D - c_r)
 		res = []
 		for f, c in zip(self._f, self._c):
