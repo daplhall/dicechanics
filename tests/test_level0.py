@@ -68,6 +68,16 @@ class TestLevel0_Dice(dice_unittest.TestCase):
 			4
 		)
 
+	def test_divide_int_floor(self):
+		d6 = tts.d(6)
+		d = d6//2
+		self.assertSequenceEqual(d.f,[0,1,2,3])
+		self.assertSequenceAlmostEqual(
+			d.p, 
+			[0.1667, 0.3333,0.3333,0.1667],
+			4
+		)
+
 	def test_divide_float(self):
 		d6 = tts.d(6)
 		d = d6/1.5
