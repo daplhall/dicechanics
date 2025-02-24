@@ -78,6 +78,7 @@ class Dice(object):
 	
 	def reroll(self, *redo, depth = 1):
 		"""
+		TODO Refactor
 		Rerolling in properbility terms are given as
 		P(n)*\sum_{i=0}^{n_r} P(R)^i
 		so
