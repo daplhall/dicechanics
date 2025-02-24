@@ -18,7 +18,7 @@ def unique(array:list) -> tuple[list,list]:
 def ceildiv(lhs: int | float, rhs: int | float):
 	return -(lhs//-rhs)
 
-def GCD(a: int, b: int) -> int:
+def gcd(a: int, b: int) -> int:
 	"""
 	Greatest commen demoninator
 	"""

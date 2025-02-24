@@ -4,7 +4,7 @@ from math import sqrt
 import operator as op
 from DiceStatistics._parser import faces_to_prop
 from DiceStatistics.types import primitives
-from DiceStatistics._math import GCD
+from DiceStatistics._math import gcd
 import DiceStatistics.Pool as Pool 
 
 type Dice = Dice
@@ -14,7 +14,8 @@ type Pool = Pool.Pool
 class Dice(object):
 
 	def __init__(self, faces, /, mask = None, rounding = None):
-		self._f, self._p, self._c = faces_to_prop(faces)		
+		self._f, self._p, self._c, self._units = faces_to_prop(faces)		
+		self._simplify()
 		self._derived_attr()
 		self._mask = mask if mask else None
 		# TODO  make it so we just pass our floor and ceil functions instead of this
@@ -33,9 +34,9 @@ class Dice(object):
 		
 	def _simplify(self):
 		if (c := self._c) and (len(c) > 1): 
-			r = GCD(c[0], c[1])
+			r = gcd(c[0], c[1])
 			for i in c[2:]:
-				r = GCD(r, i)
+				r = gcd(r, i)
 			self._c = [c//r for c in self._c]
 
 	@property
@@ -68,6 +69,12 @@ class Dice(object):
 	def copy(self) -> Dice:
 		return Dice(i for i in self)
 
+	def max(self):
+		return max(self._f)
+
+	def min(self):
+		return min(self._f)
+	
 	def __iter__(self) -> Generator[int | float]: # might need ot be text also when mask
 		for f, c in zip(self.f, self.c):
 			for _ in range(c):
@@ -76,7 +83,6 @@ class Dice(object):
 	def __contains__(self, value: any) -> bool:
 		return value in self._f
 	
-	#TODO experiment with this just generating the faces, can be a genreator
 	def _binary_level0(self, rhs: int | float, ops: callable ) -> Dice:
 		return Dice(self._rounding(ops(f, rhs)) for f in self)
 
@@ -127,17 +133,46 @@ class Dice(object):
 
 	def __eq__(self, rhs: int | float | Dice) -> Dice:
 		return self._binary_op(rhs, op.eq)
-
-	def __rmatmul__(self, lhs: int) -> Dice:
-		"""
-			Rolls self LHS times and adds them together
-		"""
+	
+	def _rmatmul_level0(self, lhs:int, ops: callable) -> Dice:
 		if neg := lhs < 0:
 			lhs *= -1
 		res = self
 		for _ in range(lhs-1):
-			res = res+self
+			res = ops(res,self)
 		return -res if neg else res
+	
+	def _rmatmul_level1(self, lhs: Dice, ops: callable) -> Dice:
+		"""
+		This is a overlap operations, ie overlapping 2 results
+		its not the same as "adding" two dice together and thus
+		the counts needs to be the same units 	
+		"""
+		res = []
+		units = self._units
+		nrolls = max(lhs.min(), lhs.max())
+		for i in lhs:
+			base = units**(nrolls-i)
+			res += [j for j in i@self]*base
+		return Dice(res)
+	
+	def _binary_rmatmul(self, lhs: int | Dice, ops:callable):
+		if isinstance(lhs, int):
+			return self._rmatmul_level0(lhs, ops)
+		elif isinstance(lhs, Dice):
+			return self._rmatmul_level1(lhs, ops)
+		else:
+			raise Exception("Unexpected type in dice matmul")
+
+
+	def __rmatmul__(self, lhs: int | Dice) -> Dice:
+		"""
+			Rolls self LHS times and adds them together
+		"""
+		return self._binary_rmatmul(lhs, op.add)
+	
+	def __matmul__(self, rhs):
+		return rhs._binary_rmatmul(self, op.add)
 
 	def _unary_level0(self, ops:callable) -> Dice:
 		return Dice(self._rounding(ops(i)) for i in self)

@@ -3,7 +3,8 @@ DiceStatistics provides a interface in python (inspired by anydice) for doing di
 ## Usage
 2 classes are provided, a Dice class used for representing statistical data and simple arithmatics, and a Pool class which allows one to do custom operations based on the outcomes of multiple seperate dice (eg. keep the highest 3 of a pool of 4).  
 ### *Dice Example*:
-
+Dice always finds the lowest number of faces to represent the dice, so a 6 sided dice
+with equal amount of 1,2,3 on its faces becomes a d3
 ```
 import TTStatistic as tts
 import matplotlib.pyplot as plt

@@ -105,21 +105,18 @@ class TestLevel0_Dice(dice_unittest.TestCase):
 		d = d10 > 8
 		self.assertSequenceEqual(d.f, [0, 1])
 		self.assertSequenceAlmostEqual(d.p, [0.8,0.2], 2)
-		self.assertSequenceAlmostEqual(d.c, [8,2], 2)
 
 	def test_greater_eqaual_than(self):
 		d10 = tts.d(10)
 		d = d10 >= 8
 		self.assertSequenceEqual(d.f, [0, 1])
 		self.assertSequenceAlmostEqual(d.p, [0.7,0.3], 2)
-		self.assertSequenceAlmostEqual(d.c, [7,3], 2)
 
 	def test_less_than(self):
 		d10 = tts.d(10)
 		d = d10 < 3
 		self.assertSequenceEqual(d.f, [0, 1])
 		self.assertSequenceAlmostEqual(d.p, [0.8,0.2], 2)
-		self.assertSequenceAlmostEqual(d.c, [8,2], 2)
 
 	def test_less_equal_than(self):
 		d10 = tts.d(10)

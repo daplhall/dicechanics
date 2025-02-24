@@ -37,6 +37,22 @@ class TestLevel1(dice_unittest.TestCase):
 			0.0333,0.0333,0.0333,0.0333],
 			4
 		)
+
+	def test_plus_differnt_2(self):
+		d4 = tts.d(4)
+		D = tts.Dice([2] + [3]*2 + [4]*3 + [5]*4 + [6]*5 + [7]*6 \
+			+ [8]*5 + [9]*4 + [10]*3 + [11]*2+ [12])
+		D = d4+D
+		self.assertSequenceEqual(
+			D.f, 
+			[3,4,5,6,7,8,9,10,11,12,13,14,15,16]
+		)
+		self.assertSequenceAlmostEqual(
+			D.p,
+			[0.0069, 0.0208, 0.0417, 0.0694, 0.0972, 0.1250, 0.1389,
+    			 0.1389, 0.1250, 0.0972, 0.0694, 0.0417, 0.0208, 0.0069],
+			4
+		)
 	
 	def test_matmult(self):
 		d6 = tts.d(6)
@@ -132,6 +148,18 @@ class TestLevel1(dice_unittest.TestCase):
 		self.assertSequenceAlmostEqual(
 			D.p,
 			[0.8333, 0.1667],
+			4
+		)
+		
+	def test_rmatmul(self):
+		d6 = tts.d(6)
+		d2 = tts.d(2)
+		D = d2@d6
+		self.assertSequenceEqual(D.f, [1,2,3,4,5,6,7,8,9,10,11,12])
+		self.assertSequenceAlmostEqual(
+			D.p,
+			[0.0833, 0.0972, 0.1111, 0.1250, 0.1389, 0.1528, 0.0833,
+			0.0694, 0.0556, 0.0417, 0.0278, 0.0139],
 			4
 		)
 
