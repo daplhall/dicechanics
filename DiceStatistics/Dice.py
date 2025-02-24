@@ -102,11 +102,8 @@ class Dice(object):
 		)
 		F = (D**depth - c_r**depth)//(D - c_r)
 		res = []
-		for f, c, p in zip(self._f, self._c, self._p):
-			if f in redo:
-				res += [f]*c**depth
-			else:
-				res += [f]*c*F
+		for f, c in zip(self._f, self._c):
+			res += [f]*c**depth if f in redo else [f]*c*F
 		return Dice(res)
        
 
