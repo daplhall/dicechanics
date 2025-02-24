@@ -34,10 +34,12 @@ class Dice(object):
 		
 	def _simplify(self):
 		if (c := self._c) and (len(c) > 1): 
-			r = gcd(c[0], c[1])
+			d = gcd(c[0], c[1])
 			for i in c[2:]:
-				r = gcd(r, i)
-			self._c = [c//r for c in self._c]
+				d = gcd(d, i)
+				if d == 1:
+					break
+			self._c = [c//d for c in self._c]
 
 	@property
 	def f(self) -> list:
