@@ -32,6 +32,20 @@ class TestDiceConstructor(dice_unittest.TestCase):
 		self.assertSequenceEqual(d.f, g.f)
 		self.assertSequenceEqual(d.c, g.c)
 		self.assertSequenceAlmostEqual(d.p, g.p, 10)
+		
+	def test_decorator(self):
+		@tts.d('5..6:3,6,6')
+		def funky_dice(faces):
+			if faces == 1:
+				return 32
+			elif faces == 6:
+				return 42
+			else:
+				return -1
+		
+		d = funky_dice()
+		self.assertSequenceEqual(d.f, [-1,42])
+		self.assertSequenceAlmostEqual(d.p, [0.3750, 0.6250], 4)
 
 class TestPool(dice_unittest.TestCase):
 	def test_constructor(self):

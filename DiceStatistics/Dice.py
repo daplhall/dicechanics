@@ -76,6 +76,11 @@ class Dice(object):
 	def min(self):
 		return min(self._f)
 	
+	def __call__(self, func):
+		def wrapper():
+			self.__init__(func(i) for i in self)
+			return self
+		return wrapper
 	def __iter__(self) -> Generator[int | float]: # might need ot be text also when mask
 		for f, c in zip(self.f, self.c):
 			for _ in range(c):
