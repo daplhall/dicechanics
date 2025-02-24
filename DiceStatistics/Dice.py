@@ -89,7 +89,7 @@ class Dice(object):
 		1+r+r^2+r^3..r^n = (1-r^n)/(1-r)
 		
 		then to convert into counts we simply use
-		p(n) = c(n)/D
+		p(n)^i = c(n)^i/D^i
 		for the else part you can supsitute this into it
 		and get
 		c(n != R) = D^i*p(n!=R) = c(n) (D^i - c(R)^i)/(D - c(R))
