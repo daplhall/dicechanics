@@ -76,7 +76,7 @@ class Dice(object):
 	def min(self):
 		return min(self._f)
 	
-	def reroll(self, *redo, depth = 1):
+	def reroll(self, *redo, depth:int = 1) -> Dice:
 		"""
 		TODO Refactor
 		Rerolling in properbility terms are given as
@@ -96,9 +96,8 @@ class Dice(object):
 		 
 		"""
 		depth += 1
-		D = self._units
 		c_r = sum([c for c, f in zip(self._c, self._f) if f in redo])
-		F = (D**depth - c_r**depth)//(D - c_r)
+		F = (self._units**depth - c_r**depth)//(self._units - c_r)
 		res = []
 		for f, c in zip(self._f, self._c):
 			res += [f]*c**depth if f in redo else [f]*c*F
