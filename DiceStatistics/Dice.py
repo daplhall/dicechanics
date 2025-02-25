@@ -20,8 +20,7 @@ class Dice(object):
 		self._rounding = rounding if rounding else lambda x: x
 
 	def _derived_attr(self):
-		self._simplify()
-		self._units = sum(self._c)
+		self._c, self._units =self._simplify()
 		self._p = [i/self._units for i in self._c]
 		self._mean = sum(p*f for p, f in zip(self.c, self.p))
 		self._var = sum(p*(x-self._mean)**2 for x, p in zip(self._f, self._p))
@@ -40,7 +39,8 @@ class Dice(object):
 				d = gcd(d, i)
 				if d == 1:
 					break
-			self._c = [c//d for c in self._c]
+			res = [c//d for c in self._c]
+			return res, sum(res)
 
 	@property
 	def f(self) -> list:
@@ -80,6 +80,8 @@ class Dice(object):
 	
 	def reroll(self, *redo, depth:int = 1) -> Dice:
 		"""
+		This method  produces large numbers, if you need inf reroll
+		then use 'inf'.
 		TODO Refactor
 		Rerolling in properbility terms are given as
 		P(n)*\sum_{i=0}^{n_r} P(R)^i
@@ -120,10 +122,6 @@ class Dice(object):
             		newdice._P[i] = Rs*p
 		so we multiply the chances of hitting times our own properbility
 		this we need to account for,
-		
-		A is just cr**-i * (D**(i+1) - cr**(i+1))/(D-cr)
-		we divide cr**i because thinks are in units of these, se we have lower numbers
-		and less GCD work
 		"""
 		if depth == 'inf':
 			return Dice(i for i in self if i not in redo)
@@ -132,18 +130,17 @@ class Dice(object):
 		i = depth # i +1
 		D = self._units
 		cr = sum([c for c, f in zip(self._c,self._f) if f in redo])
-		A = (D*(D/cr)**i - cr)/(D-cr)
+		A = (D**(i+1) - cr**(i+1))//(D-cr)
 		count = []
 		for c,f in zip(self._c, self._f):
 			if f in redo:
-				count.append(c)
+				count.append(c*cr**i)
 			else:
 				count.append(A*c)
 		## TODO This down here should be its own consturctor!
 		res = self.copy()
 		res._c = count
 		res._derived_attr()
-		res._simplify()
 		return res
 
 	
