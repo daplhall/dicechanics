@@ -55,7 +55,21 @@ class TestDiceFeatures(dice_unittest.TestCase):
 		)
 		self.assertSequenceAlmostEqual(
 			d.p,
-			[0.2469]*4 + [0.0062]*2,
+			[0.2407]*4 + [0.0185]*2,
+			4
+		)
+
+	def test_reroll_depth2(self):
+		g = tts.d10
+		d = g.reroll(1,4,6,8,10, depth=6)
+		self.assertSequenceEqual(
+			d.f,
+			[1,2,3,4,5,6,7,8,9,10]
+		)
+		self.assertSequenceAlmostEqual(
+			d.p,
+			[0.0016] + [0.1984]*2 
+			+ [0.0016,0.1984, 0.0016, 0.1984, 0.0016, 0.1984, 0.0016],
 			4
 		)
 

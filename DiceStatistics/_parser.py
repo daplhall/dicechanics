@@ -1,12 +1,10 @@
 import typing
 from DiceStatistics._math import unique
 
-def faces_to_prop(faces: list) -> list|list|list :
+def faces_to_count(faces: list) -> list|list|list :
 	f, c = unique(faces)	
 	f,c = zip(*sorted(zip(f, c), key=lambda pair: pair[0]))
-	denom = sum(c)
-	p = [i/denom for i in c]
-	return f, p, c, denom
+	return f, c
 
 def text_to_faces(text:str) -> list:
 	if  any(c.isalpha() for c in text) or ';' in text: # the alpha check out be ommited.

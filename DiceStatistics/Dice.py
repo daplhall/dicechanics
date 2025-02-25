@@ -2,7 +2,7 @@ from typing import Generator
 from itertools import product
 from math import sqrt
 import operator as op
-from DiceStatistics._parser import faces_to_prop
+from DiceStatistics._parser import faces_to_count
 from DiceStatistics.types import primitives
 from DiceStatistics._math import gcd
 import DiceStatistics.Pool as Pool 
@@ -14,13 +14,15 @@ type Pool = Pool.Pool
 class Dice(object):
 
 	def __init__(self, faces, /, mask = None, rounding = None):
-		self._f, self._p, self._c, self._units = faces_to_prop(faces)		
-		self._simplify()
+		self._f, self._c = faces_to_count(faces)		
 		self._derived_attr()
 		self._mask = mask if mask else None
 		self._rounding = rounding if rounding else lambda x: x
 
 	def _derived_attr(self):
+		self._simplify()
+		self._units = sum(self._c)
+		self._p = [i/self._units for i in self._c]
 		self._mean = sum(p*f for p, f in zip(self.c, self.p))
 		self._var = sum(p*(x-self._mean)**2 for x, p in zip(self._f, self._p))
 		self._cdf = self._cumulative()
@@ -110,15 +112,32 @@ class Dice(object):
 		l = sum([c for c, f in zip(self._c, self._f) if f in redo])
 		f = list(filter(lambda x: x not in redo,(i for i in self)))
 		return Dice(f*(self._units) + l**depth*[i for i in self])
+		
+		In the 1.0 we have 
+		if x in redo:
+            		newdice._P[i] = Rf*p
+         	else:
+            		newdice._P[i] = Rs*p
+		so we multiply the chances of hitting times our own properbility
+		this we need to account for,
 		"""
 		# Saving this legacy code for now
-		depth += 1
-		c_r = sum([c for c, f in zip(self._c, self._f) if f in redo])
-		F = (self._units**depth - c_r**depth)//(self._units - c_r)
-		res = []
-		for f, c in zip(self._f, self._c):
-			res += [f]*c**depth if f in redo else [f]*c*F #if this was a generator expression then we would save a bit on memory
-		return Dice(res)
+		i = depth # i +1
+		D = self._units
+		cr = sum([c for c, f in zip(self._c,self._f) if f in redo])
+		A = (D**(i+1) - cr**(i+1))//(D - cr)
+		count = []
+		for c,f in zip(self._c, self._f):
+			if f in redo:
+				count.append(cr**i * c)
+			else:
+				count.append(A*c)
+		res = self.copy()
+		res._c = count
+		res._derived_attr()
+		res._simplify()
+		return res
+
 	
 	def count(self, *count):
 		return Dice(i in count for i in self)
