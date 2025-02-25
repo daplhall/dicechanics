@@ -73,6 +73,19 @@ class TestDiceFeatures(dice_unittest.TestCase):
 			4
 		)
 
+	def test_reroll_inf(self):
+		g = tts.d10
+		d = g.reroll(7,8,9,10, depth = 'inf')
+		self.assertSequenceEqual(
+			d.f,
+			[1,2,3,4,5,6]
+		)
+		self.assertSequenceAlmostEqual(
+			d.p,
+			[0.1667]*6,
+			4
+		)
+
 	def test_count1(self):
 		d = tts.d10.count(5,6)
 		self.assertSequenceEqual(

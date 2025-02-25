@@ -120,18 +120,26 @@ class Dice(object):
             		newdice._P[i] = Rs*p
 		so we multiply the chances of hitting times our own properbility
 		this we need to account for,
+		
+		A is just cr**-i * (D**(i+1) - cr**(i+1))/(D-cr)
+		we divide cr**i because thinks are in units of these, se we have lower numbers
+		and less GCD work
 		"""
+		if depth == 'inf':
+			return Dice(i for i in self if i not in redo)
+			
 		# Saving this legacy code for now
 		i = depth # i +1
 		D = self._units
 		cr = sum([c for c, f in zip(self._c,self._f) if f in redo])
-		A = (D**(i+1) - cr**(i+1))//(D - cr)
+		A = (D*(D/cr)**i - cr)/(D-cr)
 		count = []
 		for c,f in zip(self._c, self._f):
 			if f in redo:
-				count.append(cr**i * c)
+				count.append(c)
 			else:
 				count.append(A*c)
+		## TODO This down here should be its own consturctor!
 		res = self.copy()
 		res._c = count
 		res._derived_attr()
