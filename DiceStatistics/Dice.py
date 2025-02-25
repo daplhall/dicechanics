@@ -124,17 +124,17 @@ class Dice(object):
 		this we need to account for,
 		"""
 		if depth == 'inf':
-			return Dice(i for i in self if i not in redo)
+			return Dice(i for i in self if i not in redo)#TODO this sould just produce 0 for the face, not remove it
 			
-		# Saving this legacy code for now
 		i = depth # i +1
 		D = self._units
 		cr = sum([c for c, f in zip(self._c,self._f) if f in redo])
-		A = (D**(i+1) - cr**(i+1))//(D-cr)
+		cr_i = cr**i
+		A = (D**(i+1) - cr_i*cr)//(D-cr)
 		count = []
 		for c,f in zip(self._c, self._f):
 			if f in redo:
-				count.append(c*cr**i)
+				count.append(c*cr_i)
 			else:
 				count.append(A*c)
 		## TODO This down here should be its own consturctor!
