@@ -14,16 +14,16 @@ type Pool = Pool.Pool
 class Dice(object):
 
 	def __init__(self, faces, /, mask = None, rounding = None):
-		self._f, self._c = faces_to_count(faces)		
+		self._data = {f:c for f, c in zip(*faces_to_count(faces))}
 		self._derived_attr()
 		self._mask = mask if mask else None
 		self._rounding = rounding if rounding else lambda x: x
 
 	def _derived_attr(self):
-		self._c, self._units =self._simplify()
-		self._p = [i/self._units for i in self._c]
-		self._mean = sum(p*f for p, f in zip(self.c, self.p))
-		self._var = sum(p*(x-self._mean)**2 for x, p in zip(self._f, self._p))
+		self._data, self._units =self._simplify()
+		self._p = [i/self._units for i in self.c]
+		self._mean = sum(p*f for p, f in zip(self.p, self.f))
+		self._var = sum(p*(x-self._mean)**2 for x, p in zip(self.f, self.p))
 		self._cdf = self._cumulative()
 
 	def _cumulative(self) -> list:
@@ -33,25 +33,25 @@ class Dice(object):
 		return res
 		
 	def _simplify(self):
-		if (c := self._c) and (len(c) > 1): 
+		if (c := self.c) and (len(c) > 1): 
 			d = gcd(c[0], c[1])
 			for i in c[2:]:
 				d = gcd(d, i)
 				if d == 1:
 					break
-			res = [c//d for c in self._c]
-			return res, sum(res)
+			res = {f : c//d for f, c in self.items()}
+			return res, sum(res.values())
 
 	@property
 	def f(self) -> list:
-		return self._f
+		return list(self._data.keys())
 	@property
 	def p(self) -> list:
 		return self._p
 
 	@property
 	def c(self) -> list:
-		return self._c
+		return list(self._data.values())
 	
 	@property
 	def mean(self) -> float:
@@ -73,10 +73,13 @@ class Dice(object):
 		return Dice(i for i in self)
 
 	def max(self):
-		return max(self._f)
+		return max(self._data.keys())
 
 	def min(self):
-		return min(self._f)
+		return min(self._data.keys())
+	
+	def items(self):
+		return self._data.items()
 	
 	def reroll(self, *redo, depth:int = 1) -> Dice:
 		"""
@@ -84,11 +87,12 @@ class Dice(object):
 		then use 'inf'.
 		TODO Refactor
 		Rerolling in properbility terms are given as
-		P(n)*\sum_{i=0}^{n_r} P(R)^i
+		P(n)*/sum_{i=0}^{n_r} P(R)^i
+
 		so
 			   |  P(n)^n_r                       for n in R
 		P(n,n_r) ={
-			   |  P(n)*\sum_{i=0}^{n_r} P(R)^i   else
+			   |  P(n)*/sum_{i=0}^{n_r} P(R)^i   else
 		the else part is a finite geomentric series with the convergence
 		1+r+r^2+r^3..r^n = (1-r^n)/(1-r)
 		
@@ -125,22 +129,20 @@ class Dice(object):
 		"""
 		if depth == 'inf':
 			return Dice(i for i in self if i not in redo)#TODO this sould just produce 0 for the face, not remove it
-			
-		cr = sum([c for c, f in zip(self._c,self._f) if f in redo])
+		cr = sum(c for f, c in self.items() if f in redo)	
 		cr_i = cr**depth
 		A = (self._units**(depth+1) - cr_i*cr)//(self._units-cr)
-		count = []
-		for c,f in zip(self._c, self._f):
+		count = {} # TODO rename
+		for f,c in self.items():
 			if f in redo:
-				count.append(c*cr_i)
+				count[f] = c*cr_i
 			else:
-				count.append(A*c)
+				count[f] = A*c
 		## TODO This down here should be its own consturctor!
 		res = self.copy()
-		res._c = count
+		res._data = count
 		res._derived_attr()
 		return res
-
 	
 	def count(self, *count):
 		return Dice(i in count for i in self)
@@ -157,7 +159,7 @@ class Dice(object):
 				yield f
 				
 	def __contains__(self, value: any) -> bool:
-		return value in self._f
+		return value in self._data.keys()
 	
 	def _binary_level0(self, rhs: int | float, ops: callable ) -> Dice:
 		return Dice(self._rounding(ops(f, rhs)) for f in self)
