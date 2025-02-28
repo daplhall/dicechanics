@@ -3,6 +3,7 @@ from DiceStatistics._math import unique
 
 def faces_to_count(faces: list) -> list|list|list :
 	f, c = unique(faces)	
+	# TODO run faces parser 
 	f,c = zip(*sorted(zip(f, c), key=lambda pair: pair[0]))
 	return f, c
 

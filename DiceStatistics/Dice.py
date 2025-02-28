@@ -16,12 +16,13 @@ class Dice(object):
 
 	def __init__(self, faces, /, mask = None, rounding = None):
 		self._data = {f:c for f, c in zip(*faces_to_count(faces))}
+		self._hash = hash(tuple(self._data.items()))
 		self._derived_attr()
 		self._mask = mask if mask else None
 		self._rounding = rounding if rounding else lambda x: x
 
 	def _derived_attr(self):
-		self._simplify()
+		self._data, self._units = self._simplify()
 		self._p = [i/self._units for i in self.c]
 		self._mean = sum(p*f for p, f in zip(self.p, self.f))
 		self._var = sum(p*(x-self._mean)**2 for x, p in zip(self.f, self.p))
@@ -41,8 +42,7 @@ class Dice(object):
 				if d == 1:
 					break
 			res = {f : c//d for f, c in self.items()}
-			self._data = res 
-			self._units = sum(res.values())
+			return res, sum(res.values())
 
 	@property
 	def f(self) -> list:
@@ -153,8 +153,7 @@ class Dice(object):
 		if not isinstance(rhs, Dice):
 			return False
 		else:
-			## TODO make a way we can check without pointer stuff
-			return self is rhs
+			return self._hash == rhs._hash
 		
 
 	def __call__(self, func) :
@@ -175,6 +174,7 @@ class Dice(object):
 		return Dice(self._rounding(ops(f, rhs)) for f in self)
 
 	def _binary_level1(self, rhs: Dice, ops:callable) -> Pool:
+		# add "condenser" here [condesner is new word for what collects faces]
 		return Dice(self._rounding(ops(*i)) for i in product(self, rhs))
 	
 	def _binary_op(self, rhs: int | float | Dice, ops:callable) -> Dice:
@@ -230,7 +230,7 @@ class Dice(object):
 		return self._binary_op(rhs, op.gt)
 
 	def __eq__(self, rhs: int | float | Dice) -> Dice:
-		# TODO write this and __ne__ as a general operation 
+		# TODO write this and __ne__ as a general operation, also optimize
 		bool = self.equal(rhs)
 		return ds.BooleanDice((i for i in self._binary_op(rhs, op.eq)), bool)
 

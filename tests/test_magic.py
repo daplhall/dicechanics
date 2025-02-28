@@ -19,6 +19,12 @@ class TestDiceMagicMethods(dice_unittest.TestCase):
 	def test_dice_contains(self):
 		d = tts.d(6)
 		self.assertIn(6, d)
+	
+	def test_boolean_dice(self):
+		f = tts.d(6)
+		g = tts.d(6)
+		self.assertFalse(f is g)
+		self.assertTrue(g == f)
 
 if __name__ == '__main__':
 	unittest.main()
