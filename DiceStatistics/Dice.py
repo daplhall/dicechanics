@@ -20,7 +20,7 @@ class Dice(object):
 		self._rounding = rounding if rounding else lambda x: x
 
 	def _derived_attr(self):
-		self._data, self._units =self._simplify()
+		self._simplify()
 		self._p = [i/self._units for i in self.c]
 		self._mean = sum(p*f for p, f in zip(self.p, self.f))
 		self._var = sum(p*(x-self._mean)**2 for x, p in zip(self.f, self.p))
@@ -40,7 +40,8 @@ class Dice(object):
 				if d == 1:
 					break
 			res = {f : c//d for f, c in self.items()}
-			return res, sum(res.values())
+			self._data = res 
+			self._units = sum(res.values())
 
 	@property
 	def f(self) -> list:
