@@ -1,14 +1,15 @@
 from typing import Generator
 from itertools import product
 from math import sqrt
+
 import operator as op
+import DiceStatistics as  ds
 from DiceStatistics._parser import faces_to_count
 from DiceStatistics.types import primitives
 from DiceStatistics._math import gcd
-import DiceStatistics.Pool as Pool 
 
 type Dice = Dice
-type Pool = Pool.Pool
+type Pool = ds.Pool
 
 
 class Dice(object):
@@ -147,6 +148,14 @@ class Dice(object):
 	
 	def count(self, *count):
 		return Dice(i in count for i in self)
+	
+	def equal(self, rhs):
+		if not isinstance(rhs, Dice):
+			return False
+		else:
+			## TODO make a way we can check without pointer stuff
+			return self is rhs
+		
 
 	def __call__(self, func) :
 		def wrapper():
@@ -155,7 +164,7 @@ class Dice(object):
 		return wrapper
 
 	def __iter__(self) -> Generator[int | float]: # might need ot be text also when mask
-		for f, c in zip(self.f, self.c):
+		for f, c in self.items():
 			for _ in range(c):
 				yield f
 				
@@ -214,9 +223,6 @@ class Dice(object):
 	def __le__(self, rhs: int | float | Dice) -> Dice:
 		return self._binary_op(rhs, op.le)
 
-	def __ne__(self, rhs: int | float | Dice) -> Dice:
-		return self._binary_op(rhs, op.ne)
-
 	def __ge__(self, rhs: int | float | Dice) -> Dice:
 		return self._binary_op(rhs, op.ge)
 	
@@ -224,7 +230,13 @@ class Dice(object):
 		return self._binary_op(rhs, op.gt)
 
 	def __eq__(self, rhs: int | float | Dice) -> Dice:
-		return self._binary_op(rhs, op.eq)
+		# TODO write this and __ne__ as a general operation 
+		bool = self.equal(rhs)
+		return ds.BooleanDice((i for i in self._binary_op(rhs, op.eq)), bool)
+
+	def __ne__(self, rhs: int | float | Dice) -> Dice:
+		bool = not self.equal(rhs)
+		return ds.BooleanDice((i for i in self._binary_op(rhs, op.ne)), bool)
 	
 	def _rmatmul_level0(self, lhs:int, ops: callable) -> Dice:
 		if neg := lhs < 0:
@@ -275,6 +287,4 @@ class Dice(object):
 	def __pos__(self) -> Dice:
 		return self._unary_level0(op.pos)
 	
-	def __invert__(self) -> Dice:
-		return self._unary_level0(op.invert)
 	

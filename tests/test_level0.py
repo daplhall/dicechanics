@@ -104,12 +104,6 @@ class TestLevel0_Dice(dice_unittest.TestCase):
 		self.assertSequenceEqual(g.f, [1,2,3,4,5,6])
 		self.assertSequenceEqual(g.c, d6.c)
 	
-	def test_bitwise_or(self):
-		d6 = tts.d(6)
-		g = ~d6
-		self.assertSequenceEqual(g.f, [-7, -6, -5, -4, -3, -2])
-		self.assertSequenceEqual(g.c, d6.c)
-		
 	def test_greater_than(self):
 		d10 = tts.d(10)
 		d = d10 > 8
@@ -148,6 +142,7 @@ class TestLevel0_Dice(dice_unittest.TestCase):
 		self.assertSequenceEqual(d.f, [0, 1])
 		self.assertSequenceAlmostEqual(d.p, [0.9,0.1], 2)
 		self.assertSequenceAlmostEqual(d.c, [9,1], 2)
+
 
 class TestLevel0_Pool(dice_unittest.TestCase):
 	def test_add_int(self):

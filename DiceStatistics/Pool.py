@@ -1,7 +1,7 @@
 from DiceStatistics._math import unique
 import DiceStatistics.Dice as Dice
 
-type Dice = Dice
+type Dice = Dice.Dice
 type Pool = Pool
 
 
