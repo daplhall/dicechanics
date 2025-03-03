@@ -4,7 +4,7 @@ from math import sqrt
 
 import operator as op
 import DiceStatistics as  ds
-from DiceStatistics._parser import faces_to_count
+from DiceStatistics._inpt_cleaning import collect_faces
 from DiceStatistics.types import primitives
 from DiceStatistics._math import gcd
 
@@ -15,7 +15,7 @@ type Pool = ds.Pool
 class Dice(object):
 
 	def __init__(self, faces, /, mask = None, rounding = None):
-		self._data = faces_to_count(faces)
+		self._data = collect_faces(faces)
 		self._derived_attr()
 		self._mask = mask if mask else None
 		self._rounding = rounding if rounding else lambda x: x
