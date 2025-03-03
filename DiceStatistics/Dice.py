@@ -17,7 +17,7 @@ class Dice(object):
 	def __init__(self, faces, /, mask = None, rounding = None):
 		self._data = collect_faces(faces)
 		self._derived_attr()
-		self._mask = mask if mask else None
+		self._mask = mask 
 		self._rounding = rounding if rounding else lambda x: x
 
 	@classmethod	
@@ -25,7 +25,7 @@ class Dice(object):
 		self = cls.__new__(cls)
 		self._data = data
 		self._derived_attr()
-		self._mask = mask if mask else None
+		self._mask = mask
 		self._rounding = rounding if rounding else lambda x: x
 		return self
 
