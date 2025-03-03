@@ -4,7 +4,7 @@ from math import sqrt
 
 import operator as op
 import DiceStatistics as  ds
-from DiceStatistics._inpt_cleaning import collect_faces
+from DiceStatistics._inpt_cleaning import collect_faces, expand_dice, sort_dict
 from DiceStatistics.types import primitives
 from DiceStatistics._math import gcd
 
@@ -141,20 +141,13 @@ class Dice(object):
 		"""
 		if depth == 'inf':
 			return Dice(i for i in self if i not in redo)#TODO this sould just produce 0 for the face, not remove it
-		cr = sum(c for f, c in self.items() if f in redo)	
-		cr_i = cr**depth
-		A = (self._units**(depth+1) - cr_i*cr)//(self._units-cr)
-		count = {} # TODO rename
-		for f,c in self.items():
-			if f in redo:
-				count[f] = c*cr_i
-			else:
-				count[f] = A*c
-		## TODO This down here should be its own consturctor!
-		res = self.copy()
-		res._data = count
-		res._derived_attr()
-		return res
+		faces = self._data
+		for _ in range(depth):
+			numbers = {f:c for f,c in faces.items() if f not in redo}
+			dice = {self: sum(c for f,c in faces.items() if f in redo)}
+			faces = expand_dice(numbers | dice)
+		return Dice.from_dict(sort_dict(faces))
+
 	
 	def count(self, *count):
 		return Dice(i in count for i in self)
