@@ -46,7 +46,7 @@ class Dice(object):
 			self._data =  {f : c//d for f, c in self.items()}
 
 	@classmethod	
-	def from_dict(cls, data, mask = None, rounding = None ):
+	def from_dict(cls, data: dict, mask = None, rounding = None ):
 		self = cls.__new__(cls)
 		self._data = data
 		self._derived_attr()
