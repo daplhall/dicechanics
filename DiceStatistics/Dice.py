@@ -20,6 +20,15 @@ class Dice(object):
 		self._mask = mask if mask else None
 		self._rounding = rounding if rounding else lambda x: x
 
+	@classmethod	
+	def from_dict(cls, data: dict, mask = None, rounding = None ):
+		self = cls.__new__(cls)
+		self._data = data
+		self._derived_attr()
+		self._mask = mask if mask else None
+		self._rounding = rounding if rounding else lambda x: x
+		return self
+
 	def _derived_attr(self):
 		self._simplify()
 		self._units = sum(self._data.values())
@@ -44,15 +53,6 @@ class Dice(object):
 				if d == 1:
 					break
 			self._data =  {f : c//d for f, c in self.items()}
-
-	@classmethod	
-	def from_dict(cls, data: dict, mask = None, rounding = None ):
-		self = cls.__new__(cls)
-		self._data = data
-		self._derived_attr()
-		self._mask = mask if mask else None
-		self._rounding = rounding if rounding else lambda x: x
-		return self
 
 	@property
 	def f(self) -> list:
