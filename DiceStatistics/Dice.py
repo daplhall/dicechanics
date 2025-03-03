@@ -5,7 +5,6 @@ from math import sqrt
 import operator as op
 import DiceStatistics as  ds
 from DiceStatistics._inpt_cleaning import collect_faces, expand_dice, sort_dict
-from DiceStatistics._math import unique
 from DiceStatistics.types import primitives
 from DiceStatistics._math import gcd
 
@@ -106,13 +105,11 @@ class Dice(object):
 
 	def explode(self, *exploder, depth:int = 1) -> Dice:
 		faces = self._data
-		expl = exploder
-		for _ in range(depth):
-			# redo needs to be updated, so every combination of redo adds another.
-			numbers = {f:c for f,c in faces.items() if f not in expl}
-			dice = dict(zip(*unique([(self+f) for f in expl])))
+		# redo needs to be updated, so every combination of redo adds another.
+		if depth > 0:
+			numbers = {f:c for f,c in faces.items() if f not in exploder}
+			dice = {(self.explode(*exploder,depth=depth-1)+f):c for f,c in faces.items() if f in exploder}
 			faces = expand_dice(numbers | dice)
-			expl = [sum(i) for i in product(expl, exploder)]
 		return Dice.from_dict(sort_dict(faces))
 
 	
