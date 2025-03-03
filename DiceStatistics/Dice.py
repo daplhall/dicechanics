@@ -94,51 +94,6 @@ class Dice(object):
 		return self._data.items()
 	
 	def reroll(self, *redo, depth:int = 1) -> Dice:
-		"""
-		This method  produces large numbers, if you need inf reroll
-		then use 'inf'.
-		TODO Refactor
-		Rerolling in properbility terms are given as
-		P(n)*/sum_{i=0}^{n_r} P(R)^i
-
-		so
-			   |  P(n)^n_r                       for n in R
-		P(n,n_r) ={
-			   |  P(n)*/sum_{i=0}^{n_r} P(R)^i   else
-		the else part is a finite geomentric series with the convergence
-		1+r+r^2+r^3..r^n = (1-r^n)/(1-r)
-		
-		then to convert into counts we simply use
-		p(n)^i = c(n)^i/D^i
-		for the else part you can supsitute this into it
-		and get
-		c(n != R) = D^i*p(n!=R) = c(n) (D^i - c(R)^i)/(D - c(R))
-		
-		[For p(n,n_r) to be a count we need the same "units" on both branches]
-		 
-		 
-		on reroll once on d6 we get the same from
-		Q = tts.Dice([1,2,3,4,5]*6+[i for i in tts.d6])
-		for reroll 2d6 on a 6 on a d6
-		Q = tts.Dice([1,2,3,4,5]*36+[i for i in 2@tts.d6])
-		for reroll 6 replacing 5 and 6 with 1d6
-		C = tts.Dice([1,2,3,4]*6+2*[i for i in tts.d6])
-		So we need to multiply all non redo time the demoninator of the dice that is replacing the roll
-		
-		think that reroll is just replacing a dice with the redo value
-		
-		l = sum([c for c, f in zip(self._c, self._f) if f in redo])
-		f = list(filter(lambda x: x not in redo,(i for i in self)))
-		return Dice(f*(self._units) + l**depth*[i for i in self])
-		
-		In the 1.0 we have 
-		if x in redo:
-            		newdice._P[i] = Rf*p
-         	else:
-            		newdice._P[i] = Rs*p
-		so we multiply the chances of hitting times our own properbility
-		this we need to account for,
-		"""
 		if depth == 'inf':
 			return Dice(i for i in self if i not in redo)#TODO this sould just produce 0 for the face, not remove it
 		faces = self._data
