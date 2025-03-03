@@ -16,13 +16,14 @@ class Dice(object):
 
 	def __init__(self, faces, /, mask = None, rounding = None):
 		self._data = faces_to_count(faces)
-		self._hash = hash(tuple(self._data.items()))
 		self._derived_attr()
 		self._mask = mask if mask else None
 		self._rounding = rounding if rounding else lambda x: x
 
 	def _derived_attr(self):
-		self._data, self._units = self._simplify()
+		self._simplify()
+		self._units = sum(self._data.values())
+		self._hash = hash(tuple(self._data.items()))
 		self._p = [i/self._units for i in self.c]
 		self._mean = sum(p*f for p, f in zip(self.p, self.f))
 		self._var = sum(p*(x-self._mean)**2 for x, p in zip(self.f, self.p))
@@ -35,14 +36,23 @@ class Dice(object):
 		return res
 		
 	def _simplify(self):
-		if (c := self.c) and (len(c) > 1): 
+		c = self.c
+		if len(c) > 1: 
 			d = gcd(c[0], c[1])
 			for i in c[2:]:
 				d = gcd(d, i)
 				if d == 1:
 					break
-			res = {f : c//d for f, c in self.items()}
-			return res, sum(res.values())
+			self._data =  {f : c//d for f, c in self.items()}
+
+	@classmethod	
+	def from_dict(cls, data, mask = None, rounding = None ):
+		self = cls.__new__(cls)
+		self._data = data
+		self._derived_attr()
+		self._mask = mask if mask else None
+		self._rounding = rounding if rounding else lambda x: x
+		return self
 
 	@property
 	def f(self) -> list:
