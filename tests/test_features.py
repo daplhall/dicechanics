@@ -98,6 +98,42 @@ class TestDiceFeatures(dice_unittest.TestCase):
 			4
 		)
 
+	def test_explode(self):
+		d = tts.d6.explode(5,6)
+		self.assertSequenceEqual(
+			d.f,
+			[1,2,3,4,6,7,8,9,10,11,12]
+		)
+		self.assertSequenceAlmostEqual(
+			d.p,
+			[0.1667]*4 + [0.0278] + [0.0556]*5 + [0.0278],
+			4
+		)
+
+	def test_explode_depth(self):
+		d = tts.d6.explode(6, depth = 3)
+		self.assertSequenceEqual(
+			d.f,
+			[1,2,3,4,5,7,8,9,10,11,13,14,15,16,17,19,20,21,22,23,24]
+		)
+		self.assertSequenceAlmostEqual(
+			d.p,
+			[0.1667]*5 + [0.0278]*5 + [0.0046]*5 + [0.0008]*5,
+			4
+		)
+
+	def test_explode_depth2(self):
+		d = tts.d6.explode(5,6, depth = 2)
+		self.assertSequenceEqual(
+			d.f,
+			[1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18]
+		)
+		self.assertSequenceAlmostEqual(
+			d.p,
+			[0.1667]*4 + [0.0278] + [0.0556]*3 + [0.0278] + [0.0046] + [0.0139] + [0.0185]*4 + [0.0139] + [0.0046],
+			4
+		)
+
 
 if __name__ == '__main__':
 	unittest.main()
