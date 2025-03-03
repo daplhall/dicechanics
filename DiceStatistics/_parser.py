@@ -4,8 +4,7 @@ from DiceStatistics._math import unique
 def faces_to_count(faces: list) -> list|list|list :
 	f, c = unique(faces)	
 	# TODO run faces parser 
-	f,c = zip(*sorted(zip(f, c), key=lambda pair: pair[0]))
-	return f, c
+	return dict(sorted(zip(f, c), key=lambda pair: pair[0]))
 
 def text_to_faces(text:str) -> list:
 	if  any(c.isalpha() for c in text) or ';' in text: # the alpha check out be ommited.

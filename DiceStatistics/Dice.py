@@ -15,7 +15,7 @@ type Pool = ds.Pool
 class Dice(object):
 
 	def __init__(self, faces, /, mask = None, rounding = None):
-		self._data = {f:c for f, c in zip(*faces_to_count(faces))}
+		self._data = faces_to_count(faces)
 		self._hash = hash(tuple(self._data.items()))
 		self._derived_attr()
 		self._mask = mask if mask else None
@@ -154,7 +154,9 @@ class Dice(object):
 			return False
 		else:
 			return self._hash == rhs._hash
-		
+	
+	def __hash__(self):
+		return self._hash
 
 	def __call__(self, func) :
 		def wrapper():
@@ -231,12 +233,16 @@ class Dice(object):
 
 	def __eq__(self, rhs: int | float | Dice) -> Dice:
 		# TODO write this and __ne__ as a general operation, also optimize
-		bool = self.equal(rhs)
-		return ds.BooleanDice((i for i in self._binary_op(rhs, op.eq)), bool)
+		return ds.BooleanDice(
+			(i for i in self._binary_op(rhs, op.eq)), 
+			self.equal(rhs)
+		)
 
 	def __ne__(self, rhs: int | float | Dice) -> Dice:
-		bool = not self.equal(rhs)
-		return ds.BooleanDice((i for i in self._binary_op(rhs, op.ne)), bool)
+		return ds.BooleanDice(
+			(i for i in self._binary_op(rhs, op.ne)),
+			not self.equal(rhs)
+		)
 	
 	def _rmatmul_level0(self, lhs:int, ops: callable) -> Dice:
 		if neg := lhs < 0:

@@ -26,5 +26,10 @@ class TestDiceMagicMethods(dice_unittest.TestCase):
 		self.assertFalse(f is g)
 		self.assertTrue(g == f)
 
+	def test_hashable_dice(self):
+		d = tts.d(6)
+		f = {'a': d}
+		self.assertTrue(f['a'] == d)
+
 if __name__ == '__main__':
 	unittest.main()
