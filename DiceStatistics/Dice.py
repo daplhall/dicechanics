@@ -134,14 +134,18 @@ class Dice(object):
 
 	
 	def fold_over(self, rhs, /, into = None) -> Dice:
-		if into is None:
-			into = rhs
-		return self._folding(rhs, op.gt, into = into)
+		return self._folding(
+			rhs, 
+			op.gt, 
+			into = rhs if into is None else into
+		)
 
 	def fold_under(self, rhs, /, into = None) -> Dice:
-		if into is None:
-			into = rhs
-		return self._folding(rhs, op.lt, into = into)
+		return self._folding(
+			rhs, 
+			op.lt, 
+			into = rhs if into is None else into
+		)
 	
 	def __hash__(self):
 		return self._hash
