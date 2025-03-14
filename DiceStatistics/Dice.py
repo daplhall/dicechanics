@@ -83,7 +83,7 @@ class Dice(object):
 		return sqrt(self._var)
 
 	def copy(self) -> Dice:
-		return Dice(i for i in self)
+		return Dice.from_dict(self._data)
 
 	def max(self):
 		return max(self._data.keys())
