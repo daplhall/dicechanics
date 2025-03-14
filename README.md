@@ -1,5 +1,12 @@
 # DiceStatistics a dice statistical tool
 DiceStatistics provides a interface in python (inspired by anydice) for doing dice statistics, which produces exact statistics for dice properbility
+## Build
+- create venv
+- install packages in requirements.txt
+- `python -m build .`
+- `pip install dist\*.whl`
+### Examples
+To make notebooks work with venv use `ipython kernel install --user --name=DiceStatistics`
 ## Usage
 2 classes are provided, a Dice class used for representing statistical data and simple arithmatics, and a Pool class which allows one to do custom operations based on the outcomes of multiple seperate dice (eg. keep the highest 3 of a pool of 4).  
 ### *Dice Example*:

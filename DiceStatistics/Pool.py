@@ -1,7 +1,8 @@
+from itertools import product
 from DiceStatistics._math import unique
-import DiceStatistics.Dice as Dice
+import DiceStatistics.Dice as dice
 
-type Dice = Dice.Dice
+type Dice = dice
 type Pool = Pool
 
 
@@ -27,14 +28,14 @@ def generate_outcomes(dice):
 class Pool(object):
 
 	def __init__(self, dice: list[Dice | Pool]):
-		self._bag = Dice
-		outcomes, outcount = unique(generate_outcomes(dice))
+		self._bag = dice
 
 	def __iter__(self):
-		for o, c in zip(self._outcomes, self._outcount):
-			for _ in range(c):
-				yield o
+		for i in product(*self._bag):
+			yield sorted(i)
 				
-	def __call__(self):
-		#Needs to be a decorator
-		pass
+	def __call__(self,func):
+		def wrapper():
+			return dice(func(i) for i in self)
+		return wrapper
+
