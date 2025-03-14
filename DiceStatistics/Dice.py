@@ -235,13 +235,13 @@ class Dice(object):
 	def __eq__(self, rhs: int | float | Dice) -> Dice:
 		# TODO write this and __ne__ as a general operation, also optimize
 		return ds.BooleanDice(
-			(i for i in self._binary_op(rhs, op.eq)), 
+			(i for i in self._binary_op(rhs, op.eq)), # TODO THIS IS A PERFORMANCE HOG
 			self.equal(rhs)
 		)
 
 	def __ne__(self, rhs: int | float | Dice) -> Dice:
 		return ds.BooleanDice(
-			(i for i in self._binary_op(rhs, op.ne)),
+			(i for i in self._binary_op(rhs, op.ne)), #TODO THIS IS A PERFORMANCE HOG
 			not self.equal(rhs)
 		)
 	
