@@ -33,10 +33,10 @@ class Dice(object):
 	def _derived_attr(self):
 		self._simplify()
 		self._units = sum(self._data.values())
-		self._hash = hash(tuple(self._data.items()))
 		self._p = [i/self._units for i in self.c]
 		self._mean = sum(p*f for p, f in zip(self.p, self.f))
 		self._var = sum(p*(x-self._mean)**2 for x, p in zip(self.f, self.p))
+		self._hash = hash(tuple(self._data.items()) + (self._mean,))
 		self._cdf = self._cumulative()
 
 	def _cumulative(self) -> list:
