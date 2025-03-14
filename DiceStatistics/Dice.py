@@ -132,7 +132,7 @@ class Dice(object):
 		else:
 			return self._hash == rhs._hash
 		
-	def _folding(self, rhs, ops:callable, into)->Dice:
+	def folding(self, rhs, ops:callable, into)->Dice:
 		data = defaultdict(
 			int, 
 			{f:c for f,c in self.items() if not ops(f, rhs)}
@@ -143,14 +143,14 @@ class Dice(object):
 
 	
 	def fold_over(self, rhs, /, into = None) -> Dice:
-		return self._folding(
+		return self.folding(
 			rhs, 
 			op.gt, 
 			into = rhs if into is None else into
 		)
 
 	def fold_under(self, rhs, /, into = None) -> Dice:
-		return self._folding(
+		return self.folding(
 			rhs, 
 			op.lt, 
 			into = rhs if into is None else into
