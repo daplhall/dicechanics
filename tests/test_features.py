@@ -133,6 +133,57 @@ class TestDiceFeatures(dice_unittest.TestCase):
 			[0.1667]*4 + [0.0278] + [0.0556]*3 + [0.0278] + [0.0046] + [0.0139] + [0.0185]*4 + [0.0139] + [0.0046],
 			4
 		)
+	
+	def test_fold_over(self):
+		d = tts.d10
+		d = d.fold_over(6)
+		self.assertSequenceEqual(d.f, [1,2,3,4,5,6])
+		self.assertSequenceAlmostEqual(
+			d.p,
+			[0.1]*5 + [0.5],
+			4
+		)
+		
+	def test_fold_over_into(self):
+		d = tts.d10
+		d = d.fold_over(6,into = 5)
+		self.assertSequenceEqual(d.f, [1,2,3,4,5,6])
+		self.assertSequenceAlmostEqual(
+			d.p,
+			[0.1]*4 + [0.5] + [0.1],
+			4
+		)
+
+	def test_fold_under(self):
+		d = tts.d10
+		d = d.fold_under(3)
+		self.assertSequenceEqual(d.f, [3,4,5,6,7,8,9,10])
+		self.assertSequenceAlmostEqual(
+			d.p,
+			[0.3] + [0.1]*7,
+			4
+		)
+
+	def test_fold_under_into(self):
+		d = tts.d10
+		d = d.fold_under(3, into = 4)
+		self.assertSequenceEqual(d.f, [3,4,5,6,7,8,9,10])
+		self.assertSequenceAlmostEqual(
+			d.p,
+			[0.1]+ [0.3] + [0.1]*6,
+			4
+		)
+
+	def test_fold_under_into_0(self):
+		d = tts.d10
+		d = d.fold_under(3, into = 0)
+		self.assertSequenceEqual(d.f, [0,3,4,5,6,7,8,9,10])
+		self.assertSequenceAlmostEqual(
+			d.p,
+			[0.2]+[0.1]+ [0.1] + [0.1]*6,
+			4
+		)
+
 
 
 if __name__ == '__main__':

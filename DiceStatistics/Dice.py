@@ -1,6 +1,7 @@
 from typing import Generator
 from itertools import product, combinations
 from math import sqrt
+from collections import defaultdict
 
 import operator as op
 import DiceStatistics as  ds
@@ -23,7 +24,7 @@ class Dice(object):
 	@classmethod	
 	def from_dict(cls, data: dict, mask = None, rounding = None ):
 		self = cls.__new__(cls)
-		self._data = data
+		self._data = sort_dict(data)
 		self._derived_attr()
 		self._mask = mask
 		self._rounding = rounding if rounding else lambda x: x
@@ -121,6 +122,26 @@ class Dice(object):
 			return False
 		else:
 			return self._hash == rhs._hash
+		
+	def _folding(self, rhs, ops:callable, into)->Dice:
+		data = defaultdict(
+			int, 
+			{f:c for f,c in self.items() if not ops(f, rhs)}
+		)
+		c = sum(c for f, c in self.items() if ops(f, rhs))
+		data[into] += c
+		return Dice.from_dict(data)
+
+	
+	def fold_over(self, rhs, /, into = None) -> Dice:
+		if into is None:
+			into = rhs
+		return self._folding(rhs, op.gt, into = into)
+
+	def fold_under(self, rhs, /, into = None) -> Dice:
+		if into is None:
+			into = rhs
+		return self._folding(rhs, op.lt, into = into)
 	
 	def __hash__(self):
 		return self._hash
