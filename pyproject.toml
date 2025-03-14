@@ -5,8 +5,8 @@ requires = [
 build-backend = "hatchling.build"
 
 [project]
-name = 'TTStatistics'
-version = '0.0.1'
+name = 'DiceStatistics'
+version = '2.0.0b'
 authors = [
     {name = 'Daniel Hall', email = 'blankemail@email.com'},
 ]
@@ -24,11 +24,11 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/daplhall/TTStatistics"
-Issues = "https://github.com/daplhall/TTStatistics/issues"
+Homepage = "https://github.com/daplhall/DiceStatistics"
+Issues = "https://github.com/daplhall/DiceStatistics/issues"
 
 [tool.hatch.build.targets.sdist]
 include = [
-  "TTStatistics/*",
+  "DiceStatistics/*",
   "tests/*"
 ]
