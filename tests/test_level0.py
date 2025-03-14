@@ -26,6 +26,11 @@ class TestLevel0_Dice(dice_unittest.TestCase):
 		d6 = tts.d(6)
 		d = d6 - 1
 		self.assertSequenceEqual(d.f, [0,1,2,3,4,5])
+
+	def test_rsub_int(self):
+		d6 = tts.d(6)
+		d = 1-d6
+		self.assertSequenceEqual(d.f, [-5,-4,-3,-2,-1,0])
 	
 	def test_mult_int(self):
 		d6 = tts.d(6)

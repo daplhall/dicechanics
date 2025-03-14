@@ -203,7 +203,7 @@ class Dice(object):
 		return self._binary_op(rhs, op.sub)
 
 	def __rsub__(self, lhs: int | float | Dice)-> Dice:
-		return self._binary_op(-lhs, op.add)
+		return (-self)._binary_op(lhs, op.add)
 
 	def __mul__(self, rhs: int | float | Dice ) -> Dice :
 		## Needs to react to rounding
