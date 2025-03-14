@@ -1,9 +1,9 @@
+import operator as op
 from typing import Generator
 from itertools import product, combinations
 from math import sqrt
 from collections import defaultdict
 
-import operator as op
 import DiceStatistics as  ds
 from DiceStatistics._inpt_cleaning import collect_faces, expand_dice, sort_dict
 from DiceStatistics.types import primitives
