@@ -15,19 +15,19 @@ type Pool = ds.Pool
 
 class Dice(object):
 
-	def __init__(self, faces, /, mask = None, rounding = None):
+	def __init__(self, faces, /, mask = None, rounding = lambda x:x):
 		self._data = collect_faces(faces)
 		self._derived_attr()
 		self._mask = mask 
-		self._rounding = rounding if rounding else lambda x: x
+		self._rounding = rounding
 
 	@classmethod	
-	def from_dict(cls, data: dict, mask = None, rounding = None ):
+	def from_dict(cls, data: dict, mask = None, rounding = lambda x:x ):
 		self = cls.__new__(cls)
 		self._data = sort_dict(data)
 		self._derived_attr()
 		self._mask = mask
-		self._rounding = rounding if rounding else lambda x: x
+		self._rounding = rounding 
 		return self
 
 	def _derived_attr(self):
