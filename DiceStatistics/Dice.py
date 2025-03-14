@@ -100,7 +100,10 @@ class Dice(object):
 		faces = self._data
 		for _ in range(depth):
 			numbers = {f:c for f,c in faces.items() if f not in redo}
-			dice = {self: sum(c for f,c in faces.items() if f in redo)}
+			dice = {
+				self: sum(c for f,c in faces.items() 
+				if f in redo)
+			}
 			faces = expand_dice(numbers | dice)
 		return Dice.from_dict(sort_dict(faces))
 
@@ -108,8 +111,14 @@ class Dice(object):
 		faces = self._data
 		# redo needs to be updated, so every combination of redo adds another.
 		if depth > 0:
-			numbers = {f:c for f,c in faces.items() if f not in exploder}
-			dice = {(self.explode(*exploder,depth=depth-1)+f):c for f,c in faces.items() if f in exploder}
+			numbers = {
+				f:c for f,c in faces.items() 
+				if f not in exploder
+			}
+			dice = {
+				(self.explode(*exploder,depth=depth-1)+f):c 
+				for f,c in faces.items() if f in exploder
+			}
 			faces = expand_dice(numbers | dice)
 		return Dice.from_dict(sort_dict(faces))
 
