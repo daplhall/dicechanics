@@ -123,10 +123,10 @@ class Dice(object):
 		return Dice.from_dict(sort_dict(faces))
 
 	
-	def count(self, *count):
+	def count(self, *count) ->Dice:
 		return Dice(i in count for i in self)
 	
-	def equal(self, rhs):
+	def equal(self, rhs) -> bool:
 		if not isinstance(rhs, Dice):
 			return False
 		else:
