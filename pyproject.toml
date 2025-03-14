@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = 'DiceStatistics'
-version = '2.0.1'
+version = '2.0.0b'
 authors = [
     {name = 'Daniel Hall', email = 'blankemail@email.com'},
 ]
