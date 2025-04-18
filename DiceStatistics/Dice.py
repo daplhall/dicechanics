@@ -174,11 +174,19 @@ class Dice(object):
 		return value in self._data.keys()
 	
 	def _binary_level0(self, rhs: int | float, ops: callable ) -> Dice:
-		return Dice(self._rounding(ops(f, rhs)) for f in self)
+		data: defaultdict[int]  = defaultdict(int)
+		for f,c in self.items():
+			key = self._rounding(ops(f, rhs))
+			data[key] += c
+		return Dice.from_dict(data)
 
 	def _binary_level1(self, rhs: Dice, ops:callable) -> Pool:
 		# add "condenser" here [condesner is new word for what collects faces]
-		return Dice(self._rounding(ops(*i)) for i in product(self, rhs))
+		data: defaultdict[int] = defaultdict(int)
+		for ((f1,c1),(f2,c2)) in product(self.items(), rhs.items()):
+			key = self._rounding(ops(f1, f2))
+			data[key] += c1*c2
+		return Dice.from_dict(data)
 	
 	def _binary_op(self, rhs: int | float | Dice, ops:callable) -> Dice:
 		if isinstance(rhs, primitives):
@@ -234,14 +242,14 @@ class Dice(object):
 
 	def __eq__(self, rhs: int | float | Dice) -> Dice:
 		# TODO write this and __ne__ as a general operation, also optimize
-		return ds.BooleanDice(
-			(i for i in self._binary_op(rhs, op.eq)), # TODO THIS IS A PERFORMANCE HOG
+		return ds.BooleanDice.from_dice(
+			self._binary_op(rhs, op.eq), #TODO THIS IS A PERFORMANCE HOG
 			self.equal(rhs)
 		)
 
 	def __ne__(self, rhs: int | float | Dice) -> Dice:
-		return ds.BooleanDice(
-			(i for i in self._binary_op(rhs, op.ne)), #TODO THIS IS A PERFORMANCE HOG
+		return ds.BooleanDice.from_dice(
+			self._binary_op(rhs, op.ne), #TODO THIS IS A PERFORMANCE HOG
 			not self.equal(rhs)
 		)
 	
