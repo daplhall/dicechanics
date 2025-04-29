@@ -90,7 +90,14 @@ class Dice(object):
 
 	def min(self):
 		return min(self._data.keys())
-	
+
+	def keys(self):
+		return self._data.keys()
+
+	def values(self):
+		return self._data.values()
+
+
 	def items(self):
 		return self._data.items()
 	
