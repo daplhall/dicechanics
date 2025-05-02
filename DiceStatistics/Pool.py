@@ -57,6 +57,7 @@ class Pool(object):
 	def __call__(self,func):
 		def wrapper():
 			#return dice(func(i) for i in self)
+			
 			return dice.from_dict({func(f):c for f,c in self})
 		return wrapper
 
