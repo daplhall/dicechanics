@@ -3,13 +3,11 @@ from collections import defaultdict
 def combs_arrays(inpt: list[list], i:int , func: callable, mem: dict):
 	if i in mem:
 		return mem[i]
-	if not inpt:
+	if i >= len(inpt):
 		return {}
-	cur = inpt.pop()
 	res = defaultdict(int)
-	for f,c in cur.items():
-		sub = combs_arrays(inpt.copy(), i+1, func, mem)
-		if sub:
+	for f,c in inpt[i].items():
+		if sub := combs_arrays(inpt, i+1, func, mem):
 			for sf,sc in sub.items():
 				res[func(f,sf)] += c*sc
 		else:
@@ -18,11 +16,11 @@ def combs_arrays(inpt: list[list], i:int , func: callable, mem: dict):
 	return res
 import time
 from itertools import product
-a = {1:5,3:2,2:1}
+a = {f:1 for f in range(1,7)}
 
 inpt = [a]*2
 mem = {}
 t = time.time()
 res = combs_arrays(inpt, 0, lambda x,y: x+y, mem)
 print(time.time() - t)
-print(dict(res))
+print(res)
