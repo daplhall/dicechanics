@@ -19,6 +19,7 @@ def comb(outcomes, inpt, func):
 		c = [d[outcome] for d in compress(inpt,dice_mask)]
 		res = comb(outcomes[i+1], left_over, func)
 		#construct solution
+	so we can ignore the dice loop
 
 	"""
 	if not outcomes or not inpt:
