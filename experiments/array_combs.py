@@ -18,9 +18,15 @@ import time
 from itertools import product
 a = {f:1 for f in range(1,7)}
 
+def f(x, y):
+	if isinstance(y,list):
+		return [x]+y
+	else:
+		return [x,y]
+
 inpt = [a]*2
 mem = {}
 t = time.time()
-res = combs_arrays(inpt, 0, lambda x,y: x+y, mem)
-print(time.time() - t)
+res = combs_arrays(inpt, 0, lambda x,y: (x+y,0), mem)
 print(res)
+print(time.time() - t)

@@ -309,4 +309,11 @@ class Dice(object):
 	def __pos__(self) -> Dice:
 		return self._unary_level0(op.pos)
 	
+	def __getitem__(self, i):
+		return self._data[i]
 	
+	def __repr__(self):
+		return "Dice{"+str(self._data)+'}'
+	
+	def __str__(self):
+		return self.__repr__()
