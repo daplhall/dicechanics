@@ -14,6 +14,11 @@ def comb(outcomes, inpt, func):
 	if dice_mask as multiple hits, then we can just combine
 	their count, and then continue down without
 	this current outcome.
+	example:
+		dice_mask = which_dice(inpt, outcome)
+		c = [d[outcome] for d in compress(inpt,dice_mask)]
+		res = comb(outcomes[i+1], left_over, func)
+		#construct solution
 
 	"""
 	if not outcomes or not inpt:
@@ -22,7 +27,6 @@ def comb(outcomes, inpt, func):
 	res = defaultdict(int)
 	for i, outcome in enumerate(outcomes):
 		dice_mask = which_dice(inpt, outcome)
-		
 		for die in compress(inpt, dice_mask): # same as list[mask] in numpy
 			c = die[outcome]
 			left_over = [i for i in inpt if i != die]
