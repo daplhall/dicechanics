@@ -13,7 +13,7 @@ def comb(outcomes, inpt, func):
 	optimization: 
 	if dice_mask as multiple hits, then we can just combine
 	their count, and then continue down without
-	this current outcome
+	this current outcome.
 
 	"""
 	if not outcomes or not inpt:
