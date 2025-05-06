@@ -1,16 +1,9 @@
 #from line_profiler import profile
 from itertools import compress
-from collections import ChainMap, defaultdict
+from collections import ChainMap, defaultdict, Counter
 
 from DiceStatistics import d, Dice
 
-#@profile
-def which(inpt, outcome):
-	
-	return [(outcome in i) for i in inpt]
-
-
-CALLS = 0
 #@profile
 def comb(outcomes, inpt, func, mem):
 	"""
@@ -26,11 +19,11 @@ def comb(outcomes, inpt, func, mem):
 		res = comb(outcomes[i+1], left_over, func)
 		#construct solution
 	so we can ignore the dice loop
-
+	
+	2)
+	i could maybe have a function that finds the next outcome from
+	the remaining dice. So i can skip calls
 	"""
-	global CALLS
-	CALLS += 1
-
 	cache_key = tuple(inpt)
 	if cache_key in mem:
 		return mem[cache_key]
@@ -39,16 +32,13 @@ def comb(outcomes, inpt, func, mem):
 	
 	res = defaultdict(int)
 	for i, outcome in enumerate(outcomes):
-		#dice_mask = which(inpt, outcome)
-		#for idx, (die, mask) in enumerate(zip(inpt, dice_mask)): # same as list[mask] in numpy
-		#	if not mask:
-		#		continue
 		for idx, die in enumerate(inpt):
 			if not outcome in die:
 				continue
 			c = die[outcome]
-			left_over = [v for i, v in enumerate(inpt) if i != idx]# the problem! i != die, is problematic if the dice has the same hash, is not is problematic if the dice is copies eg [a]*5
-			if sub := comb(outcomes, left_over, func, mem):
+			sub_bag = inpt.copy()
+			sub_bag.pop(idx)
+			if sub := comb(outcomes, sub_bag, func, mem):
 				for sf, sc in sub.items():
 					res[func(outcome,sf)] += sc*c
 			else:
@@ -61,9 +51,13 @@ def comb(outcomes, inpt, func, mem):
 
 
 import time
-n = 17
-a = d(50)
+n = 2
+a = d(2)
 inpt = [a]*n
+inpt = [
+	Dice.from_dict({1:1,2:1}),
+	Dice.from_dict({1:1,2:1})
+]
 outcomes = sorted(list(ChainMap(*inpt)),reverse=True)
 print(outcomes)
 mem = {}
@@ -71,8 +65,9 @@ t = time.time()
 res = comb(outcomes, inpt, lambda x,y: x+y, mem)
 print("time = ", time.time() - t)
 dice = Dice.from_dict(res)
-print(CALLS)
-#print(dice)
+print(res)
+print(dice)
+#print(dice.p)
 
 #res = dict(sorted(res.items(), key = lambda x: x[0]))
 #print(Dice.from_dict(res))

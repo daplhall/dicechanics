@@ -22,12 +22,23 @@ def combs_arrays(inpt: list[list], i:int , func: callable, mem: dict):
 	return res
 import time
 from itertools import product
-a = {f:1 for f in range(1,50)}
-inpt = [a]*5
+
+def func(x,y):
+	if isinstance(y,int):
+		return (x,y)
+	return (x,) + y
+
+a = {1:1,3:1,5:1}
+b = {2:1,3:1,4:1}
+c = {3:1,4:1,5:1}
+
+a = {f:1 for f in range(1,51)}
+inpt = [a]*3
+
 mem = {}
 t = time.time()
-res = combs_arrays(inpt, 0, lambda x,y: x+y, mem)
+res = combs_arrays(inpt, 0, lambda x, y: x+y, mem)
 print(time.time() - t)
+print(res)
 print(calls)
 print(hits)
-print(hits/calls)

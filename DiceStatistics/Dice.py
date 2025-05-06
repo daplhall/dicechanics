@@ -38,6 +38,7 @@ class Dice(object):
 		self._var = sum(p*(x-self._mean)**2 for x, p in zip(self.f, self.p))
 		self._hash = hash(tuple(self._data.items()) + (self._mean,))
 		self._cdf = self._cumulative()
+		self._max = max(self._data)
 
 	def _cumulative(self) -> list:
 		res = []
@@ -58,6 +59,7 @@ class Dice(object):
 	@property
 	def f(self) -> list:
 		return list(self._data.keys())
+
 	@property
 	def p(self) -> list:
 		return self._p
@@ -65,8 +67,8 @@ class Dice(object):
 	@property
 	def c(self) -> list:
 		return list(self._data.values())
-	
-	@property
+
+	@property	
 	def mean(self) -> float:
 		return self._mean
 
@@ -81,6 +83,9 @@ class Dice(object):
 	@property
 	def std(self) -> float:
 		return sqrt(self._var)
+	
+	def max(self) -> float | int:
+		return self._max
 
 	def copy(self) -> Dice:
 		return Dice.from_dict(self._data)
