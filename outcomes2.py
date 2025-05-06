@@ -83,13 +83,11 @@ def comb(bag, func, keep, mem):
 	sorted_bag = sorted(bag, key = lambda key: _max(key), reverse=True) # might need copy
 	res = defaultdict(int)
 	while(sorted_bag[0]):
-		o = sorted_bag[0][-1]
+		o = sorted_bag[0][-1] if keep[-1] else None
 		sorted_bag[0] = sorted_bag[0][:-1]# "pop the top"
 		c = 1
 		sub_bag = sorted_bag[1:]
 		sub = comb(sub_bag, func, keep[:-1], mem)
-		if keep[-1] != 1:
-			o = None
 		for sf, sc in sub.items():
 			if o is None and sf is not None:
 				key = sf
