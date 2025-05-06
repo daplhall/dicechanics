@@ -84,7 +84,7 @@ def comb(bag, func, keep, mem):
 	res = defaultdict(int)
 	while(sorted_bag[0]):
 		o = sorted_bag[0][-1]
-		sorted_bag[0] = sorted_bag[0][:-1]
+		sorted_bag[0] = sorted_bag[0][:-1]# "pop the top"
 		c = 1
 		sub_bag = sorted_bag[1:]
 		sub = comb(sub_bag, func, keep[:-1], mem)
@@ -92,18 +92,12 @@ def comb(bag, func, keep, mem):
 			o = None
 		for sf, sc in sub.items():
 			if o is None and sf is not None:
-				res[sf] += c*sc
+				key = sf
 			elif sf is None:
-				res[o] += c*sc
+				key = o
 			else:
-				res[func(o,sf)] += c*sc
-
-
-#		for sf, sc in sub.items():
-#			if sf is None:
-#				res[o] += c*sc
-#			else:
-#				res[func(o, sf)] += c*sc
+				key= func(o,sf)
+			res[key] += c*sc
 		if sorted_bag and len(sorted_bag) > 1 and sorted_bag[0]:
 			sorted_bag.sort(key = lambda key: _max(key), reverse=True)
 	mem[cache_key] = res
@@ -121,7 +115,7 @@ bag = [
 	[1,2]
 ]
 
-keep = [1,0,0,1]
+keep = [0,1,0,1]
 
 mem = {}
 res = comb(bag, lambda x,y: x+y, keep, mem)
