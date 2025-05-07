@@ -84,7 +84,7 @@ def comb(bag, func, keep, mem):
 	res = defaultdict(int)
 	while(sorted_bag[0]):
 		o = sorted_bag[0][-1] if keep[-1] else None
-		sorted_bag[0] = sorted_bag[0][:-1]# "pop the top"
+		sorted_bag[0] = sorted_bag[0][:-1]# "cheeper pop the top"
 		c = 1
 		sub_bag = sorted_bag[1:]
 		sub = comb(sub_bag, func, keep[:-1], mem)

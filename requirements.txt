@@ -5,3 +5,4 @@ scipy
 build
 pyperformance
 ipykernel
+sphinx

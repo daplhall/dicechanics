@@ -39,6 +39,3 @@ mem = {}
 t = time.time()
 res = combs_arrays(inpt, 0, lambda x, y: x+y, mem)
 print(time.time() - t)
-print(res)
-print(calls)
-print(hits)
