@@ -1,13 +1,11 @@
+from DiceStatistics import Dice
 from collections import defaultdict
 
 hits = 0
 calls = 0
-def combs_arrays(inpt: list[list], i:int , func: callable, mem: dict):
-	global calls
-	calls += 1
+
+def combs_arrays(inpt: list[Dice], i:int , func: callable, mem: dict):
 	if i in mem:
-		global hits
-		hits += 1
 		return mem[i]
 	if i >= len(inpt):
 		return {}
@@ -20,6 +18,9 @@ def combs_arrays(inpt: list[list], i:int , func: callable, mem: dict):
 			res[f] = c
 	mem[i] = res
 	return res
+
+
+
 import time
 from itertools import product
 
@@ -28,13 +29,9 @@ def func(x,y):
 		return (x,y)
 	return (x,) + y
 
-a = {1:1,3:1,5:1}
-b = {2:1,3:1,4:1}
-c = {3:1,4:1,5:1}
 
-a = {f:1 for f in range(1,51)}
-inpt = [a]*3
-
+a = Dice.from_dict({f:1 for f in range(1,51)})
+inpt = [a]*50
 mem = {}
 t = time.time()
 res = combs_arrays(inpt, 0, lambda x, y: x+y, mem)

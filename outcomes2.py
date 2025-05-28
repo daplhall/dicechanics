@@ -9,30 +9,28 @@ from DiceStatistics import d, Dice
 def _max(key):
 	if not key:
 		return None
-	return min(key)
+	return max(key)
 		
 HITS = 0
 CALLS = 0
 RE = 0
+RE1 = 0
+RE2 = 0
+RE3 = 0
+RE4 = 0
 CACHEKEY = defaultdict(int)
 """
-the keep idea works we, we just need to know how to structure the order of the code corretly!
-and then we need to find out if we can cache
+This function might be faster than the rest
 """
 #:@profile
-def comb(bag, idxs, func, keep, mem):
-	global HITS, CALLS, RE
-	CALLS+=1
-
+def comb(bag, idxs, func, keep, mem, I):
+	global RE,HITS, RE1, RE2, RE3, RE4
 	cache_key = tuple(tuple(i) for i in bag)
-	#print(bag, idxs)
 	if cache_key in mem:
-		HITS +=1
-		#print("\thit",bag, idxs,"\t\t",cache_key)
-		#CACHEKEY[cache_key] += 1
-		return mem[cache_key]
-		
-		
+		HITS+=1
+		#print("\thit:", bag)
+		#return mem[cache_key]
+
 	if not bag:
 		res = {None: 1}
 		mem[cache_key] = res
@@ -42,19 +40,21 @@ def comb(bag, idxs, func, keep, mem):
 	sorted_bag, sorted_idxs = zip(*sorted(zip(bag,idxs), key = lambda key: _max(key[0]), reverse=True))
 	sorted_bag = list(sorted_bag)
 	while(sorted_bag[0]):
-		RE += 1
 		o = sorted_bag[0][-1] if keep[-1] else None
 		c = 1
 		sorted_bag[0] = sorted_bag[0][:-1]# "cheeper pop the top"
 		sub_bag = sorted_bag[1:]
 		sub_idxs = sorted_idxs[1:]
-		#if len(bag) == 4:
-		print(o,sorted_idxs[0], sorted_bag[0], "\t", sub_bag, sub_idxs)
-		ck = tuple(tuple(i) for i in sub_bag)
-		if ck in mem:
-			sub = mem[ck]
-		else:
-			sub = comb(sub_bag, sub_idxs, func, keep[:-1], mem)
+		if len(bag) == 4:
+			RE+=1
+			#print(o,sorted_idxs[0], sorted_bag[0],"\t", sub_bag, sub_idxs)
+		if len(bag) == 3:
+			RE1+=1
+		if len(bag) == 2:
+			RE2+=1
+		if len(bag) == 1:
+			RE3+=1
+		sub = comb(sub_bag, sub_idxs, func, keep[:-1], mem, I+1)
 		for sf, sc in sub.items():
 			if o is None and sf is not None:
 				key = sf
@@ -78,35 +78,29 @@ bag = [
 		[1,2,3,4],
 		[2,3,4,5],
 		[3,4,5,6],
-		[4,5,6,7]
+		[4,5,6,7],
 ]
 
-ER = 10
-#bag = [
-#	list(range(1,ER)),
-#	list(range(1,ER)),
-#	list(range(1,ER)),
-#]
+ER = 51
 bag = [
-	list(range(1,7)),
-	list(range(1,5)),
-]
+	list(range(1,ER)),
+]*4
 
-keep = [0,1]
+keep = [1]*len(bag)
 import time
 mem = {}
 t = time.time()
 #res = comb(bag, list(range(len(bag))), lambda x,y: x+y, keep, mem)
-res = comb(bag, list(range(len(bag))), lambda x,y: x+y, keep, mem)
+res = comb(bag, list(range(len(bag))), lambda x,y: x+y, keep, mem,0)
 print(time.time() - t)
 q = Dice.from_dict(res)
 print(q._units)
-w = d(bag[0]) + d(bag[1])
-print(q)
-print(w)
+#w = d(bag[0]) + d(bag[1]) + d(bag[2])+ d(bag[3])
+#print(w)
 print(HITS)
-print(CALLS)
-print(HITS/CALLS)
+print("RE:")
 print(RE)
-for f, c in CACHEKEY.items():
-	print(f,c)
+print(RE1)
+print(RE2)
+print(RE3)
+print(RE4)

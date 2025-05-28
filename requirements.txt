@@ -6,3 +6,4 @@ build
 pyperformance
 ipykernel
 sphinx
+line_profiler
