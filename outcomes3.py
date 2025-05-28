@@ -1,5 +1,4 @@
-
-#from line_profiler import profile
+from line_profiler import profile
 from itertools import compress
 from collections import ChainMap, defaultdict
 from math import prod, factorial
@@ -11,48 +10,52 @@ def _max(key):
 	if not key:
 		return None
 	return max(key)
-
-#@profile
+		
 HITS = 0
 CALLS = 0
+LOOPS = 0
 """
-the keep idea works we, we just need to know how to structure the order of the code corretly!
-and then we need to find out if we can cache
+This function might be faster than the rest
 """
-def dp(bag, idxs, func, keep, mem):
-	global HITS, CALLS
-	CALLS+=1
-	cache_key = idxs
+@profile
+def comb(bag, idxs, func, keep, mem, I):
+	global CALLS, HITS, LOOPS
+	CALLS += 1
+	cache_key = tuple(tuple(i) for i in bag)
 	if cache_key in mem:
-		HITS += 1
+		HITS+=1
+		#print("\thit:", bag)
 		return mem[cache_key]
-	res = defaultdict(int)
-	C = 1 ## where this is used, we need to translate into dict
-	if len(bag) == 1:
-		for sf in bag[0]:
-			res[(sf,sf)] = C
-		#mem[cache_key] = res
+
+	if not bag:
+		res = {None: 1}
+		mem[cache_key] = res
 		return res
 
-	#sorted_bag = sorted(bag, key = lambda key: _max(key), reverse=True) # might need copy
+	res = defaultdict(int)
 	sorted_bag, sorted_idxs = zip(*sorted(zip(bag,idxs), key = lambda key: _max(key[0]), reverse=True))
 	sorted_bag = list(sorted_bag)
 	while(sorted_bag[0]):
-		o = sorted_bag[0][-1]
-		c = C
-		sorted_bag[0] = sorted_bag[0][:-1]
+		LOOPS += 1
+		o = sorted_bag[0][-1] if keep[-1] else None
+		c = 1
+		sorted_bag[0] = sorted_bag[0][:-1]# "cheeper pop the top"
 		sub_bag = sorted_bag[1:]
 		sub_idxs = sorted_idxs[1:]
-		sub = dp(sub_bag, sub_idxs , func, keep, mem)
-		for idx,((sf, p), sc) in enumerate(sub.items()):
-			if p <= o:
-				res[func(o,sf), o] += c*sc
-		if sorted_bag and len(sorted_bag) > 1 and sorted_bag[0]: # i stop the code here if the current top is empty
-			sorted_bag, sorted_idxs = zip(*sorted(zip(sorted_bag,idxs), key = lambda key: _max(key[0]), reverse=True))
+		sub = comb(sub_bag, sub_idxs, func, keep[:-1], mem, I+1)
+		for sf, sc in sub.items():
+			if o is None and sf is not None:
+				key = sf
+			elif sf is None:
+				key = o
+			else:
+				key= func(o,sf)
+			res[key] += c*sc
+		if sorted_bag and len(sorted_bag) > 1 and sorted_bag[0]:
+			sorted_bag, sorted_idxs = zip(*sorted(zip(sorted_bag,sorted_idxs), key = lambda key: _max(key[0]), reverse=True))
 			sorted_bag = list(sorted_bag)
-	#mem[cache_key] = res
+	mem[cache_key] = res
 	return res
-		
 
 def f(x,y):
 	if isinstance(y, int):
@@ -60,29 +63,26 @@ def f(x,y):
 	return (x,) + y
 
 bag = [
-		list(range(1,7)),
-		list(range(1,7)),
-		list(range(1,7)),
+		[1,2,3,4],
+		[2,3,4,5],
+		[3,4,5,6],
+		[4,5,6,7],
 ]
 
+ER = 51
+bag = [
+	list(range(1,ER)),
+]*5
 
-
-keep = [0,1]
-
-mem = {}
+keep = [1]*len(bag)
 import time
+mem = {}
 t = time.time()
-res = dp(bag, tuple(range(len(bag))), lambda x,y: x+y, keep, mem)
-final = defaultdict(int)
-for (f,_), c in res.items():
-	final[f] += c
-print(time.time()-t)
-print(res)
-print(final)
-die = Dice.from_dict(final)
-print(die)
-print(4@d(6))
-print(die.p)
-print(HITS)
-print(CALLS)
-#res = comb(bag, f)
+#res = comb(bag, list(range(len(bag))), lambda x,y: x+y, keep, mem)
+res = comb(bag, list(range(len(bag))), lambda x,y: x+y, keep, mem,0)
+print(time.time() - t)
+q = Dice.from_dict(res)
+print(q._units)
+print("CALLS:", CALLS)
+print("HITS:", HITS)
+print("LOOPS:", LOOPS)

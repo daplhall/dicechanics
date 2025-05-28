@@ -5,6 +5,7 @@ from DiceStatistics._math import unique
 from DiceStatistics._inpt_cleaning import sort_dict
 import DiceStatistics.Dice as dice
 from DiceStatistics._dice_combinatorics import linear_non_selective
+from DiceStatistics._popper import DicePopper
 
 type Dice = dice.Dice
 type Pool = Pool
