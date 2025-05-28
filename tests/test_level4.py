@@ -5,7 +5,7 @@ import numpy as np
 import DiceStatistics as tts
 import dice_unittest
 
-class TestLevel4(dice_unittest.TestCase):
+class TestNonSelective(dice_unittest.TestCase):
 	
 	def setUp(self):
 		d6 = tts.d6
@@ -44,6 +44,37 @@ class TestLevel4(dice_unittest.TestCase):
 		self.assertSequenceEqual(
 			d.c,
 			[1, 3, 3, 6, 3, 9, 7, 3, 6, 15, 6, 6, 9, 9, 15, 3, 1, 12, 3, 12, 6, 3, 9, 3, 3, 12, 1, 9, 3, 3, 6, 3, 3, 3, 6, 1, 3, 3, 3, 1]		)
+	
+class TestSelective(dice_unittest.TestCase):
+	def setUp(self):
+		d6 = tts.d6
+		self.pool = tts.Pool([d6,d6,d6])
+	
+	def test_add_selective(self):
+		pool = self.pool[0,1,1]
+		d = pool.perform(lambda x, y: x+y)
+		self.assertSequenceEqual(
+			d.f,
+			list(range(2,13))
+		)	
+		self.assertSequenceAlmostEqual(
+			d.p,
+			[
+				0.00462962962963,
+				0.0138888888889,
+				0.0324074074074,
+				0.0555555555556,
+				0.087962962963,
+				0.125,
+				0.157407407407,
+				0.166666666667,
+				0.157407407407,
+				0.125,
+				0.0740740740741,
+			],
+			4
+		)
+
 
 if __name__ == '__main__':
 	unittest.main()

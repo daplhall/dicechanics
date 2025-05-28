@@ -4,12 +4,16 @@ class DicePopper(object):
 	count: list[int]
 	def __init__(self, dice):
 		data = dice._data
-		self.faces = tuple(data.keys())
-		self.count = tuple(data.values())
+		self.faces = list(data.keys())
+		self.count = list(data.values())
 		self.i = len(self.faces)-1
+		self.c = self.count[self.i]
 	
 	def identifier(self):
-		return tuple(self.faces) + tuple(self.count) + (self.i,)
+		"""
+		When i updated this i got quite a performance increase!	
+		"""
+		return tuple(self.faces) + (self.i, self.c)
 
 	def max(self):
 		if self.i < 0:
@@ -24,16 +28,18 @@ class DicePopper(object):
 		if self.i < 0:
 			return None
 		face = self.faces[self.i]	
-		self.count[self.i] -= 1
-		if self.count[self.i] == 0:
+		self.c -= 1
+		if self.c == 0:
 			self.i -= 1
+			self.c = self.count[self.i]
 		return face
 
 	def copy(self):
 		res = DicePopper.__new__(DicePopper)
 		res.faces = self.faces
-		res.count = self.count.copy()
+		res.count = self.count
 		res.i = self.i
+		res.c = self.c
 		return res
 
 	def __bool__(self):

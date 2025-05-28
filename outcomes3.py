@@ -17,7 +17,7 @@ LOOPS = 0
 """
 This function might be faster than the rest
 """
-@profile
+#@profile
 def comb(bag, idxs, func, keep, mem, I):
 	global CALLS, HITS, LOOPS
 	CALLS += 1
@@ -69,12 +69,12 @@ bag = [
 		[4,5,6,7],
 ]
 
-ER = 51
+ER = 7
 bag = [
 	list(range(1,ER)),
-]*5
+]*3
 
-keep = [1]*len(bag)
+keep = [0,1,1]
 import time
 mem = {}
 t = time.time()
@@ -82,7 +82,7 @@ t = time.time()
 res = comb(bag, list(range(len(bag))), lambda x,y: x+y, keep, mem,0)
 print(time.time() - t)
 q = Dice.from_dict(res)
-print(q._units)
+print(q)
 print("CALLS:", CALLS)
 print("HITS:", HITS)
 print("LOOPS:", LOOPS)

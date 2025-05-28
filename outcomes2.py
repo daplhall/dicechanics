@@ -12,16 +12,9 @@ def _max(key):
 		return None
 	return max(key)
 		
-CALLS = 0
-HITS = 0
-LOOPS = 0
-@profile
 def comb(bag, func, keep, mem):
-	global HITS, CALLS, LOOPS
-	CALLS += 1
 	cache_key = tuple(i.identifier() for i in bag)	
 	if cache_key in mem:
-		HITS += 1
 		return mem[cache_key]
 	if not bag:
 		mem[cache_key] = {None: 1}
@@ -29,13 +22,12 @@ def comb(bag, func, keep, mem):
 	res = defaultdict(int)
 	sorted_bag = sorted(bag, key = lambda key: key.max(), reverse=True)
 	while(dice := sorted_bag[0]):
-		LOOPS += 1
 		o = dice.pop() 
 		sub_bag = [i.copy() for i in sorted_bag[1:]]
 		sub = comb(sub_bag, func, keep[:-1], mem) 
 		for sf, sc in sub.items():
-			if keep[-1] == 0 and sf is not None:
-				key = sf
+			if keep[-1] == 0:
+				key = sf if sf is not None else None
 			elif sf is None:
 				key = o
 			else:
@@ -60,18 +52,18 @@ bag = [
 		Dice.from_dict({4:1,5:1,6:1,7:1})
 ]
 
-#bag = [
-#	d(50),
-#]*5
+bag = [
+	d(6),
+]*3
 
 
-keep = [1]*len(bag)
+keep = [0,1,1]
 
 import time
 t = time.time()
 res = selective_combs(bag, keep, lambda x, y: x+y)
 d = Dice.from_dict(res)
+print(d)
+#q = bag[0] + bag[1] + bag[2] + bag[3]
+#print(d._data == q._data)
 print(time.time() - t)
-print("CALLS:", CALLS)
-print("HITS:", HITS)
-print("LOOPS:", LOOPS)
