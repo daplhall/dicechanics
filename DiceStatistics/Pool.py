@@ -35,7 +35,7 @@ class Pool(object):
 		res = self.copy()
 		if isinstance(idx, slice):
 			keep = [0]*len(self._bag)
-			keep[idx] = 1
+			keep[idx] = [1]*len(keep[idx])
 		else:
 			keep = idx
 		res._keep = keep

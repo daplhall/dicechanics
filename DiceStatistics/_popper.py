@@ -28,11 +28,9 @@ class DicePopper(object):
 		if self.i < 0:
 			return None
 		face = self.faces[self.i]	
-		self.c -= 1
-		if self.c == 0:
-			self.i -= 1
-			self.c = self.count[self.i]
-		return face
+		count = self.count[self.i]
+		self.i -= 1
+		return face, count
 
 	def copy(self):
 		res = DicePopper.__new__(DicePopper)
