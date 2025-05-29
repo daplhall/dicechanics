@@ -44,14 +44,35 @@ class TestNonSelective(dice_unittest.TestCase):
 		self.assertSequenceEqual(
 			d.c,
 			[1, 3, 3, 6, 3, 9, 7, 3, 6, 15, 6, 6, 9, 9, 15, 3, 1, 12, 3, 12, 6, 3, 9, 3, 3, 12, 1, 9, 3, 3, 6, 3, 3, 3, 6, 1, 3, 3, 3, 1]		)
-	
+
+	def test_max_non_selective(self):
+		d = self.pool.perform(max)
+		self.assertSequenceEqual(
+			d.f,
+			[1,2,3,4,5,6]
+		)
+		self.assertSequenceEqual(
+			d.c,
+			[1,7,19,37,61,91]
+		)
+
+	def test_min_non_selective(self):
+		d = self.pool.perform(min)
+		self.assertSequenceEqual(
+			d.f,
+			[1,2,3,4,5,6]
+		)
+		self.assertSequenceEqual(
+			d.c,
+			[1,7,19,37,61,91][::-1]
+		)
+
 class TestSelective(dice_unittest.TestCase):
-	def setUp(self):
-		d6 = tts.d6
-		self.pool = tts.Pool([d6,d6,d6])
 	
-	def test_add_selective(self):
-		pool = self.pool[0,1,1]
+	def test_add_3d6_selective(self):
+		d6 = tts.d6
+		pool = tts.Pool([d6,d6,d6])
+		pool = pool[0,1,1]
 		d = pool.perform(lambda x, y: x+y)
 		self.assertSequenceEqual(
 			d.f,
@@ -74,7 +95,20 @@ class TestSelective(dice_unittest.TestCase):
 			],
 			4
 		)
+	
+	def test_add_middle_mixed(self):
+		pool = tts.Pool([tts.d4,tts.d6,tts.d8])
+		d = pool[0,1,0].perform(lambda x, y: x + y)
+		self.assertSequenceEqual(
+			d.f,
+			[1,2,3,4,5,6]
+		)
+		self.assertSequenceEqual(
+			d.c,
+			[4,10,13,13,5,3]
+		)
 
+	
 
 if __name__ == '__main__':
 	unittest.main()
