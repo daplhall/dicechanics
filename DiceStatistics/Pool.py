@@ -45,5 +45,8 @@ class Pool(object):
 		def wrapper():
 			return self.perform(func)
 		return wrapper
+
+	def __add__(self, rhs: Dice | int | float | Pool):
+		pass	
 	
 

@@ -108,6 +108,18 @@ class TestSelective(dice_unittest.TestCase):
 			[4,10,13,13,5,3]
 		)
 
+	def test_add_with_numbers(self):
+		pool = tts.Pool([tts.d4,3])
+		d = pool[0,1].perform(sum)
+		self.assertSequenceEqual(
+			d.f,
+			[3, 4]
+		)
+		self.assertSequenceEqual(
+			d.c,
+			[3, 1]
+		)
+
 	
 
 if __name__ == '__main__':
