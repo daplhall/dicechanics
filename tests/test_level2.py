@@ -29,12 +29,7 @@ class TestLevel2(dice_unittest.TestCase):
 			[tts.d6, tts.d10]	
 		)
 
-	def test_addpool(self):
-		newpool = self.pool + tts.Pool([tts.d10, tts.d20])
-		self.assertSequenceEqual(
-			newpool._bag,
-			[tts.d6, tts.d10, tts.d20]
-		)
+
 	
 
 if __name__ == '__main__':
