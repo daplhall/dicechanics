@@ -1,6 +1,6 @@
 numpy
-requests
 matplotlib
 scipy
 build
-pyperformance
+sphinx
+line_profiler

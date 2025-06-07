@@ -21,7 +21,7 @@ def expand_dice(data:dict)->defaultdict:
 	for i, die in enumerate(dice):
 		for f in numbers.keys():
 			numbers[f] *= die._units
-		for d in dice:
+		for d in dice: #TODO THIS IS A PERFORMANCE HOG!!
 			if d != die:
 				dice[d] *= die._units
 	for die, c in dice.items():
