@@ -16,7 +16,7 @@ They are accessed through the `d(...)`, `z(...)`, `pool(...)`
 ### *Dice Example*:
 Creating a dice which have the faces `1..6` and doing operations with it.
 ```python
-d6 = tts.d(6)
+d6 = d(6)
 A = 2@d6 + 3 # roll 2 d6 add them, then add 3
 B = d6-d6*d6/d6
 C = A + B
