@@ -1,8 +1,12 @@
 
+from DiceStatistics.types import primitives
+from DiceStatistics.Dice import convert_to_dice
+
 class DicePopper(object):
 	faces: list[int|float]
 	count: list[int]
 	def __init__(self, dice):
+		dice = convert_to_dice(dice)
 		data = dice._data
 		self.faces = list(data.keys())
 		self.count = list(data.values())
