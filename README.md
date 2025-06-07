@@ -55,7 +55,7 @@ funky_dice = mydice():
 Calculating the probabilities for getting the sum of the highest 3 of 3d6 and 2d10
 ```python
 mypool = pool([d6]*3 + [d10]*2)
-res = mypool[3:].perform(sum) # reduces the result to a dice representation
+res = mypool[3:].perform(lambda x, y: x + y) # reduces the result to a dice representation
 ```
 or through a decorator
 ```python
