@@ -1,5 +1,5 @@
 from collections.abc import Iterable
-from DiceStatistics.Dice import Dice
+from DiceStatistics import Dice, Pool
 from DiceStatistics._parser import text_to_faces
 
 def d(inpt: list | str, **kwards) -> Dice:
@@ -15,3 +15,6 @@ def d(inpt: list | str, **kwards) -> Dice:
 
 def z(inpt: int, **kwards) -> Dice:
 	return Dice(range(0, inpt + 1), **kwards)
+
+def pool(inpt:list) -> Dice:
+	return Pool(inpt)
