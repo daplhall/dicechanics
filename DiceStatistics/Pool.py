@@ -45,8 +45,8 @@ class Pool(object):
 	def __str__(self):
 		n = len(self._bag)
 		txt = "Pool(["
-		for i in enumerate(range(self._bag)):
-			txt += str(i) + ", " if i < n else ""
+		for i, d in enumerate(self._bag):
+			txt += str(d) + (", " if i < n - 1 else "")
 		txt += "])"
 		return txt
 	

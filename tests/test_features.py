@@ -183,6 +183,16 @@ class TestDiceFeatures(dice_unittest.TestCase):
 			[0.2]+[0.1]+ [0.1] + [0.1]*6,
 			4
 		)
+		
+	
+class TestPoolFeatures(unittest.TestCase):
+	def test_to_string(self):
+		pool = tts.Pool([tts.d6, tts.d6])
+		self.assertEqual(
+			str(pool),
+			'Pool([Dice({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1}), Dice({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1})])'
+		)
+
 
 
 

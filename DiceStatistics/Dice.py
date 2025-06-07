@@ -319,7 +319,7 @@ class Dice(object):
 		return self._data[i]
 
 	def __repr__(self):
-		return "Dice{"+str(self._data)+'}'
+		return "Dice("+str(self._data)+')'
 
 	def __str__(self):
 		return self.__repr__()
