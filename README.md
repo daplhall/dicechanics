@@ -1,31 +1,39 @@
 # DiceStatistics a dice statistical tool
-DiceStatistics provides a interface in python (inspired by anydice) for doing dice statistics, which produces exact statistics for dice properbility
-## Build
+DiceStatistics provides a interface in python (inspired by anydice) for modelling dice mechanincs.  
+## Build and install
 - create venv
 - install packages in requirements.txt
 - `python -m build .`
 - `pip install dist\*.whl`
-### Examples
-To make notebooks work with venv use `ipython kernel install --user --name=DiceStatistics`
 ## Usage
-2 classes are provided, a Dice class used for representing statistical data and simple arithmatics, and a Pool class which allows one to do custom operations based on the outcomes of multiple seperate dice (eg. keep the highest 3 of a pool of 4).  
+2 lasses are provided, a Dice class used for representing statistical data and can perform simple arithmatics, and a Pool class which allows one to do custom linear operations based on the outcomes of multiple seperate dice (it only takes 2 values at a time, thus the operation declaration is `lambda x,y: ...`.
+
+They are accessed through the `d(...)`, `z(...)`, `pool(...)` 
+
+
 ### *Dice Example*:
-Dice always finds the lowest number of faces to represent the dice, so a 6 sided dice
-with equal amount of 1,2,3 on its faces becomes a d3
-```
-import TTStatistic as tts
-import matplotlib.pyplot as plt
+Creating a dice which have the faces `1..6` and doing operations with it.
+```python
 d6 = tts.d(6)
-A = 2@d6 + 3
+A = 2@d6 + 3 # roll 2 d6 add them, then add 3
 B = d6-d6*d6/d6
 C = A + B
 
-fig, ax = plt.subplots()
-ax.plot(C.f, C.p)
-plt.show()
+prop = C.p # get properbiltiy of result
+faces = C.f # get faces of result, 1:1 with properbility
 ```
+Creating a filter on a dice.
+```python
+def filter(outcome):
+	if outcome == 4:
+		return 4
+	elif outcome > 4:
+		return 3
+
+funky_dice = tts.d('3:6,1..2').perform(filter):
 ```
-import DiceStatistics as tts
+Which can also be written with a decorator
+```python
 @tts.d('3:6, 1..2')
 def mydice(outcome):
 	if outcome == 4:
@@ -37,23 +45,16 @@ funky_dice = mydice():
 ```
 
 ### *Pool Example*
+Calculating the properbilites for getting the sum of the highest 3 of 3d6 and 2d10
+```python
+mypool = pool([d6]*3 + [d10]*2)
+res = mypool[3:].perform(sum) # reduces the result to a dice representation
 ```
-import TTStatistic as tts
-import matplotlib.pyplot as plt
+or through a decorator
+```python
+@pool([d6]*3 + [d10]*2)
+def mypool(x, y):
+	return x + y
 
-@tts.Pool(tts.d6, tts.d100, tts.d10)
-def Advantage(Write me):
-	Write me
-
-fig, ax = plt.subplots()
-ax.plot(C.f, C.p)
-plt.show()
+res = mypool()
 ```
-
-```
-d10[10] -> pool
-A = d10.pool(10) -> pool
-A.perform(some_function)
-```
-## Building
-Write me!
