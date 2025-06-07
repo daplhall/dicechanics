@@ -11,7 +11,12 @@ An library for python which provides an interface for modelling dice mechanics.
 They are accessed through the `d(...)`, `z(...)`, `pool(...)` 
 
 ### Dice parser:
-
+The dice class can take a sting input, that if follows a givens tructure expands into multiple numbers.
+```python
+d('1,2,3,4,5') # gives a dice with numbers 1 through 5
+d('1..6:2') # gives numbers 1 through 6 twice.
+d('1..4:4, 1:3, 1..2, 6') # is equivalent to the dict: {1:8,2:5,3:4,4:4,6:1}
+```
 
 ### *Dice Example*:
 Creating a dice which have the faces `1..6` and doing operations with it.
