@@ -1,4 +1,4 @@
-# DiceStatistics: Library for modelling dice mechanics
+# Dicechanics: Library for modelling dice mechanics
 DiceStatistics provides an interface in python (inspired by anydice) for modelling dice mechanics.  
 ## Build and install
 - create venv
