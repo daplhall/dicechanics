@@ -1,12 +1,12 @@
-# DiceStatistics: Libary for modelling dice mechanics
-DiceStatistics provides a interface in python (inspired by anydice) for modelling dice mechanincs.  
+# DiceStatistics: Library for modelling dice mechanics
+DiceStatistics provides an interface in python (inspired by anydice) for modelling dice mechanics.  
 ## Build and install
 - create venv
 - install packages in requirements.txt
 - `python -m build .`
 - `pip install dist\*.whl`
 ## Usage
-2 lasses are provided, a Dice class used for representing statistical data and can perform simple arithmatics, and a Pool class which allows one to do custom linear operations based on the outcomes of multiple seperate dice (it only takes 2 values at a time, thus the operation declaration is `lambda x,y: ...`.
+2 classes are provided, a Dice class used for representing statistical data and can perform simple arithmetics, and a Pool class which allows one to do custom linear operations based on the outcomes of multiple separate dice (it only takes 2 values at a time, thus the operation declaration is `lambda x,y: ...`.
 
 They are accessed through the `d(...)`, `z(...)`, `pool(...)` 
 
@@ -19,16 +19,16 @@ A = 2@d6 + 3 # roll 2 d6 add them, then add 3
 B = d6-d6*d6/d6
 C = A + B
 
-prop = C.p # get properbiltiy of result
-faces = C.f # get faces of result, 1:1 with properbility
+prop = C.p # get probability of result
+faces = C.f # get faces of result, 1:1 with probability
 ```
 Creating a filter on a dice.
 ```python
 def filter(outcome):
-	if outcome == 4:
-		return 4
-	elif outcome > 4:
-		return 3
+    if outcome == 4:
+        return 4
+    elif outcome > 4:
+        return 3
 
 funky_dice = tts.d('3:6,1..2').perform(filter):
 ```
@@ -36,16 +36,16 @@ Which can also be written with a decorator
 ```python
 @tts.d('3:6, 1..2')
 def mydice(outcome):
-	if outcome == 4:
-		return 4
-	elif outcome > 4:
-		return 3
+    if outcome == 4:
+        return 4
+    elif outcome > 4:
+        return 3
 
 funky_dice = mydice():
 ```
 
 ### *Pool Example*
-Calculating the properbilites for getting the sum of the highest 3 of 3d6 and 2d10
+Calculating the probabilities for getting the sum of the highest 3 of 3d6 and 2d10
 ```python
 mypool = pool([d6]*3 + [d10]*2)
 res = mypool[3:].perform(sum) # reduces the result to a dice representation
@@ -54,7 +54,8 @@ or through a decorator
 ```python
 @pool([d6]*3 + [d10]*2)
 def mypool(x, y):
-	return x + y
+    return x + y
 
 res = mypool()
 ```
+
