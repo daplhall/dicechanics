@@ -3,17 +3,13 @@ from collections import defaultdict
 from math import prod
 from DiceStatistics._math import unique
 from DiceStatistics._inpt_cleaning import sort_dict
-import DiceStatistics.Dice as dice
+from DiceStatistics.Dice import Dice, convert_to_dice
 from DiceStatistics._dice_combinatorics import linear_non_selective, linear_selective
-
-type Dice = dice.Dice
-type Pool = Pool
-
 
 # Pool needs to be invoked in the interface witha  decorator, in which
 # it is loaded with dice and the operations that needs to happen
 class Pool(object):
-	def __init__(self, dice: list[Dice | Pool]):
+	def __init__(self, dice: list):
 		self._bag = dice
 		self._keep = None
 
@@ -22,7 +18,7 @@ class Pool(object):
 			res = linear_non_selective(self._bag, func)
 		else:
 			res = linear_selective(self._bag, self._keep, func)
-		return dice.from_dict(res)
+		return Dice.from_dict(res)
 	
 	def copy(self):
 		res = Pool.__new__(Pool)
@@ -45,8 +41,30 @@ class Pool(object):
 		def wrapper():
 			return self.perform(func)
 		return wrapper
-
-	def __add__(self, rhs: Dice | int | float | Pool):
-		pass	
 	
+	def __str__(self):
+		n = len(self._bag)
+		txt = "Pool(["
+		for i in enumerate(range(self._bag)):
+			txt += str(i) + ", " if i < n else ""
+		txt += "])"
+		return txt
+	
+	def add_level2(self, rhs):
+		res = self.copy()
+		res._bag.append(rhs)
+		return res
+	
+	def add_level3(self, rhs):
+		res = self.copy()
+		res._bag.extend(rhs._bag)
+		return res
+	
+	def __add__(self, rhs):
+		if isinstance(rhs, Pool):
+			return self.add_level3(rhs)
+		else:
+			rhs = convert_to_dice(rhs)
+			return self.add_level2(rhs)
+
 

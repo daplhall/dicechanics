@@ -1,7 +1,7 @@
 __all__ = []
 
 
-from DiceStatistics.Dice import Dice 
+from DiceStatistics.Dice import Dice
 from DiceStatistics.Pool import Pool
 from DiceStatistics.BooleanDice import BooleanDice
 from DiceStatistics.interface import d, z

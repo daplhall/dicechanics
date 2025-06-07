@@ -1,6 +1,5 @@
 
 import unittest
-import numpy as np
 
 import DiceStatistics as tts
 import dice_unittest
