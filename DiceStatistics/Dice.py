@@ -171,7 +171,7 @@ class Dice(object):
 			into=rhs if into is None else into
 		)
 	
-	def perform(self, func:callable):
+	def map(self, func:callable):
 		res = Dice.__new__(Dice)
 		res.__init__(func(i) for i in self)
 		return res
@@ -181,7 +181,7 @@ class Dice(object):
 
 	def __call__(self, func):
 		def wrapper():
-			return self.perform(func)
+			return self.map(func)
 		return wrapper
 
 	def __iter__(self) -> Generator:  # might need ot be text also when mask

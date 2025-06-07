@@ -29,7 +29,7 @@ C = A + B
 prop = C.p # get probability of result
 faces = C.f # get faces of result, 1:1 with probability
 ```
-Creating a filter on a dice.
+Mapping outcomes on a dice to new ones.
 ```python
 def filter(outcome):
     if outcome == 4:
@@ -37,7 +37,7 @@ def filter(outcome):
     elif outcome > 4:
         return 3
 
-funky_dice = tts.d('3:6,1..2').perform(filter):
+funky_dice = tts.d('3:6,1..2').map(filter):
 ```
 Which can also be written with a decorator
 ```python
