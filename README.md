@@ -10,7 +10,7 @@ An library for python which provides an interface for modelling dice mechanics.
 
 They are accessed through the `d(...)`, `z(...)`, `pool(...)` 
 
-### Dice parser:
+### *Dice parser*:
 The dice class can take a sting input, that if follows a givens tructure expands into multiple numbers.
 ```python
 d('1,2,3,4,5') # gives a dice with numbers 1 through 5
