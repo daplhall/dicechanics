@@ -4,3 +4,4 @@ scipy
 build
 sphinx
 line_profiler
+pyperformance
