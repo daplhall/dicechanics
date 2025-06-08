@@ -184,6 +184,12 @@ class TestDiceFeatures(dice_unittest.TestCase):
 			4
 		)
 		
+	def test_string(self):
+		self.assertEqual(
+			str(tts.d4),
+			"Dice({1: 1, 2: 1, 3: 1, 4: 1})"
+		)
+		
 	
 class TestPoolFeatures(unittest.TestCase):
 	def test_to_string(self):

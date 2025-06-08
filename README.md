@@ -66,3 +66,8 @@ def mypool(x, y):
 res = mypool()
 ```
 
+## Run Bench
+```
+pyperformance run --manifest benchmarks/MANIFEST
+```
+
