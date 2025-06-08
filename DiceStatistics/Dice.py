@@ -208,11 +208,11 @@ class Dice(object):
 		return Dice.from_dict(data)
 
 	def _binary_op(self, rhs: int | float , ops: callable) :
-		rhs = convert_to_dice(rhs)
-		if isinstance(rhs, Dice):
+		if isinstance(rhs, Dice) or isinstance(rhs, primitives):
+			rhs = convert_to_dice(rhs)
 			return self._binary_level1(rhs, ops)
 		else:  # TODO This here should test the other way around. maybe have a try catch
-			raise Exception("Unexpected type in dice level 0")
+			return self._binary_level1(rhs, ops)
 
 	def __add__(self, rhs: int | float ) :
 		"""
