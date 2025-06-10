@@ -8,7 +8,7 @@ An library for python which provides an interface for modelling dice mechanics.
 ## Usage
 2 classes are provided, a Dice class used for representing statistical data and can perform simple arithmetics, and a Pool class which allows one to do custom linear operations based on the outcomes of multiple separate dice (it only takes 2 values at a time, thus the operation declaration is `lambda x,y: ...`.
 
-They are accessed through the `d(...)`, `z(...)`, `pool(...)` 
+They are accessed through the `d(...)`, `z(...)`, `pool(...)` functions.
 
 ### Dice parser:
 
