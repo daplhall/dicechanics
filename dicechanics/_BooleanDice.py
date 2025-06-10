@@ -1,4 +1,4 @@
-import DiceStatistics as ds
+import dicechanics as ds
 
 class BooleanDice(ds.Dice):
 	def __init__(self, faces, truth: bool):

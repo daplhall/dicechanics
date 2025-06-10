@@ -1,6 +1,6 @@
 import unittest
 
-import DiceStatistics as tts
+import dicechanics as tts
 import dice_unittest
 
 class Testlevel3(dice_unittest.TestCase):

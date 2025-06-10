@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-import DiceStatistics as tts
+import dicechanics as tts
 import dice_unittest
 
 class TestLevel0_Dice(dice_unittest.TestCase):

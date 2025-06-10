@@ -1,10 +1,10 @@
 from itertools import product
 from collections import defaultdict
 from math import prod
-from DiceStatistics._math import unique
-from DiceStatistics._inpt_cleaning import sort_dict
-from DiceStatistics._Dice import Dice, convert_to_dice
-from DiceStatistics._dice_combinatorics import linear_non_selective, linear_selective
+from dicechanics._math import unique
+from dicechanics._inpt_cleaning import sort_dict
+from dicechanics._Dice import Dice, convert_to_dice
+from dicechanics._dice_combinatorics import linear_non_selective, linear_selective
 
 # Pool needs to be invoked in the interface witha  decorator, in which
 # it is loaded with dice and the operations that needs to happen

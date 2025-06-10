@@ -4,10 +4,10 @@ from itertools import product, combinations
 from math import sqrt
 from collections import defaultdict
 
-import DiceStatistics as ds
-from DiceStatistics._inpt_cleaning import collect_faces, expand_dice, sort_dict
-from DiceStatistics._math import gcd
-from DiceStatistics.typing import NumVector, BinaryFunc_T, CompareFunc_T, UnaryFunc_T
+import dicechanics as ds
+from dicechanics._inpt_cleaning import collect_faces, expand_dice, sort_dict
+from dicechanics._math import gcd
+from dicechanics.typing import NumVector, BinaryFunc_T, CompareFunc_T, UnaryFunc_T
 
 type Dice_T = Dice
 type RoundingFunc_T = Callable[[Any], Any]
