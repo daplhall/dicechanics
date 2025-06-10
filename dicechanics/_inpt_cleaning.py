@@ -2,7 +2,7 @@
 import dicechanics as ds
 from collections import defaultdict
 from typing import DefaultDict, Iterable
-from dicechanics._math import unique
+from dicechanics.math import unique
 
 def sort_dict(faces: dict):
 	return dict(sorted(faces.items(), key=lambda pair: pair[0]))

@@ -6,7 +6,7 @@ from collections import defaultdict
 
 import dicechanics as ds
 from dicechanics._inpt_cleaning import collect_faces, expand_dice, sort_dict
-from dicechanics._math import gcd
+from dicechanics.math import gcd
 from dicechanics.typing import NumVector, BinaryFunc_T, CompareFunc_T, UnaryFunc_T
 
 type Dice_T = Dice

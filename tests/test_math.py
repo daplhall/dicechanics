@@ -1,6 +1,6 @@
 import unittest
 
-from dicechanics._math import gcd
+from dicechanics.math import gcd
 import dice_unittest
 
 class TestLevel1(dice_unittest.TestCase):
