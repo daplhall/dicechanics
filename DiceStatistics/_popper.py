@@ -1,6 +1,5 @@
 
-from DiceStatistics.types import primitives
-from DiceStatistics.Dice import convert_to_dice
+from DiceStatistics._Dice import convert_to_dice
 
 class DicePopper(object):
 	faces: list[int|float]

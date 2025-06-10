@@ -1,8 +1,9 @@
 from collections.abc import Iterable
-from DiceStatistics import Dice, Pool
+from DiceStatistics._Dice import Dice
+from DiceStatistics._Pool import Pool
 from DiceStatistics._parser import text_to_faces
 
-def d(inpt: list | str, **kwards) -> Dice:
+def d(inpt:Iterable | int, **kwards) -> Dice:
 	if isinstance(inpt, int):
 		return Dice(range(1,inpt+1),**kwards)
 	elif isinstance(inpt, str):
@@ -16,5 +17,5 @@ def d(inpt: list | str, **kwards) -> Dice:
 def z(inpt: int, **kwards) -> Dice:
 	return Dice(range(0, inpt + 1), **kwards)
 
-def pool(inpt:list) -> Dice:
+def pool(inpt:list) -> Pool:
 	return Pool(inpt)

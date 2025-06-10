@@ -1,14 +1,20 @@
+from typing import Callable, DefaultDict, Sequence
 from collections import defaultdict
 import DiceStatistics as ds
 from DiceStatistics._popper import DicePopper
+from DiceStatistics.typing import BinaryFunc_T
 
+type T = dict[object, int]
+type Inpt_T = Sequence[ds.Dice]
+type Bag_T = Sequence[DicePopper]
+type Mem_T = dict[object, T]
 
-def linear_combs(inpt: list[ds.Dice], layer:int , func: callable, mem: dict) -> defaultdict[int]:
+def linear_combs(inpt: Inpt_T, layer: int , func: BinaryFunc_T, mem: Mem_T) -> T:
 	if layer in mem:
 		return mem[layer]
 	if layer >= len(inpt):
 		return {}
-	res = defaultdict(int)
+	res: T = defaultdict(int)
 	for f,c in inpt[layer].items():
 		if sub := linear_combs(inpt, layer+1, func, mem):
 			for sf,sc in sub.items():
@@ -18,12 +24,12 @@ def linear_combs(inpt: list[ds.Dice], layer:int , func: callable, mem: dict) -> 
 	mem[layer] = res
 	return res
 
-def linear_non_selective(inpt: list[ds.Dice], func: callable) -> ds.Dice:
-	mem = {}
+def linear_non_selective(inpt: Inpt_T, func: BinaryFunc_T) -> ds.Dice:
+	mem: Mem_T = {}
 	res = linear_combs(inpt, 0, func, mem)
 	return ds.Dice.from_dict(res)
 
-def selective_comb(bag, func, keep, mem):
+def selective_comb(bag: Bag_T, func: BinaryFunc_T, keep: list[int], mem: Mem_T):
 	"""
 	TODO:
 	The popper goes through them 1 by 1 so if we have a face with repeated 1000 times it runs through that 1000 times...	
@@ -34,7 +40,7 @@ def selective_comb(bag, func, keep, mem):
 	if not bag:
 		mem[cache_key] = {None: 1}
 		return mem[cache_key]
-	res = defaultdict(int)
+	res: T = defaultdict(int)
 	sorted_bag = sorted(bag, key = lambda key: key.max(), reverse=True)
 	while(dice := sorted_bag[0]):
 		o,c = dice.pop() 
@@ -53,8 +59,8 @@ def selective_comb(bag, func, keep, mem):
 	mem[cache_key] = res
 	return res
 
-def linear_selective(inpt: list[ds.Dice], keep: list[int], func: callable) -> ds.Dice:
-	mem = {}
-	inpt = [DicePopper(i) for i in inpt]
-	res = selective_comb(inpt, func, keep, mem)
+def linear_selective(inpt: Inpt_T, keep: list[int], func: BinaryFunc_T) -> ds.Dice:
+	mem: Mem_T = {}
+	poppers = [DicePopper(i) for i in inpt]
+	res = selective_comb(poppers, func, keep, mem)
 	return ds.Dice.from_dict(res)

@@ -1,12 +1,13 @@
 
 import DiceStatistics as ds
 from collections import defaultdict
+from typing import DefaultDict, Iterable
 from DiceStatistics._math import unique
 
 def sort_dict(faces: dict):
 	return dict(sorted(faces.items(), key=lambda pair: pair[0]))
 
-def expand_dice(data:dict)->defaultdict:
+def expand_dice(data:dict)->DefaultDict:
 	"""
 		expands dice in a dictionary, to a dict of numbers
 	"""
@@ -29,10 +30,10 @@ def expand_dice(data:dict)->defaultdict:
 			numbers[f] += c*cd
 	return numbers
 
-def clean_faces(faces: dict) -> dict:
+def clean_faces(faces: dict) -> DefaultDict:
 	faces = sort_dict(faces)
 	return expand_dice(faces)
 
-def collect_faces(faces: list) -> dict:
-	faces = dict(zip(*unique(faces)))
-	return clean_faces(faces)
+def collect_faces(faces: Iterable[float]) -> DefaultDict:
+	out = dict(zip(*unique(faces)))
+	return clean_faces(out)
