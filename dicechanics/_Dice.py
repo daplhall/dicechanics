@@ -1,20 +1,21 @@
 import operator as op
 from typing import Generator, Callable, Iterable, Any
-from itertools import product, combinations
+from itertools import product
 from math import sqrt
 from collections import defaultdict
+from collections.abc import KeysView,ValuesView, ItemsView
 
-import dicechanics as ds
 from dicechanics._inpt_cleaning import collect_faces, expand_dice, sort_dict
 from dicechanics.math import gcd
-from dicechanics.typing import NumVector, BinaryFunc_T, CompareFunc_T, UnaryFunc_T
+from dicechanics.typing import BinaryFunc_T, CompareFunc_T, UnaryFunc_T
 
 type Dice_T = Dice
-type RoundingFunc_T = Callable[[Any], Any]
+type BooleanDice_T = BooleanDice
+type PureFunc_T = Callable[[Any], Any]
 
 PRIMITIVES = (float, int)
 
-def convert_to_dice(inpt):
+def convert_to_dice(inpt:object) -> Dice_T:
 	if isinstance(inpt, PRIMITIVES):
 		return Dice([inpt])
 	elif isinstance(inpt, Dice):
@@ -22,15 +23,14 @@ def convert_to_dice(inpt):
 	else:
 		raise ValueError("Inpt is not a primitive or a Dice")
 
-
 class Dice(object):
-	def __init__(self, faces: Iterable[float], /, rounding: RoundingFunc_T =lambda x: x):
+	def __init__(self, faces: Iterable[float], /, rounding: PureFunc_T =lambda x: x):
 		self._data = collect_faces(faces)
 		self._derived_attr()
 		self._rounding = rounding
 
 	@classmethod
-	def from_dict(cls, data: dict, rounding=lambda x: x):
+	def from_dict(cls, data: dict, rounding=lambda x: x) -> Dice_T:
 		self = cls.__new__(cls)
 		self._data = sort_dict(data)
 		self._derived_attr()
@@ -101,19 +101,19 @@ class Dice(object):
 	def min(self) -> float:
 		return self._min
 
-	def copy(self):
+	def copy(self) -> Dice_T:
 		return Dice.from_dict(self._data)
 
-	def keys(self):
+	def keys(self) -> KeysView:
 		return self._data.keys()
 
-	def values(self):
+	def values(self) -> ValuesView:
 		return self._data.values()
 
-	def items(self):
+	def items(self) -> ItemsView:
 		return self._data.items()
 
-	def reroll(self, *redo, depth: int = 1):
+	def reroll(self, *redo, depth: int = 1) -> Dice_T:
 		if depth == "inf":
 			# TODO this sould just produce 0 for the face, not remove it
 			return Dice(i for i in self if i not in redo)
@@ -130,7 +130,7 @@ class Dice(object):
 			faces = expand_dice(numbers | dice)
 		return Dice.from_dict(sort_dict(faces))
 
-	def explode(self, *exploder, depth: int = 1):
+	def explode(self, *exploder, depth: int = 1) -> Dice_T:
 		faces = self._data
 		# redo needs to be updated, so every combination of redo adds another.
 		if depth > 0:
@@ -150,7 +150,7 @@ class Dice(object):
 			faces = expand_dice(numbers | dice)
 		return Dice.from_dict(sort_dict(faces))
 
-	def count(self, *count):
+	def count(self, *count) -> Dice_T:
 		return Dice(i in count for i in self)
 
 	def equal(self, rhs) -> bool:
@@ -159,7 +159,7 @@ class Dice(object):
 		else:
 			return self._hash == rhs._hash
 
-	def folding(self, rhs, ops: CompareFunc_T, into):
+	def folding(self, rhs: object, ops: CompareFunc_T, into:object) -> Dice_T:
 		data = defaultdict(
 			int, {f: c for f, c in self.items() if not ops(f, rhs)}
 		)
@@ -167,27 +167,26 @@ class Dice(object):
 		data[into] += c
 		return Dice.from_dict(data)
 
-	def fold_over(self, rhs, /, into=None):
+	def fold_over(self, rhs:object, /, into:object=None) -> Dice_T:
 		return self.folding(
 			rhs, op.gt, into=rhs if into is None else into
 		)
 
-	def fold_under(self, rhs, /, into=None):
+	def fold_under(self, rhs:object, /, into:object=None) -> Dice_T:
 		return self.folding(
 			rhs, op.lt, into=rhs if into is None else into
 		)
 
-	def perform(self, func: Callable[[float], float]):
+	def perform(self, func: PureFunc_T)->Dice_T:
 		res = Dice(func(i) for i in self)
 		return res
 
-	def __hash__(self):
+	def __hash__(self)->int:
 		return self._hash
 
-	def __call__(self, func):
+	def __call__(self, func: PureFunc_T) -> Callable:
 		def wrapper():
 			return self.perform(func)
-
 		return wrapper
 
 	def __iter__(self) -> Generator:  # might need ot be text also when mask
@@ -195,7 +194,7 @@ class Dice(object):
 			for _ in range(c):
 				yield f
 
-	def __contains__(self, value: float) -> bool:
+	def __contains__(self, value: object) -> bool:
 		return value in self._data.keys()
 
 	def _binary_level0(self, rhs: object, ops: BinaryFunc_T):
@@ -213,7 +212,7 @@ class Dice(object):
 			data[key] += c1 * c2
 		return Dice.from_dict(data)
 
-	def _binary_op(self, rhs: Dice_T | object, ops: BinaryFunc_T):
+	def _binary_op(self, rhs: object, ops: BinaryFunc_T):
 		if isinstance(rhs, Dice):
 			return self._binary_level1(rhs, ops)
 		else:
@@ -263,24 +262,24 @@ class Dice(object):
 	def __gt__(self, rhs: object) -> Dice_T:
 		return self._binary_op(rhs, op.gt)
 
-	def __eq__(self, rhs: object):
+	def __eq__(self, rhs: object) -> BooleanDice_T: # type: ignore
 		# TODO write this and __ne__ as a general operation, also optimize
-		return ds.BooleanDice.from_dice(
+		return BooleanDice.from_dice(
 			self._binary_op(
 				rhs, op.eq
 			),  # TODO THIS IS A PERFORMANCE HOG
 			self.equal(rhs),
 		)
 
-	def __ne__(self, rhs: object):
-		return ds.BooleanDice.from_dice(
+	def __ne__(self, rhs: object) -> BooleanDice_T: #type: ignore
+		return BooleanDice.from_dice(
 			self._binary_op(
 				rhs, op.ne
 			),  # TODO THIS IS A PERFORMANCE HOG
 			not self.equal(rhs),
 		)
 
-	def _rmatmul_level0(self, lhs: int, ops: BinaryFunc_T):
+	def _rmatmul_level0(self, lhs: int, ops: BinaryFunc_T) -> Dice_T:
 		if neg := lhs < 0:
 			lhs *= -1
 		res = self
@@ -288,7 +287,7 @@ class Dice(object):
 			res = ops(res, self)
 		return -res if neg else res
 
-	def _rmatmul_level1(self, lhs: Dice_T, ops: BinaryFunc_T):
+	def _rmatmul_level1(self, lhs: Dice_T, ops: BinaryFunc_T) -> Dice_T:
 		"""
 		This is a overlap operations, ie overlapping 2 results
 		its not the same as "adding" two dice together and thus
@@ -302,7 +301,7 @@ class Dice(object):
 			res += [j for j in i @ self] * base
 		return Dice(res)
 
-	def _binary_rmatmul(self, lhs: int, ops: BinaryFunc_T):
+	def _binary_rmatmul(self, lhs: int, ops: BinaryFunc_T) -> Dice_T:
 		if isinstance(lhs, int):
 			return self._rmatmul_level0(lhs, ops)
 		elif isinstance(lhs, Dice):
@@ -310,29 +309,46 @@ class Dice(object):
 		else:
 			raise Exception("Unexpected type in dice matmul")
 
-	def __rmatmul__(self, lhs: int):
+	def __rmatmul__(self, lhs: int) -> Dice_T:
 		"""
 		Rolls self LHS times and adds them together
 		"""
 		return self._binary_rmatmul(lhs, op.add)
 
-	def __matmul__(self, rhs):
+	def __matmul__(self, rhs) -> Dice_T:
 		return rhs._binary_rmatmul(self, op.add)
 
-	def _unary_level0(self, ops: UnaryFunc_T):
+	def _unary_level0(self, ops: UnaryFunc_T) -> Dice_T:
 		return Dice(self._rounding(ops(i)) for i in self)
 
-	def __neg__(self):
+	def __neg__(self) -> Dice_T:
 		return self._unary_level0(op.neg)
 
-	def __pos__(self):
+	def __pos__(self) -> Dice_T:
 		return self._unary_level0(op.pos)
 
-	def __getitem__(self, i):
+	def __getitem__(self, i) -> Dice_T:
 		return self._data[i]
 
-	def __repr__(self):
+	def __repr__(self) -> str:
 		return "Dice(" + str(self._data) + ")"
 
-	def __str__(self):
+	def __str__(self) -> str:
 		return self.__repr__()
+
+class BooleanDice(Dice):
+	def __init__(self, faces, truth: bool):
+		super().__init__(faces)
+		self._truth = truth
+		
+	@classmethod
+	def from_dice(cls, dice:Dice, truth: bool) -> BooleanDice_T:
+		self = cls.__new__(cls)
+		self._data = dice._data
+		self._rounding = dice._rounding
+		self._truth = truth
+		self._derived_attr()
+		return self
+		
+	def __bool__(self) -> bool:
+		return self._truth

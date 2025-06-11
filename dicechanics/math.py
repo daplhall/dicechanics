@@ -11,6 +11,8 @@ div = op.truediv
 mod = op.mod
 ceil = math.ceil
 floor = math.floor
+max = max
+min = min
 
 def unique(array: Iterable[float]) -> tuple[list,list]:
 	uf = []

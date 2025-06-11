@@ -4,10 +4,10 @@ from collections import defaultdict
 from typing import DefaultDict, Iterable
 from dicechanics.math import unique
 
-def sort_dict(faces: dict):
+def sort_dict(faces: dict) -> dict:
 	return dict(sorted(faces.items(), key=lambda pair: pair[0]))
 
-def expand_dice(data:dict)->DefaultDict:
+def expand_dice(data:dict)->dict:
 	"""
 		expands dice in a dictionary, to a dict of numbers
 	"""
@@ -30,10 +30,10 @@ def expand_dice(data:dict)->DefaultDict:
 			numbers[f] += c*cd
 	return numbers
 
-def clean_faces(faces: dict) -> DefaultDict:
+def clean_faces(faces: dict) -> dict:
 	faces = sort_dict(faces)
 	return expand_dice(faces)
 
-def collect_faces(faces: Iterable[float]) -> DefaultDict:
+def collect_faces(faces: Iterable[float]) -> dict:
 	out = dict(zip(*unique(faces)))
 	return clean_faces(out)

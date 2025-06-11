@@ -1,4 +1,4 @@
-from typing import Callable, DefaultDict, Sequence
+from typing import Sequence
 from collections import defaultdict
 import dicechanics as ds
 from dicechanics._popper import DicePopper
@@ -29,7 +29,7 @@ def linear_non_selective(inpt: Inpt_T, func: BinaryFunc_T) -> ds.Dice:
 	res = linear_combs(inpt, 0, func, mem)
 	return ds.Dice.from_dict(res)
 
-def selective_comb(bag: Bag_T, func: BinaryFunc_T, keep: list[int], mem: Mem_T):
+def selective_comb(bag: Bag_T, func: BinaryFunc_T, keep: list[int], mem: Mem_T) -> T:
 	"""
 	TODO:
 	The popper goes through them 1 by 1 so if we have a face with repeated 1000 times it runs through that 1000 times...	
