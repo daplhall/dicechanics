@@ -251,14 +251,14 @@ class Die:
 	def __gt__(self, rhs: object) -> Die_T:
 		return self._binary_op(rhs, op.gt)
 
-	def __eq__(self, rhs: object) -> BooleanDie_T:  # type: ignore
+	def __eq__(self, rhs: object) -> BooleanDie_T:
 		# TODO write this and __ne__ as a general operation, also optimize
 		return BooleanDie.from_dice(
 			self._binary_op(rhs, op.eq),  # TODO THIS IS A PERFORMANCE HOG
 			self.equal(rhs),
 		)
 
-	def __ne__(self, rhs: object) -> BooleanDie_T:  # type: ignore
+	def __ne__(self, rhs: object) -> BooleanDie_T:
 		return BooleanDie.from_dice(
 			self._binary_op(rhs, op.ne),  # TODO THIS IS A PERFORMANCE HOG
 			not self.equal(rhs),

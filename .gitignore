@@ -1,5 +1,6 @@
 .venv/
 .vscode/
+.ruff_cache
+.mypy_cache
 dist/
 **/__pycache__/
-.ruff_cache
