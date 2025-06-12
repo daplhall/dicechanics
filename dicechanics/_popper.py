@@ -1,5 +1,5 @@
 
-from dicechanics._Dice import convert_to_dice
+from dicechanics._Die import convert_to_dice
 
 class DicePopper(object):
 	faces: list[object]

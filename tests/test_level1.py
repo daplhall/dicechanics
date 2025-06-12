@@ -40,7 +40,7 @@ class TestLevel1(dice_unittest.TestCase):
 
 	def test_plus_differnt_2(self):
 		d4 = tts.d(4)
-		D = tts.Dice([2] + [3]*2 + [4]*3 + [5]*4 + [6]*5 + [7]*6 \
+		D = tts.Die([2] + [3]*2 + [4]*3 + [5]*4 + [6]*5 + [7]*6 \
 			+ [8]*5 + [9]*4 + [10]*3 + [11]*2+ [12])
 		D = d4+D
 		self.assertSequenceEqual(

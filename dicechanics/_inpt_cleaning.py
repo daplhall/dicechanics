@@ -1,8 +1,9 @@
 
 import dicechanics as ds
 from collections import defaultdict
-from typing import DefaultDict, Iterable
+from typing import Iterable, TypeVar
 from dicechanics.math import unique
+
 
 def sort_dict(faces: dict) -> dict:
 	return dict(sorted(faces.items(), key=lambda pair: pair[0]))
@@ -13,7 +14,7 @@ def expand_dice(data:dict)->dict:
 	"""
 	dice = defaultdict(
 		int, 
-		filter(lambda x: isinstance(x[0], ds.Dice), data.items())
+		filter(lambda x: isinstance(x[0], ds.Die), data.items())
 	)
 	numbers = defaultdict(
 		int, 

@@ -5,7 +5,7 @@ from dicechanics._popper import DicePopper
 from dicechanics.typing import BinaryFunc_T
 
 type T = dict[object, int]
-type Inpt_T = Sequence[ds.Dice]
+type Inpt_T = Sequence[ds.Die]
 type Bag_T = Sequence[DicePopper]
 type Mem_T = dict[object, T]
 
@@ -24,10 +24,10 @@ def linear_combs(inpt: Inpt_T, layer: int , func: BinaryFunc_T, mem: Mem_T) -> T
 	mem[layer] = res
 	return res
 
-def linear_non_selective(inpt: Inpt_T, func: BinaryFunc_T) -> ds.Dice:
+def linear_non_selective(inpt: Inpt_T, func: BinaryFunc_T) -> ds.Die:
 	mem: Mem_T = {}
 	res = linear_combs(inpt, 0, func, mem)
-	return ds.Dice.from_dict(res)
+	return ds.Die.from_dict(res)
 
 def selective_comb(bag: Bag_T, func: BinaryFunc_T, keep: list[int], mem: Mem_T) -> T:
 	"""
@@ -59,8 +59,8 @@ def selective_comb(bag: Bag_T, func: BinaryFunc_T, keep: list[int], mem: Mem_T) 
 	mem[cache_key] = res
 	return res
 
-def linear_selective(inpt: Inpt_T, keep: list[int], func: BinaryFunc_T) -> ds.Dice:
+def linear_selective(inpt: Inpt_T, keep: list[int], func: BinaryFunc_T) -> ds.Die:
 	mem: Mem_T = {}
 	poppers = [DicePopper(i) for i in inpt]
 	res = selective_comb(poppers, func, keep, mem)
-	return ds.Dice.from_dict(res)
+	return ds.Die.from_dict(res)

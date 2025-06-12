@@ -187,7 +187,7 @@ class TestDiceFeatures(dice_unittest.TestCase):
 	def test_string(self):
 		self.assertEqual(
 			str(tts.d4),
-			"Dice({1: 1, 2: 1, 3: 1, 4: 1})"
+			"Die({1: 1, 2: 1, 3: 1, 4: 1})"
 		)
 		
 	
@@ -196,7 +196,7 @@ class TestPoolFeatures(unittest.TestCase):
 		pool = tts.Pool([tts.d6, tts.d6])
 		self.assertEqual(
 			str(pool),
-			'Pool([Dice({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1}), Dice({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1})])'
+			'Pool([Die({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1}), Die({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1})])'
 		)
 
 

@@ -1,4 +1,4 @@
-from dicechanics._Dice import Dice, convert_to_dice
+from dicechanics._Die import Die, convert_to_dice
 from dicechanics._dice_combinatorics import linear_non_selective, linear_selective
 
 # Pool needs to be invoked in the interface witha  decorator, in which
@@ -13,7 +13,7 @@ class Pool(object):
 			res = linear_non_selective(self._bag, func)
 		else:
 			res = linear_selective(self._bag, self._keep, func)
-		return Dice.from_dict(res)
+		return Die.from_dict(res)
 	
 	def copy(self):
 		res = Pool.__new__(Pool)
