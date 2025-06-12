@@ -1,5 +1,9 @@
+from dicechanics._dice_combinatorics import (
+	linear_non_selective,
+	linear_selective,
+)
 from dicechanics._Die import Die, convert_to_dice
-from dicechanics._dice_combinatorics import linear_non_selective, linear_selective
+
 
 # Pool needs to be invoked in the interface witha  decorator, in which
 # it is loaded with dice and the operations that needs to happen
@@ -14,29 +18,29 @@ class Pool(object):
 		else:
 			res = linear_selective(self._bag, self._keep, func)
 		return Die.from_dict(res)
-	
+
 	def copy(self):
 		res = Pool.__new__(Pool)
 		res._bag = self._bag
 		res._keep = self._keep
 		return res
 
-	
 	def __getitem__(self, idx):
 		res = self.copy()
 		if isinstance(idx, slice):
-			keep = [0]*len(self._bag)
-			keep[idx] = [1]*len(keep[idx])
+			keep = [0] * len(self._bag)
+			keep[idx] = [1] * len(keep[idx])
 		else:
 			keep = idx
 		res._keep = keep
 		return res
 
-	def __call__(self,func):
+	def __call__(self, func):
 		def wrapper():
 			return self.perform(func)
+
 		return wrapper
-	
+
 	def __str__(self):
 		n = len(self._bag)
 		txt = "Pool(["
@@ -44,22 +48,20 @@ class Pool(object):
 			txt += str(d) + (", " if i < n - 1 else "")
 		txt += "])"
 		return txt
-	
+
 	def add_level2(self, rhs):
 		res = self.copy()
 		res._bag.append(rhs)
 		return res
-	
+
 	def add_level3(self, rhs):
 		res = self.copy()
 		res._bag.extend(rhs._bag)
 		return res
-	
+
 	def __add__(self, rhs):
 		if isinstance(rhs, Pool):
 			return self.add_level3(rhs)
 		else:
 			rhs = convert_to_dice(rhs)
 			return self.add_level2(rhs)
-
-

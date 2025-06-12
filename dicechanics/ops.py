@@ -1,4 +1,4 @@
-__all__ = ['add', 'sub', 'mul', 'floordiv', 'div','mod','ceil','floor']
+__all__ = ["add", "sub", "mul", "floordiv", "div", "mod", "ceil", "floor"]
 
 import math
 import operator as op
@@ -14,5 +14,6 @@ floor = math.floor
 max = max
 min = min
 
+
 def ceildiv(lhs: float, rhs: float) -> float:
-	return -(lhs//-rhs)
+	return -(lhs // -rhs)

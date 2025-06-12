@@ -1,6 +1,7 @@
 from typing import Iterable
 
-def unique(array: Iterable[float]) -> tuple[list,list]:
+
+def unique(array: Iterable[float]) -> tuple[list, list]:
 	uf = []
 	c = []
 	for e in array:
@@ -18,6 +19,6 @@ def gcd(a: int, b: int) -> int:
 	Greatest commen demoninator
 	"""
 	while b != 0:
-		r = a%b
-		a,b = b, r
+		r = a % b
+		a, b = b, r
 	return a

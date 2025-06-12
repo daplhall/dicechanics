@@ -1,9 +1,9 @@
 import operator as op
 from collections import defaultdict
-from collections.abc import KeysView,ValuesView, ItemsView
+from collections.abc import ItemsView, KeysView, ValuesView
 from itertools import product
 from math import sqrt
-from typing import Generator, Callable, Iterable, Any
+from typing import Any, Callable, Generator, Iterable
 
 from dicechanics._inpt_cleaning import collect_faces, expand_dice, sort_dict
 from dicechanics._math import gcd
@@ -15,7 +15,8 @@ type PureFunc_T = Callable[[Any], Any]
 
 PRIMITIVES = (float, int)
 
-def convert_to_dice(inpt:object) -> Die_T:
+
+def convert_to_dice(inpt: object) -> Die_T:
 	if isinstance(inpt, PRIMITIVES):
 		return Die([inpt])
 	elif isinstance(inpt, Die):
@@ -23,8 +24,11 @@ def convert_to_dice(inpt:object) -> Die_T:
 	else:
 		raise ValueError("Inpt is not a primitive or a Die")
 
-class Die():
-	def __init__(self, faces: Iterable[float], /, rounding: PureFunc_T =lambda x: x):
+
+class Die:
+	def __init__(
+		self, faces: Iterable[float], /, rounding: PureFunc_T = lambda x: x
+	):
 		self._data = collect_faces(faces)
 		self._derived_attr()
 		self._rounding = rounding
@@ -43,8 +47,7 @@ class Die():
 		self._p = [i / self._units for i in self.c]
 		self._mean = sum(p * f for p, f in zip(self.p, self.f))
 		self._var = sum(
-			p * (x - self._mean) ** 2
-			for x, p in zip(self.f, self.p)
+			p * (x - self._mean) ** 2 for x, p in zip(self.f, self.p)
 		)
 		self._hash = hash(tuple(self._data.items()) + (self._mean,))
 		self._cdf = self._cumulative()
@@ -52,8 +55,10 @@ class Die():
 		self._min = min(self._data)
 
 	def _cumulative(self) -> list[float]:
-		out:list[float] = []
-		for p in self.p:  # can fold this out an call with iter to clean up the if statement
+		out: list[float] = []
+		for p in (
+			self.p
+		):  # can fold this out an call with iter to clean up the if statement
 			out.append(p + out[-1] if out else p)
 		return out
 
@@ -119,14 +124,8 @@ class Die():
 			return Die(i for i in self if i not in redo)
 		faces = self._data
 		for _ in range(depth):
-			numbers = {
-				f: c for f, c in faces.items() if f not in redo
-			}
-			dice = {
-				self: sum(
-					c for f, c in faces.items() if f in redo
-				)
-			}
+			numbers = {f: c for f, c in faces.items() if f not in redo}
+			dice = {self: sum(c for f, c in faces.items() if f in redo)}
 			faces = expand_dice(numbers | dice)
 		return Die.from_dict(sort_dict(faces))
 
@@ -134,16 +133,9 @@ class Die():
 		faces = self._data
 		# redo needs to be updated, so every combination of redo adds another.
 		if depth > 0:
-			numbers = {
-				f: c
-				for f, c in faces.items()
-				if f not in exploder
-			}
+			numbers = {f: c for f, c in faces.items() if f not in exploder}
 			dice = {
-				(
-					self.explode(*exploder, depth=depth - 1)
-					+ f
-				): c
+				(self.explode(*exploder, depth=depth - 1) + f): c
 				for f, c in faces.items()
 				if f in exploder
 			}
@@ -159,7 +151,7 @@ class Die():
 		else:
 			return self._hash == rhs._hash
 
-	def folding(self, rhs: object, ops: CompareFunc_T, into:object) -> Die_T:
+	def folding(self, rhs: object, ops: CompareFunc_T, into: object) -> Die_T:
 		data = defaultdict(
 			int, {f: c for f, c in self.items() if not ops(f, rhs)}
 		)
@@ -167,26 +159,23 @@ class Die():
 		data[into] += c
 		return Die.from_dict(data)
 
-	def fold_over(self, rhs:object, /, into:object=None) -> Die_T:
-		return self.folding(
-			rhs, op.gt, into=rhs if into is None else into
-		)
+	def fold_over(self, rhs: object, /, into: object = None) -> Die_T:
+		return self.folding(rhs, op.gt, into=rhs if into is None else into)
 
-	def fold_under(self, rhs:object, /, into:object=None) -> Die_T:
-		return self.folding(
-			rhs, op.lt, into=rhs if into is None else into
-		)
+	def fold_under(self, rhs: object, /, into: object = None) -> Die_T:
+		return self.folding(rhs, op.lt, into=rhs if into is None else into)
 
-	def perform(self, func: PureFunc_T)->Die_T:
+	def perform(self, func: PureFunc_T) -> Die_T:
 		res = Die(func(i) for i in self)
 		return res
 
-	def __hash__(self)->int:
+	def __hash__(self) -> int:
 		return self._hash
 
 	def __call__(self, func: PureFunc_T) -> Callable:
 		def wrapper():
 			return self.perform(func)
+
 		return wrapper
 
 	def __iter__(self) -> Generator:  # might need ot be text also when mask
@@ -198,7 +187,7 @@ class Die():
 		return value in self._data.keys()
 
 	def _binary_level0(self, rhs: object, ops: BinaryFunc_T):
-		data = defaultdict[object,int](int)
+		data = defaultdict[object, int](int)
 		for f, c in self.items():
 			key = self._rounding(ops(f, rhs))
 			data[key] += c
@@ -262,20 +251,16 @@ class Die():
 	def __gt__(self, rhs: object) -> Die_T:
 		return self._binary_op(rhs, op.gt)
 
-	def __eq__(self, rhs: object) -> BooleanDie_T: # type: ignore
+	def __eq__(self, rhs: object) -> BooleanDie_T:  # type: ignore
 		# TODO write this and __ne__ as a general operation, also optimize
 		return BooleanDie.from_dice(
-			self._binary_op(
-				rhs, op.eq
-			),  # TODO THIS IS A PERFORMANCE HOG
+			self._binary_op(rhs, op.eq),  # TODO THIS IS A PERFORMANCE HOG
 			self.equal(rhs),
 		)
 
-	def __ne__(self, rhs: object) -> BooleanDie_T: #type: ignore
+	def __ne__(self, rhs: object) -> BooleanDie_T:  # type: ignore
 		return BooleanDie.from_dice(
-			self._binary_op(
-				rhs, op.ne
-			),  # TODO THIS IS A PERFORMANCE HOG
+			self._binary_op(rhs, op.ne),  # TODO THIS IS A PERFORMANCE HOG
 			not self.equal(rhs),
 		)
 
@@ -298,7 +283,7 @@ class Die():
 		nrolls = max(lhs.min(), lhs.max())
 		for i in lhs:
 			base = units ** (nrolls - i)
-			res += [j for j in i @ self] * base
+			res += list(i @ self) * base
 		return Die(res)
 
 	def _binary_rmatmul(self, lhs: int, ops: BinaryFunc_T) -> Die_T:
@@ -336,19 +321,20 @@ class Die():
 	def __str__(self) -> str:
 		return self.__repr__()
 
+
 class BooleanDie(Die):
 	def __init__(self, faces, truth: bool):
 		super().__init__(faces)
 		self._truth = truth
-		
+
 	@classmethod
-	def from_dice(cls, dice:Die, truth: bool) -> BooleanDie_T:
+	def from_dice(cls, dice: Die, truth: bool) -> BooleanDie_T:
 		self = cls.__new__(cls)
 		self._data = dice._data
 		self._rounding = dice._rounding
 		self._truth = truth
 		self._derived_attr()
 		return self
-		
+
 	def __bool__(self) -> bool:
 		return self._truth

@@ -1,5 +1,4 @@
-from typing import Callable, Any
-
+from typing import Any, Callable
 
 type NumVector = list[float]
 type BinaryFunc_T = Callable[[Any, Any], Any]
