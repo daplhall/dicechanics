@@ -1,12 +1,12 @@
 import operator as op
-from typing import Generator, Callable, Iterable, Any
-from itertools import product
-from math import sqrt
 from collections import defaultdict
 from collections.abc import KeysView,ValuesView, ItemsView
+from itertools import product
+from math import sqrt
+from typing import Generator, Callable, Iterable, Any
 
 from dicechanics._inpt_cleaning import collect_faces, expand_dice, sort_dict
-from dicechanics.math import gcd
+from dicechanics._math import gcd
 from dicechanics.typing import BinaryFunc_T, CompareFunc_T, UnaryFunc_T
 
 type Die_T = Die

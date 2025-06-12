@@ -1,5 +1,6 @@
-from typing import Sequence
 from collections import defaultdict
+from typing import Sequence
+
 import dicechanics as ds
 from dicechanics._popper import DicePopper
 from dicechanics.typing import BinaryFunc_T

@@ -1,4 +1,3 @@
-
 from dicechanics._Die import convert_to_dice
 
 class DicePopper(object):

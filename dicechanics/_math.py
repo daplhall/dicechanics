@@ -1,18 +1,4 @@
-__all__ = ['add', 'sub', 'mul', 'floordiv', 'div','mod','ceil','floor']
-import math
-import operator as op
 from typing import Iterable
-
-add = op.add
-sub = op.sub
-mul = op.mul
-floordiv = op.floordiv
-div = op.truediv
-mod = op.mod
-ceil = math.ceil
-floor = math.floor
-max = max
-min = min
 
 def unique(array: Iterable[float]) -> tuple[list,list]:
 	uf = []
@@ -26,8 +12,6 @@ def unique(array: Iterable[float]) -> tuple[list,list]:
 			c[i] += 1
 	return uf, c
 
-def ceildiv(lhs: float, rhs: float) -> float:
-	return -(lhs//-rhs)
 
 def gcd(a: int, b: int) -> int:
 	"""

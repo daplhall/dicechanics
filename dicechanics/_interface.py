@@ -1,4 +1,5 @@
 from collections.abc import Iterable
+
 from dicechanics._Die import Die
 from dicechanics._Pool import Pool
 from dicechanics._parser import text_to_faces

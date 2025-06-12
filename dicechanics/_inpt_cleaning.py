@@ -1,8 +1,9 @@
 
-import dicechanics as ds
 from collections import defaultdict
-from typing import Iterable, TypeVar
-from dicechanics.math import unique
+from typing import Iterable
+
+import dicechanics as ds
+from dicechanics._math import unique
 
 
 def sort_dict(faces: dict) -> dict:

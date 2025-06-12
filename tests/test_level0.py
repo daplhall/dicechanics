@@ -54,7 +54,7 @@ class TestLevel0_Dice(dice_unittest.TestCase):
 
 	def test_divide_int_roundup(self):
 		control = tts.d("1,1,2,2,3,3")
-		d6 = tts.d(6, rounding = tts.math.ceil)
+		d6 = tts.d(6, rounding = tts.ops.ceil)
 		d = d6/2
 		self.assertSequenceEqual(d.f, control.f)
 		self.assertSequenceAlmostEqual(
@@ -64,7 +64,7 @@ class TestLevel0_Dice(dice_unittest.TestCase):
 		)
 
 	def test_divide_int_rounddown(self):
-		d6 = tts.d(6, rounding = tts.math.floor)
+		d6 = tts.d(6, rounding = tts.ops.floor)
 		d = d6/2
 		self.assertSequenceEqual(d.f,[0,1,2,3])
 		self.assertSequenceAlmostEqual(
