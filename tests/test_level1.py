@@ -1,8 +1,8 @@
 import unittest
-import numpy as np
+
+import dice_unittest
 
 import dicechanics as tts
-import dice_unittest
 
 
 class TestLevel1(dice_unittest.TestCase):
@@ -13,7 +13,7 @@ class TestLevel1(dice_unittest.TestCase):
 	def test_plus_dice(self):
 		d6 = tts.d(6)
 		D = d6 + d6
-		self.assertSequenceEqual(D.f, [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+		assert D.f == [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 		self.assertSequenceAlmostEqual(
 			D.p,
 			[
@@ -36,10 +36,26 @@ class TestLevel1(dice_unittest.TestCase):
 		d6 = tts.d(6)
 		dd = tts.d("2,4,6,8,20")
 		D = d6 + dd
-		self.assertSequenceEqual(
-			D.f,
-			[3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 21, 22, 23, 24, 25, 26],
-		)
+		assert D.f == [
+			3,
+			4,
+			5,
+			6,
+			7,
+			8,
+			9,
+			10,
+			11,
+			12,
+			13,
+			14,
+			21,
+			22,
+			23,
+			24,
+			25,
+			26,
+		]
 		self.assertSequenceAlmostEqual(
 			D.p,
 			[
@@ -81,9 +97,7 @@ class TestLevel1(dice_unittest.TestCase):
 			+ [12]
 		)
 		D = d4 + D
-		self.assertSequenceEqual(
-			D.f, [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-		)
+		assert D.f == [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 		self.assertSequenceAlmostEqual(
 			D.p,
 			[
@@ -108,7 +122,7 @@ class TestLevel1(dice_unittest.TestCase):
 	def test_matmult(self):
 		d6 = tts.d(6)
 		D = 2 @ d6
-		self.assertSequenceEqual(D.f, [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+		assert D.f == [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 		self.assertSequenceAlmostEqual(
 			D.p,
 			[
@@ -130,7 +144,7 @@ class TestLevel1(dice_unittest.TestCase):
 	def test_matmult_multiple(self):
 		d6 = tts.d(6)
 		D = 4 @ d6
-		self.assertSequenceEqual(D.f, range(4, 24 + 1))
+		assert D.f == list(range(4, 24 + 1))
 		self.assertSequenceAlmostEqual(
 			D.p,
 			[
@@ -162,7 +176,7 @@ class TestLevel1(dice_unittest.TestCase):
 	def test_matmult_one(self):
 		d6 = tts.d(6)
 		D = 1 @ d6
-		self.assertSequenceEqual(D.f, range(1, 6 + 1))
+		assert D.f == list(range(1, 6 + 1))
 		self.assertSequenceAlmostEqual(
 			D.p, [0.1667, 0.1667, 0.1667, 0.1667, 0.1667, 0.1667], 4
 		)
@@ -170,7 +184,7 @@ class TestLevel1(dice_unittest.TestCase):
 	def test_matmult_negative(self):
 		d6 = tts.d(6)
 		D = -4 @ d6
-		self.assertSequenceEqual(D.f, range(-24, -3))
+		assert D.f == list(range(-24, -3))
 		self.assertSequenceAlmostEqual(
 			D.p,
 			[
@@ -202,32 +216,32 @@ class TestLevel1(dice_unittest.TestCase):
 	def test_greater_than(self):
 		d6 = tts.d(6)
 		D = d6 > d6
-		self.assertSequenceEqual(D.f, [0, 1])
+		assert D.f == [0, 1]
 		self.assertSequenceAlmostEqual(D.p, [0.5833, 0.4167], 4)
 
 	def test_greater_equal_than(self):
 		d6 = tts.d(6)
 		D = d6 >= d6
-		self.assertSequenceEqual(D.f, [0, 1])
+		assert D.f == [0, 1]
 		self.assertSequenceAlmostEqual(D.p, [0.4167, 0.5833], 4)
 
 	def test_not_equal_than(self):
 		d6 = tts.d(6)
 		D = d6 != d6
-		self.assertSequenceEqual(D.f, [0, 1])
+		assert D.f == [0, 1]
 		self.assertSequenceAlmostEqual(D.p, [0.1667, 0.8333], 4)
 
 	def test_equal_than(self):
 		d6 = tts.d(6)
 		D = d6 == d6
-		self.assertSequenceEqual(D.f, [0, 1])
+		assert D.f == [0, 1]
 		self.assertSequenceAlmostEqual(D.p, [0.8333, 0.1667], 4)
 
 	def test_rmatmul(self):
 		d6 = tts.d(6)
 		d2 = tts.d(2)
 		D = d2 @ d6
-		self.assertSequenceEqual(D.f, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+		assert D.f == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 		self.assertSequenceAlmostEqual(
 			D.p,
 			[
@@ -251,45 +265,42 @@ class TestLevel1(dice_unittest.TestCase):
 		f = tts.d("1,3,6")
 		g = tts.d("4,7,8")
 		D = f @ g
-		self.assertSequenceEqual(
-			D.f,
-			[
-				4,
-				7,
-				8,
-				12,
-				15,
-				16,
-				18,
-				19,
-				20,
-				21,
-				22,
-				23,
-				24,
-				27,
-				28,
-				30,
-				31,
-				32,
-				33,
-				34,
-				35,
-				36,
-				37,
-				38,
-				39,
-				40,
-				41,
-				42,
-				43,
-				44,
-				45,
-				46,
-				47,
-				48,
-			],
-		)
+		assert D.f == [
+			4,
+			7,
+			8,
+			12,
+			15,
+			16,
+			18,
+			19,
+			20,
+			21,
+			22,
+			23,
+			24,
+			27,
+			28,
+			30,
+			31,
+			32,
+			33,
+			34,
+			35,
+			36,
+			37,
+			38,
+			39,
+			40,
+			41,
+			42,
+			43,
+			44,
+			45,
+			46,
+			47,
+			48,
+		]
 		self.assertSequenceAlmostEqual(
 			D.p,
 			[
@@ -335,7 +346,7 @@ class TestLevel1(dice_unittest.TestCase):
 		f = tts.d("0,1")
 		g = tts.d("1,2,3")
 		D = f @ g
-		self.assertSequenceEqual(D.f, [0, 1, 2, 3])
+		assert D.f == [0, 1, 2, 3]
 		self.assertSequenceAlmostEqual(D.p, [0.5] + [0.1667] * 3, 4)
 
 

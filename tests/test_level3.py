@@ -1,7 +1,8 @@
 import unittest
 
-import dicechanics as tts
 import dice_unittest
+
+import dicechanics as tts
 
 
 class Testlevel3(dice_unittest.TestCase):
@@ -10,7 +11,7 @@ class Testlevel3(dice_unittest.TestCase):
 
 	def test_addpool(self):
 		newpool = self.pool + tts.Pool([tts.d10, tts.d20])
-		self.assertSequenceEqual(newpool._bag, [tts.d6, tts.d10, tts.d20])
+		assert newpool._bag == [tts.d6, tts.d10, tts.d20]
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 from dicechanics._Die import convert_to_dice
 
 
-class DicePopper(object):
+class DicePopper:
 	faces: list[object]
 	count: list[int]
 

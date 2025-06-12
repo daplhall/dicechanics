@@ -1,7 +1,8 @@
 import unittest
 
-from dicechanics._math import gcd
 import dice_unittest
+
+from dicechanics._math import gcd
 
 
 class TestLevel1(dice_unittest.TestCase):
@@ -10,7 +11,7 @@ class TestLevel1(dice_unittest.TestCase):
 		r = gcd(X[0], X[1])
 		for i in X[2:]:
 			r = gcd(r, i)
-		self.assertEqual(r, 5)
+		assert r == 5
 
 
 if __name__ == "__main__":

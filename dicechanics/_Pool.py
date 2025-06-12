@@ -7,7 +7,7 @@ from dicechanics._Die import Die, convert_to_dice
 
 # Pool needs to be invoked in the interface witha  decorator, in which
 # it is loaded with dice and the operations that needs to happen
-class Pool(object):
+class Pool:
 	def __init__(self, dice: list):
 		self._bag = dice
 		self._keep = None
