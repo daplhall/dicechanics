@@ -1,8 +1,8 @@
 import unittest
 import dice_unittest
 
-from DiceStatistics._parser import text_to_faces
-from DiceStatistics._inpt_cleaning import collect_faces
+from dicechanics._parser import text_to_faces
+from dicechanics._inpt_cleaning import collect_faces
 
 class TestParser(dice_unittest.TestCase):
 	def test_parse(self):

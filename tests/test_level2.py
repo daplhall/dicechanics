@@ -1,6 +1,6 @@
 import unittest
 
-import DiceStatistics as tts
+import dicechanics as tts
 import dice_unittest
 
 class TestLevel2(dice_unittest.TestCase):
@@ -12,14 +12,14 @@ class TestLevel2(dice_unittest.TestCase):
 		newpool = self.pool + 1
 		self.assertSequenceEqual(
 			newpool._bag,
-			[tts.d6, tts.Dice([1])]
+			[tts.d6, tts.Die([1])]
 		)
 	
 	def test_addfloat(self):
 		newpool = self.pool + 1.5
 		self.assertSequenceEqual(
 			newpool._bag,
-			[tts.d6, tts.Dice([1.5])]
+			[tts.d6, tts.Die([1.5])]
 		)
 
 	def test_adddice(self):

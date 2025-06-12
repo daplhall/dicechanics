@@ -1,6 +1,6 @@
 import unittest
 
-import DiceStatistics as tts
+import dicechanics as tts
 import dice_unittest
 
 class TestNonSelective(dice_unittest.TestCase):
