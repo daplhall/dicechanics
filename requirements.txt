@@ -5,3 +5,4 @@ build
 sphinx
 line_profiler
 mypy
+pytest

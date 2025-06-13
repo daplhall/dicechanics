@@ -1,26 +1,16 @@
-import unittest
-
-import dice_unittest
-
-import dicechanics as tts
+import dicechanics as ds
 
 
-class TestLevel2(dice_unittest.TestCase):
-	def setUp(self):
-		self.pool = tts.Pool([tts.d6])
-
-	def test_addint(self):
-		newpool = self.pool + 1
-		assert newpool._bag == [tts.d6, tts.Die([1])]
-
-	def test_addfloat(self):
-		newpool = self.pool + 1.5
-		assert newpool._bag == [tts.d6, tts.Die([1.5])]
-
-	def test_adddice(self):
-		newpool = self.pool + tts.d10
-		assert newpool._bag == [tts.d6, tts.d10]
+def test_addint(pool_1d6, d6):
+	newpool = pool_1d6 + 1
+	assert newpool._bag == [d6, ds.Die([1])]
 
 
-if __name__ == "__main__":
-	unittest.main()
+def test_addfloat(pool_1d6, d6):
+	newpool = pool_1d6 + 1.5
+	assert newpool._bag == [d6, ds.Die([1.5])]
+
+
+def test_adddice(pool_1d6, d6, d10):
+	newpool = pool_1d6 + d10
+	assert newpool._bag == [d6, d10]
