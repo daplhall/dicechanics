@@ -65,3 +65,13 @@ def mypool(x, y):
 
 res = mypool()
 ```
+
+### *Running benchmarks*
+To run the benchmarks and saving them
+```
+pytest benchmarks --benchmark-autosave
+```
+to compare differnt runs
+```
+pytest-benchmark compare [ids,...]
+```
