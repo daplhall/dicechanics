@@ -1,18 +1,6 @@
-import unittest
-
-import dice_unittest
-
-import dicechanics as tts
+import dicechanics as ds
 
 
-class Testlevel3(dice_unittest.TestCase):
-	def setUp(self):
-		self.pool = tts.Pool([tts.d6])
-
-	def test_addpool(self):
-		newpool = self.pool + tts.Pool([tts.d10, tts.d20])
-		assert newpool._bag == [tts.d6, tts.d10, tts.d20]
-
-
-if __name__ == "__main__":
-	unittest.main()
+def test_addpool(pool_1d6, d6, d10, d20):
+	newpool = pool_1d6 + ds.pool([d10, d20])
+	assert newpool._bag == [d6, d10, d20]

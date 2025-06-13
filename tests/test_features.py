@@ -1,211 +1,179 @@
-import unittest
+import pytest
 
-import dice_unittest
-
-import dicechanics as tts
+import dicechanics as ds
 
 
-class TestDiceFeatures(dice_unittest.TestCase):
-	def test_reroll1(self):
-		d = tts.d6.reroll(6)
-		assert d.f == [1, 2, 3, 4, 5, 6]
-		self.assertSequenceAlmostEqual(
-			d.p, [0.1944, 0.1944, 0.1944, 0.1944, 0.1944, 0.02778], 4
-		)
-
-	def test_reroll2(self):
-		g = 2 @ tts.d6
-		d = g.reroll(7)
-		assert d.f == [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-		self.assertSequenceAlmostEqual(
-			d.p,
-			[
-				0.0324,
-				0.0648,
-				0.0972,
-				0.1296,
-				0.1620,
-				0.0278,
-				0.1620,
-				0.1296,
-				0.0972,
-				0.0648,
-				0.0324,
-			],
-			4,
-		)
-
-	def test_reroll3(self):
-		g = 3 @ tts.d6
-		d = g.reroll(7)
-		assert d.f == [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
-		self.assertSequenceAlmostEqual(
-			d.p,
-			[
-				0.0050,
-				0.0149,
-				0.0297,
-				0.0495,
-				0.0048,
-				0.1040,
-				0.1238,
-				0.1337,
-				0.1337,
-				0.1238,
-				0.1040,
-				0.0743,
-				0.0495,
-				0.0297,
-				0.0149,
-				0.0050,
-			],
-			4,
-		)
-
-	def test_reroll_depth(self):
-		g = tts.d6
-		d = g.reroll(5, 6, depth=2)
-		assert d.f == [1, 2, 3, 4, 5, 6]
-		self.assertSequenceAlmostEqual(d.p, [0.2407] * 4 + [0.0185] * 2, 4)
-
-	def test_reroll_depth2(self):
-		g = tts.d10
-		d = g.reroll(1, 4, 6, 8, 10, depth=6)
-		assert d.f == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-		self.assertSequenceAlmostEqual(
-			d.p,
-			[0.0016]
-			+ [0.1984] * 2
-			+ [0.0016, 0.1984, 0.0016, 0.1984, 0.0016, 0.1984, 0.0016],
-			4,
-		)
-
-	def test_reroll_inf(self):
-		g = tts.d10
-		d = g.reroll(7, 8, 9, 10, depth="inf")
-		assert d.f == [1, 2, 3, 4, 5, 6]
-		self.assertSequenceAlmostEqual(d.p, [0.1667] * 6, 4)
-
-	def test_count1(self):
-		d = tts.d10.count(5, 6)
-		assert d.f == [0, 1]
-		self.assertSequenceAlmostEqual(d.p, [0.8, 0.2], 4)
-
-	def test_explode(self):
-		d = tts.d6.explode(5, 6)
-		assert d.f == [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12]
-		self.assertSequenceAlmostEqual(
-			d.p, [0.1667] * 4 + [0.0278] + [0.0556] * 5 + [0.0278], 4
-		)
-
-	def test_explode_depth(self):
-		d = tts.d6.explode(6, depth=3)
-		assert d.f == [
-			1,
-			2,
-			3,
-			4,
-			5,
-			7,
-			8,
-			9,
-			10,
-			11,
-			13,
-			14,
-			15,
-			16,
-			17,
-			19,
-			20,
-			21,
-			22,
-			23,
-			24,
-		]
-		self.assertSequenceAlmostEqual(
-			d.p, [0.1667] * 5 + [0.0278] * 5 + [0.0046] * 5 + [0.0008] * 5, 4
-		)
-
-	def test_explode_depth2(self):
-		d = tts.d6.explode(5, 6, depth=2)
-		assert d.f == [
-			1,
-			2,
-			3,
-			4,
-			6,
-			7,
-			8,
-			9,
-			10,
-			11,
-			12,
-			13,
-			14,
-			15,
-			16,
-			17,
-			18,
-		]
-		self.assertSequenceAlmostEqual(
-			d.p,
-			[0.1667] * 4
-			+ [0.0278]
-			+ [0.0556] * 3
-			+ [0.0278]
-			+ [0.0046]
-			+ [0.0139]
-			+ [0.0185] * 4
-			+ [0.0139]
-			+ [0.0046],
-			4,
-		)
-
-	def test_fold_over(self):
-		d = tts.d10
-		d = d.fold_over(6)
-		assert d.f == [1, 2, 3, 4, 5, 6]
-		self.assertSequenceAlmostEqual(d.p, [0.1] * 5 + [0.5], 4)
-
-	def test_fold_over_into(self):
-		d = tts.d10
-		d = d.fold_over(6, into=5)
-		assert d.f == [1, 2, 3, 4, 5, 6]
-		self.assertSequenceAlmostEqual(d.p, [0.1] * 4 + [0.5] + [0.1], 4)
-
-	def test_fold_under(self):
-		d = tts.d10
-		d = d.fold_under(3)
-		assert d.f == [3, 4, 5, 6, 7, 8, 9, 10]
-		self.assertSequenceAlmostEqual(d.p, [0.3] + [0.1] * 7, 4)
-
-	def test_fold_under_into(self):
-		d = tts.d10
-		d = d.fold_under(3, into=4)
-		assert d.f == [3, 4, 5, 6, 7, 8, 9, 10]
-		self.assertSequenceAlmostEqual(d.p, [0.1] + [0.3] + [0.1] * 6, 4)
-
-	def test_fold_under_into_0(self):
-		d = tts.d10
-		d = d.fold_under(3, into=0)
-		assert d.f == [0, 3, 4, 5, 6, 7, 8, 9, 10]
-		self.assertSequenceAlmostEqual(
-			d.p, [0.2] + [0.1] + [0.1] + [0.1] * 6, 4
-		)
-
-	def test_string(self):
-		assert str(tts.d4) == "Die({1: 1, 2: 1, 3: 1, 4: 1})"
+@pytest.fixture
+def folding_faces():
+	return [3, 4, 5, 6, 7, 8, 9, 10]
 
 
-class TestPoolFeatures(unittest.TestCase):
-	def test_to_string(self):
-		pool = tts.Pool([tts.d6, tts.d6])
-		assert (
-			str(pool)
-			== "Pool([Die({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1}), Die({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1})])"  # noqa: E501
-		)
+def test_reroll1(d6):
+	d = d6.reroll(6)
+	assert d.f == d6.f
+	assert d.c == [7] * 5 + [1]
 
 
-if __name__ == "__main__":
-	unittest.main()
+def test_reroll2(d6):
+	d = 2 @ d6
+	g = d.reroll(7)
+	assert g.f == d.f
+	assert g.c == [7, 14, 21, 28, 35, 6, 35, 28, 21, 14, 7]
+
+
+def test_reroll3(d6):
+	d = 3 @ d6
+	g = d.reroll(7)
+	assert d.f == g.f
+	assert g.c == [
+		77,
+		231,
+		462,
+		770,
+		75,
+		1617,
+		1925,
+		2079,
+		2079,
+		1925,
+		1617,
+		1155,
+		770,
+		462,
+		231,
+		77,
+	]
+
+
+def test_reroll_depth(d6):
+	d = d6.reroll(5, 6, depth=2)
+	assert d.f == d6.f
+	assert d.c == [13, 13, 13, 13, 1, 1]
+
+
+def test_reroll_depth2(d10):
+	d = d10.reroll(1, 4, 6, 8, 10, depth=6)
+	assert d.f == d10.f
+	assert d.c == [1, 127, 127, 1, 127, 1, 127, 1, 127, 1]
+
+
+def test_reroll_inf(d10, d6):
+	d = d10.reroll(7, 8, 9, 10, depth="inf")
+	assert d.f == d6.f
+	assert d.c == [1] * 6
+
+
+def test_count1(d10):
+	d = d10.count(5, 6)
+	assert d.f == [0, 1]
+	assert d.c == [4, 1]
+
+
+def test_explode(d6):
+	d = d6.explode(5, 6)
+	assert d.f == [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12]
+	assert d.c == [6, 6, 6, 6, 1, 2, 2, 2, 2, 2, 1]
+
+
+def test_explode_depth(d6):
+	d = d6.explode(6, depth=3)
+	assert d.f == [
+		1,
+		2,
+		3,
+		4,
+		5,
+		7,
+		8,
+		9,
+		10,
+		11,
+		13,
+		14,
+		15,
+		16,
+		17,
+		19,
+		20,
+		21,
+		22,
+		23,
+		24,
+	]
+	assert d.c == [
+		216,
+		216,
+		216,
+		216,
+		216,
+		36,
+		36,
+		36,
+		36,
+		36,
+		6,
+		6,
+		6,
+		6,
+		6,
+		1,
+		1,
+		1,
+		1,
+		1,
+		1,
+	]
+
+
+def test_explode_depth2(d6):
+	d = d6.explode(5, 6, depth=2)
+	assert d.f == [
+		1,
+		2,
+		3,
+		4,
+		6,
+		7,
+		8,
+		9,
+		10,
+		11,
+		12,
+		13,
+		14,
+		15,
+		16,
+		17,
+		18,
+	]
+	assert d.c == [36, 36, 36, 36, 6, 12, 12, 12, 6, 1, 3, 4, 4, 4, 4, 3, 1]
+
+
+def test_fold_under(d10, folding_faces):
+	d = d10.fold_under(3)
+	assert d.f == folding_faces
+	assert d.c == [3, 1, 1, 1, 1, 1, 1, 1]
+
+
+def test_fold_under_into(d10, folding_faces):
+	d = d10.fold_under(3, into=4)
+	assert d.f == folding_faces
+	assert d.c == [1, 3, 1, 1, 1, 1, 1, 1]
+
+
+def test_fold_under_into_0(d10, folding_faces):
+	d = d10.fold_under(3, into=0)
+	assert d.f == [0] + folding_faces
+	assert d.c == [2, 1, 1, 1, 1, 1, 1, 1, 1]
+
+
+def test_string(d6):
+	assert str(d6) == "Die({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1})"
+
+
+def test_pool_string(d6):
+	pool = ds.pool([d6, d6])
+	assert (
+		str(pool)
+		== "Pool([Die({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1}), Die({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1})])"
+	)
