@@ -1,8 +1,6 @@
-numpy
-matplotlib
-scipy
-build
-sphinx
-line_profiler
-mypy
-pytest
+matplotlib==3.10.3
+build==1.2.2
+sphinx==8.2.3
+line_profiler==4.2.0
+pytest==8.4.0
+pytest_benchmark==5.1.0
