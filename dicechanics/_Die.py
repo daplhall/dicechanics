@@ -165,7 +165,7 @@ class Die:
 	def fold_under(self, rhs: object, /, into: object = None) -> Die_T:
 		return self.folding(rhs, op.lt, into=rhs if into is None else into)
 
-	def perform(self, func: PureFunc_T) -> Die_T:
+	def map(self, func: PureFunc_T) -> Die_T:
 		res = Die(func(i) for i in self)
 		return res
 
@@ -174,7 +174,7 @@ class Die:
 
 	def __call__(self, func: PureFunc_T) -> Callable:
 		def wrapper():
-			return self.perform(func)
+			return self.map(func)
 
 		return wrapper
 
