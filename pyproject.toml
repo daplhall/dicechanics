@@ -19,8 +19,6 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "numpy>=2.0.0",
-    "scipy>=1.14.1"
 ]
 
 [project.urls]
