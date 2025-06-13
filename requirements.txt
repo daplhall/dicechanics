@@ -1,6 +1,7 @@
 build==1.2.2
 line_profiler==4.2.0
 matplotlib==3.10.3
+mypy
 pytest==8.4.0
 pytest_benchmark==5.1.0
 sphinx==8.2.3
