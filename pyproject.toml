@@ -5,12 +5,12 @@ requires = [
 build-backend = "hatchling.build"
 
 [project]
-name = 'DiceStatistics'
+name = 'dicechanics'
 version = '2.0.0b'
 authors = [
     {name = 'Daniel Hall', email = 'blankemail@email.com'},
 ]
-description = "A dice statistics module"
+description = "A tool for doing statistic on dice mechanics"
 readme = 'README.md'
 requires-python = ">=3.12"
 classifiers = [
@@ -27,6 +27,6 @@ Issues = "https://github.com/daplhall/DiceStatistics/issues"
 
 [tool.hatch.build.targets.sdist]
 include = [
-  "DiceStatistics/*",
+  "dicechanics/*",
   "tests/*"
 ]
