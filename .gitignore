@@ -3,6 +3,7 @@
 .ruff_cache
 .mypy_cache
 .pytest_cache
+.benchmarks
 dist/
 build/
 **/__pycache__/
