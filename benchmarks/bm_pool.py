@@ -13,7 +13,7 @@ def pool_nonselective_max():
 
 # TODO once the selective is optimized, we paramterize this test
 @pytest.mark.parametrize("pool", [pool_nonselective_max, pool_nonselective_add])
-def test_pool_nonselective(pool, benchmark):
+def bm_pool_nonselective(pool, benchmark):
 	res = benchmark(pool)
 	assert (
 		res._units
@@ -26,6 +26,6 @@ def pool_selective():
 	return ds.pool([ds.d(50)] * 8)[3:].perform(ds.ops.add)
 
 
-def test_pool_selective(benchmark):
+def bm_pool_selective(benchmark):
 	res = benchmark(pool_selective)
 	assert res._units == 39062500000000

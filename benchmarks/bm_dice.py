@@ -31,7 +31,7 @@ def die_from_text():
 @pytest.mark.parametrize(
 	"creator", [die_from_number, die_from_iterable, die_from_text]
 )
-def test_die_creation(creator, benchmark):
+def bm_die_creation(creator, benchmark):
 	res = benchmark(creator)
 	assert list(res.keys()) == list(range(1, CREATION_FACES + 1))
 
@@ -40,7 +40,7 @@ def matmult():  # TODO Remove d50 from test i need to test onlt 50@
 	return 50 @ ds.d(50)
 
 
-def test_matmult(benchmark):
+def bm_matmult(benchmark):
 	res = benchmark(matmult)
 	assert (
 		res._units
@@ -71,13 +71,18 @@ def dice_add_pool(d):
 	return ds.pool([d, d]).perform(ds.ops.add)
 
 
-@pytest.mark.parametrize(
-	"inpt", [dice_add, dice_add_pool, dice_sub, dice_mul, dice_div]
-)
-def test_add(inpt, ops_dice, benchmark):
+@pytest.mark.parametrize("inpt", [dice_add, dice_add_pool, dice_sub])
+def bm_binary_ops(inpt, ops_dice, benchmark):
 	d = ops_dice
 	res = benchmark(inpt, d)
 	assert res._units == 25000000
+
+
+@pytest.mark.parametrize("inpt", [dice_mul, dice_div])
+def bm_binary_ops_2(inpt, benchmark):
+	d = ds.d(500)
+	res = benchmark(inpt, d)
+	assert res._units == 250000
 
 
 def explode():
@@ -89,7 +94,7 @@ def reroll():
 
 
 @pytest.mark.parametrize("inpt", [explode, reroll])
-def test_unique_mechanics(inpt, benchmark):
+def bm_unique_mechanics(inpt, benchmark):
 	res = benchmark(inpt)
 	assert res._units == 10000000
 
@@ -110,7 +115,7 @@ def map(d):
 
 
 @pytest.mark.parametrize("inpt", [count, map])
-def test_modify(inpt, benchmark, stress_die):
+def bm_modify(inpt, benchmark, stress_die):
 	d = stress_die
 	res = benchmark(inpt, d)
 	assert res._units == CREATION_FACES
@@ -120,7 +125,7 @@ def cumulative(d):
 	return d.cdf
 
 
-def test_cumulative(benchmark, stress_die):
+def bm_cumulative(benchmark, stress_die):
 	d = stress_die
 	res = benchmark(cumulative, d)
 	assert res[0] == 0.0001
@@ -130,7 +135,7 @@ def copy(d):
 	return d.copy()
 
 
-def test_die_copy(stress_die, benchmark):
+def bm_die_copy(stress_die, benchmark):
 	d = stress_die
 	res = benchmark(copy, d)
 	assert res == d
