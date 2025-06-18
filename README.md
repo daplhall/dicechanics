@@ -37,11 +37,11 @@ def filter(outcome):
     elif outcome > 4:
         return 3
 
-funky_dice = tts.d('3:6,1..2').map(filter):
+funky_dice = d('3:6,1..2').map(filter):
 ```
 Which can also be written with a decorator
 ```python
-@tts.d('3:6, 1..2')
+@d('3:6, 1..2')
 def mydice(outcome):
     if outcome == 4:
         return 4
