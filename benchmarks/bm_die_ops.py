@@ -1,0 +1,52 @@
+import pytest
+
+import dicechanics as ds
+
+
+def matmult():  # TODO Remove d50 from test i need to test onlt 50@
+	return 50 @ ds.d(50)
+
+
+def bm_matmult(benchmark):
+	res = benchmark(matmult)
+	assert (
+		res._units
+		== 8881784197001252323389053344726562500000000000000000000000000000000000000000000000000  # noqa: E501
+	)
+
+
+def dice_add(d):
+	return d + d
+
+
+def dice_sub(d):
+	return d - d
+
+
+def dice_mul(d):
+	return d * d
+
+
+def dice_div(d):
+	return d / d
+
+
+def dice_add_pool(d):
+	"""
+	For comparison with the add operator
+	"""
+	return ds.pool([d, d]).perform(ds.ops.add)
+
+
+@pytest.mark.parametrize("inpt", [dice_add, dice_add_pool, dice_sub])
+def bm_binary_ops(inpt, ops_dice, benchmark):
+	d = ops_dice
+	res = benchmark(inpt, d)
+	assert res._units == 25000000
+
+
+@pytest.mark.parametrize("inpt", [dice_mul, dice_div])
+def bm_binary_ops_2(inpt, benchmark):
+	d = ds.d(500)
+	res = benchmark(inpt, d)
+	assert res._units == 250000

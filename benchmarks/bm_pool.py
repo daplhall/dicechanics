@@ -3,18 +3,19 @@ import pytest
 import dicechanics as ds
 
 
-def pool_nonselective_add():
-	return ds.pool([ds.d(50)] * 50).perform(ds.ops.add)
+def pool_nonselective_add(p):
+	return p.perform(ds.ops.add)
 
 
-def pool_nonselective_max():
-	return ds.pool([ds.d(50)] * 50).perform(ds.ops.max)
+def pool_nonselective_max(p):
+	return p.perform(ds.ops.max)
 
 
 # TODO once the selective is optimized, we paramterize this test
 @pytest.mark.parametrize("pool", [pool_nonselective_max, pool_nonselective_add])
-def bm_pool_nonselective(pool, benchmark):
-	res = benchmark(pool)
+def bm_pool_nonselective(pool, stress_pool, benchmark):
+	p = stress_pool
+	res = benchmark(pool, p)
 	assert (
 		res._units
 		== 8881784197001252323389053344726562500000000000000000000000000000000000000000000000000  # noqa: E501
@@ -22,10 +23,11 @@ def bm_pool_nonselective(pool, benchmark):
 
 
 # -----TEMP----
-def pool_selective():
-	return ds.pool([ds.d(50)] * 8)[3:].perform(ds.ops.add)
+def pool_selective(p):
+	return p[3:].perform(ds.ops.add)
 
 
-def bm_pool_selective(benchmark):
-	res = benchmark(pool_selective)
+def bm_pool_selective(stress_pool_small, benchmark):
+	p = stress_pool_small
+	res = benchmark(pool_selective, p)
 	assert res._units == 39062500000000
