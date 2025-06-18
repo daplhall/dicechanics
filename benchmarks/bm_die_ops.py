@@ -3,12 +3,13 @@ import pytest
 import dicechanics as ds
 
 
-def matmult():  # TODO Remove d50 from test i need to test onlt 50@
-	return 50 @ ds.d(50)
+def matmult(n,d):  # TODO Remove d50 from test i need to test onlt 50@
+	return n @ d
 
 
-def bm_matmult(benchmark):
-	res = benchmark(matmult)
+def bm_matmult(d50, benchmark):
+	d = d50
+	res = benchmark(matmult, 50, d)
 	assert (
 		res._units
 		== 8881784197001252323389053344726562500000000000000000000000000000000000000000000000000  # noqa: E501
