@@ -174,6 +174,6 @@ def test_string(d6):
 def test_pool_string(d6):
 	pool = ds.pool([d6, d6])
 	assert (
-		str(pool)
-		== "Pool([Die({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1}), Die({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1})])"
+		str(pool) == "Pool([Die({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1}),"
+		" Die({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1})])"
 	)
