@@ -66,12 +66,16 @@ def mypool(x, y):
 res = mypool()
 ```
 
-### *Running benchmarks*
+### *Running benchmarks and tests*
 To run the benchmarks and saving them
-```
+```bash
 pytest benchmarks --benchmark-autosave
 ```
-to compare differnt runs
+to run specific tests in a file
+```bash
+pytest benchmarks\test_bm_dice.py::<Benchmark>
 ```
+to compare differnt runs
+```bash
 pytest-benchmark compare [ids,...]
 ```
