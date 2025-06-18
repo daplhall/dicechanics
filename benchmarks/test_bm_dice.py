@@ -65,6 +65,9 @@ def dice_div(d):
 
 
 def dice_add_pool(d):
+	"""
+	For comparison with the add operator
+	"""
 	return ds.pool([d, d]).perform(ds.ops.add)
 
 
