@@ -1,8 +1,6 @@
 # Dicechanics: Library for modelling dice mechanics
 An library for python which provides an interface for modelling dice mechanics.  
 ## Build and install
-- create venv
-- install packages in requirements.txt
 - `python -m build .`
 - `pip install dist\*.whl`
 ## Usage
