@@ -13,7 +13,7 @@ type Mem_T = dict[object, T]
 
 def linear_combs(inpt: Inpt_T, layer: int, func: BinaryFunc_T, mem: Mem_T) -> T:
 	"""
-	function applys a linear to a set of combinations
+	Function that applies a linear operation to a set of unordered combinations
 
 	Parameters
 	----------
@@ -73,7 +73,7 @@ def selective_comb(
 	bag: Bag_T, func: BinaryFunc_T, keep: list[int], mem: Mem_T
 ) -> T:
 	"""
-	Function that goes through combinatiorics through ordered outcomes.
+	Function that goes through the combinatiorics of ordered outcomes.
 
 	Parameters
 	----------
@@ -117,7 +117,7 @@ def linear_selective(
 	inpt: Inpt_T, keep: list[int], func: BinaryFunc_T
 ) -> ds.Die:
 	"""
-	The function that sets up the parameters for selective_comb
+	Function that applies a linear operation to a set of ordered combinations
 
 	Parameters
 	----------
