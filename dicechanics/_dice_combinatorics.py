@@ -12,6 +12,26 @@ type Mem_T = dict[object, T]
 
 
 def linear_combs(inpt: Inpt_T, layer: int, func: BinaryFunc_T, mem: Mem_T) -> T:
+	"""
+	function applys a linear to a set of combinations
+
+	Parameters
+	----------
+	inpt: Sequence
+		A sequence of Die.
+	layer: int
+		An arbitary integer that indicates the depth.
+	func: Callable
+		The function that is applied to the set of outcomes.
+		Takes values at a time and combines them.
+	mem: dict
+		The cache in which each layer is saved
+
+	Returns
+	-------
+	out : dict
+		A dict with the outcomes as keys and occurrences as data
+	"""
 	if layer in mem:
 		return mem[layer]
 	if layer >= len(inpt):
@@ -28,6 +48,22 @@ def linear_combs(inpt: Inpt_T, layer: int, func: BinaryFunc_T, mem: Mem_T) -> T:
 
 
 def linear_non_selective(inpt: Inpt_T, func: BinaryFunc_T) -> ds.Die:
+	"""
+	The function that sets up the parameters for linear_combs
+
+	Parameters
+	----------
+	inpt: Sequence
+		A sequence of dice.
+	func: Callable
+		The function that is applied to the set of outcomes.
+		Takes values at a time and combines them.
+
+	Returns
+	-------
+		the resault of the combinatiorics calculations in the form of
+		a die representation.
+	"""
 	mem: Mem_T = {}
 	res = linear_combs(inpt, 0, func, mem)
 	return ds.Die.from_dict(res)
@@ -37,9 +73,19 @@ def selective_comb(
 	bag: Bag_T, func: BinaryFunc_T, keep: list[int], mem: Mem_T
 ) -> T:
 	"""
-	TODO:
-	The popper goes through them 1 by 1 so if we have a face with repeated 1000
-	times it runs through that 1000 times...
+	Function that goes through combinatiorics through ordered outcomes.
+
+	Parameters
+	----------
+	bag: Sequence
+		A sequence of DicePoppers.
+	func: Callable
+		The function that is applied to the set of outcomes.
+		Takes values at a time and combines them.
+	keep: list
+		List of which dice in bag to keep.
+	mem: dict
+		The cache in which each layer is saved
 	"""
 	cache_key = tuple(i.identifier() for i in bag)
 	if cache_key in mem:
@@ -70,6 +116,24 @@ def selective_comb(
 def linear_selective(
 	inpt: Inpt_T, keep: list[int], func: BinaryFunc_T
 ) -> ds.Die:
+	"""
+	The function that sets up the parameters for selective_comb
+
+	Parameters
+	----------
+	inpt: Sequence
+		A sequence of dice.
+	keep: list
+		List of which dice in bag to keep.
+	func: Callable
+		The function that is applied to the set of outcomes.
+		Takes values at a time and combines them.
+
+	Returns
+	-------
+		the resault of the combinatiorics calculations in the form of
+		a die representation.
+	"""
 	mem: Mem_T = {}
 	poppers = [DicePopper(i) for i in inpt]
 	res = selective_comb(poppers, func, keep, mem)
