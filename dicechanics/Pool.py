@@ -2,7 +2,7 @@ from dicechanics._dice_combinatorics import (
 	linear_non_selective,
 	linear_selective,
 )
-from dicechanics._Die import Die, convert_to_dice
+from dicechanics.Die import Die, convert_to_dice
 
 
 # Pool needs to be invoked in the interface witha  decorator, in which

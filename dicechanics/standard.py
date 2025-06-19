@@ -1,4 +1,4 @@
-from dicechanics._interface import d, z
+from dicechanics.interface import d, z
 
 d4 = d(4)
 d6 = d(6)
