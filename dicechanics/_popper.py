@@ -1,11 +1,18 @@
-from dicechanics.Die import convert_to_dice
+from dicechanics.Die import Die, convert_to_dice
+
+type DicePopper_T = DicePopper
 
 
 class DicePopper:
+	"""
+	Class responsible for "popping" the highest value data of a die
+	Used in _dice_combinatorics
+	"""
+
 	faces: list[object]
 	count: list[int]
 
-	def __init__(self, dice):
+	def __init__(self, dice: Die):
 		dice = convert_to_dice(dice)
 		data = dice._data
 		self.faces = list(data.keys())
@@ -13,21 +20,38 @@ class DicePopper:
 		self.i = len(self.faces) - 1
 		self.c = self.count[self.i]
 
-	def identifier(self):
+	def identifier(self) -> tuple[object, object]:
 		"""
-		When i updated this i got quite a performance increase!
+		Returns a hashable object to identify the popper object
+
+		Returns
+		-------
+		out: tuple
+			tuple that can be hashed to identify the object
 		"""
 		return tuple(self.faces) + (self.i, self.c)
 
-	def max(self):
+	def max(self) -> object:
+		"""
+		Returns the highest value of the dice.
+
+		Returns
+		-------
+		out: object
+			Max value of the dice, None if no more values are left
+		"""
 		if self.i < 0:
 			return None
 		return self.faces[self.i]
 
-	def pop(self):
+	def pop(self) -> object:
 		"""
-		i need to do that i is -1 when the last element is popped.
-		now i == 0 even if the last count is 0
+		Pops the max value of the dice
+
+		Returns
+		-------
+		out: object
+			The max of the dice
 		"""
 		if self.i < 0:
 			return None
@@ -36,7 +60,15 @@ class DicePopper:
 		self.i -= 1
 		return face, count
 
-	def copy(self):
+	def copy(self) -> DicePopper_T:
+		"""
+		Copies the current object
+
+		Returns
+		-------
+		out: DicePopper
+			Copy of the current object
+		"""
 		res = DicePopper.__new__(DicePopper)
 		res.faces = self.faces
 		res.count = self.count
@@ -48,7 +80,7 @@ class DicePopper:
 		return self.i > -1
 
 	def __str__(self):
-		return f"i: {self.i} - " + str(tuple(zip(self.faces, self.count)))
+		return repr(self)
 
 	def __repr__(self):
-		return str(self)
+		return f"i: {self.i} - " + str(tuple(zip(self.faces, self.count)))

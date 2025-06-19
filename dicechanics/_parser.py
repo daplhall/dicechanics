@@ -4,7 +4,7 @@ from dicechanics.typing import NumVector
 def text_to_faces(text: str) -> NumVector:
 	"""
 	Function that parses a string of "numbers" and expands them to a list.
-	Eg. "1,2,3,4:2" -> [1,2,3,4,4]
+	Eg. "1..3,4:2" -> [1,2,3,4,4]
 
 	Parameters
 	----------
