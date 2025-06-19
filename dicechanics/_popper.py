@@ -1,4 +1,4 @@
-from dicechanics._Die import convert_to_dice
+from dicechanics.Die import convert_to_dice
 
 
 class DicePopper:

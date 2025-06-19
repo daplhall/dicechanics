@@ -1,8 +1,8 @@
 from collections.abc import Iterable
 
-from dicechanics._Die import Die
 from dicechanics._parser import text_to_faces
-from dicechanics._Pool import Pool
+from dicechanics.Die import Die
+from dicechanics.Pool import Pool
 
 
 def d(inpt: Iterable | int, **kwards) -> Die:
