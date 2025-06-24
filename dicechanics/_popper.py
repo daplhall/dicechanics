@@ -20,7 +20,7 @@ class DicePopper:
 		self.i = len(self.faces) - 1
 		self.c = self.count[self.i]
 
-	def identifier(self) -> tuple[object, object]:
+	def identifier(self) -> tuple:
 		"""
 		Returns a hashable object to identify the popper object
 

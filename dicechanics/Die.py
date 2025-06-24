@@ -35,6 +35,20 @@ class Die:
 
 	@classmethod
 	def from_dict(cls, data: dict[object, int], rounding=lambda x: x) -> Die_T:
+		"""
+		Constructor that creates a die directly from a dict.
+
+		Parameters
+		----------
+		data: dict
+			The data in the form of a dict.
+		rounding: Callable
+			A function that determines how to round outcomes.
+
+		Returns
+		-------
+		out: Die
+		"""
 		self = cls.__new__(cls)
 		self._data = sort_dict(data)
 		self._derived_attr()
@@ -42,6 +56,13 @@ class Die:
 		return self
 
 	def _derived_attr(self):
+		"""
+		A helper function that sets all dervied stats and clean up funcs.
+
+		Returns
+		-------
+		out: None
+		"""
 		self._simplify()
 		self._units = sum(self._data.values())
 		self._p = [i / self._units for i in self.c]
@@ -55,6 +76,14 @@ class Die:
 		self._min = min(self._data)
 
 	def _cumulative(self) -> list[float]:
+		"""
+		Function that calulates the cumulative properbility of the Die.
+
+		Returns
+		-------
+		out: list
+			The cumulative properbility
+		"""
 		out: list[float] = []
 		for p in (
 			self.p
@@ -63,6 +92,13 @@ class Die:
 		return out
 
 	def _simplify(self):
+		"""
+		Helper function that simplifes the data.
+
+		Returns
+		-------
+		out: None
+		"""
 		c = self.c
 		if len(c) > 1:
 			d = gcd(c[0], c[1])
@@ -74,52 +110,165 @@ class Die:
 
 	@property
 	def f(self) -> list:
+		"""
+		Returns the faces of the die
+
+		Returns
+		-------
+		out: list
+			The faces of the die.
+		"""
 		return list(self._data.keys())
 
 	@property
 	def p(self) -> list:
+		"""
+		Returns the properbility of the die
+
+		Returns
+		-------
+		out: list
+			The properbility of the die.
+		"""
 		return self._p
 
 	@property
 	def c(self) -> list:
+		"""
+		Returns the count list of the die
+
+		Returns
+		-------
+		out: list
+			The number pr face of the die.
+		"""
 		return list(self._data.values())
 
 	@property
 	def mean(self) -> float:
+		"""
+		Returns the mean of the die
+
+		Returns
+		-------
+		out: float
+			The mean of the die.
+		"""
 		return self._mean
 
 	@property
 	def cdf(self) -> list:
+		"""
+		Returns the cumulative properbility of the die
+
+		Returns
+		-------
+		out: List
+			The cumulative properbility of the die.
+		"""
 		return self._cdf
 
 	@property
 	def var(self) -> float:
+		"""
+		Returns the varians of the die
+
+		Returns
+		-------
+		out: float
+			The varians of the die.
+		"""
 		return self._var
 
 	@property
 	def std(self) -> float:
+		"""
+		Returns the standard deviation of the die
+
+		Returns
+		-------
+		out: float
+			The standard deviations of the die.
+		"""
 		return sqrt(self._var)
 
 	def max(self) -> float:
+		"""
+		Returns the maximum face of the die.
+		-------
+		out: float
+			The maximum face of the die.
+		"""
 		return self._max
 
 	def min(self) -> float:
+		"""
+		Returns the minimum faces of the die
+		-------
+		out: float
+			The minimum face of the die
+		"""
 		return self._min
 
 	def copy(self) -> Die_T:
+		"""
+		Function that creates a copy of the die
+
+		Returns
+		-------
+		out: Die
+			The copy
+		"""
 		return Die.from_dict(self._data)
 
 	def keys(self) -> KeysView:
+		"""
+		Get the keys of the internal dict.
+
+		Returns
+		-------
+		out: KeysView
+			The keys if the internal data.
+		"""
 		return self._data.keys()
 
 	def values(self) -> ValuesView:
+		"""
+		Get the values of the internal dict.
+
+		Returns:
+		out: ValuesView
+			The values if the internal data.
+		"""
 		return self._data.values()
 
 	def items(self) -> ItemsView:
+		"""
+		Get the items (keys and values) of the internal dict.
+
+		Returns:
+		out: ValuesView
+			The items if the internal data.
+		"""
 		return self._data.items()
 
 	def reroll(self, *redo, depth: int = 1) -> Die_T:
-		if depth == "inf":
+		"""
+		Function that rerolls on a given set of values
+
+		Parameters
+		----------
+		redo: array_like | args
+			the values that needs to be rerolled
+		depth: int
+			the number of rerolls allowed
+
+		Returns
+		out: Die
+			A die that represents the rerolled properbilites
+		-------
+		"""
+		if depth == "inf":  # TODO make this react to math.inf
 			# TODO this sould just produce 0 for the face, not remove it
 			return Die(i for i in self if i not in redo)
 		faces = self._data
@@ -129,18 +278,33 @@ class Die:
 			faces = expand_dice(numbers | dice)
 		return Die.from_dict(sort_dict(faces))
 
-	def explode(self, *exploder, depth: int = 1) -> Die_T:
+	def _plode(self, ops, *ploder, depth: int = 1):
+		"""
+		Function that applies an explosion
+		"""
 		faces = self._data
 		# redo needs to be updated, so every combination of redo adds another.
 		if depth > 0:
-			numbers = {f: c for f, c in faces.items() if f not in exploder}
+			numbers = {f: c for f, c in faces.items() if f not in ploder}
 			dice = {
-				(self.explode(*exploder, depth=depth - 1) + f): c
+				(ops(f, self._plode(ops, *ploder, depth=depth - 1))): c
 				for f, c in faces.items()
-				if f in exploder
+				if f in ploder
 			}
 			faces = expand_dice(numbers | dice)
 		return Die.from_dict(sort_dict(faces))
+
+	def explode(self, *exploder, depth: int = 1) -> Die_T:
+		"""
+		Function that applies an explosion
+		"""
+		return self._plode(op.add, *exploder, depth=depth)
+
+	def implode(self, *imploder, depth: int = 1) -> Die_T:
+		"""
+		Function that applies an explosion
+		"""
+		return self._plode(op.sub, *imploder, depth=depth)
 
 	def count(self, *count) -> Die_T:
 		return Die(i in count for i in self)

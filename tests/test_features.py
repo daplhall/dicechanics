@@ -70,6 +70,12 @@ def test_count1(d10):
 
 
 def test_explode(d6):
+	d = d6.explode(6)
+	assert d.f == [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12]
+	assert d.c == [6, 6, 6, 6, 6, 1, 1, 1, 1, 1, 1]
+
+
+def test_explode_double(d6):
 	d = d6.explode(5, 6)
 	assert d.f == [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12]
 	assert d.c == [6, 6, 6, 6, 1, 2, 2, 2, 2, 2, 1]
@@ -147,6 +153,12 @@ def test_explode_depth2(d6):
 		18,
 	]
 	assert d.c == [36, 36, 36, 36, 6, 12, 12, 12, 6, 1, 3, 4, 4, 4, 4, 3, 1]
+
+
+def test_implode(d6):
+	d = d6.implode(1)
+	assert d.f == [-5, -4, -3, -2, -1, 0, 2, 3, 4, 5, 6]
+	assert d.c == [1, 1, 1, 1, 1, 1, 6, 6, 6, 6, 6]
 
 
 def test_fold_under(d10, folding_faces):
