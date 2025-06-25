@@ -3,6 +3,7 @@ from dicechanics._dice_combinatorics import (
 	linear_selective,
 )
 from dicechanics.Die import Die, convert_to_die
+from dicechanics.typing import BinaryFunc_T
 
 
 # Pool needs to be invoked in the interface witha  decorator, in which
@@ -12,7 +13,23 @@ class Pool:
 		self._bag = dice
 		self._keep = None
 
-	def perform(self, func):
+	def perform(self, func: BinaryFunc_T) -> Die:
+		"""
+		Function that performs a function to the elements in the pool.
+		The function must have the form f(x, y)	-> z, and its operation
+		must be linear, ie. the order in which the values are calulated
+		doesn't matter.
+
+		Paramters
+		---------
+		func: Callable
+			Function with the form f(x, y) -> z. It must apply a linear
+			operation
+
+		Returns
+		-------
+
+		"""
 		if self._keep is None or all(self._keep):
 			res = linear_non_selective(self._bag, func)
 		else:
@@ -20,12 +37,34 @@ class Pool:
 		return Die.from_dict(res)
 
 	def copy(self):
+		"""
+		Function that creates a copy of the pool
+
+		Returns
+		-------
+		out: Pool
+			A copy of the current pool
+		"""
 		res = Pool.__new__(Pool)
 		res._bag = self._bag
 		res._keep = self._keep
 		return res
 
 	def __getitem__(self, idx):
+		"""
+		Get in this function defines which faces in sorted outcomes of
+		rolling the back needs to be selected and operated on in the perform
+		method
+
+		Parameters
+		----------
+		idx: list | slice
+
+		Returns
+		-------
+		out: pool
+			A pool copy with which die to keep set
+		"""
 		res = self.copy()
 		if isinstance(idx, slice):
 			keep = [0] * len(self._bag)
@@ -36,6 +75,10 @@ class Pool:
 		return res
 
 	def __call__(self, func):
+		"""
+		A wrapper for perform, allows the pool to be used as a decorator
+		"""
+
 		def wrapper():
 			return self.perform(func)
 
@@ -50,11 +93,37 @@ class Pool:
 		return txt
 
 	def add_level2(self, rhs):
+		"""
+		Function that applies lvl 2 operations to the pool
+
+		Parameters
+		----------
+		rhs: die | float
+			The value to be added to the bag
+
+		Returns
+		-------
+		out: pool
+			A new pool with the added input
+		"""
 		res = self.copy()
 		res._bag.append(rhs)
 		return res
 
 	def add_level3(self, rhs):
+		"""
+		Function that applies lvl 3 operations to the pool
+
+		Parameters
+		----------
+		rhs: pool
+			The pool that needs to extend the current pool
+
+		Returns
+		-------
+		out: pool
+			A new pool with the added input
+		"""
 		res = self.copy()
 		res._bag.extend(rhs._bag)
 		return res
