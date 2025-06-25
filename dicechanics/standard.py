@@ -1,3 +1,10 @@
+"""
+Module that defines the standard dice that you can by in a store
+
+it defines:
+d4, d6, d8, d10, d12, d20, d100 and z9
+"""
+
 __all__ = ["d4", "d6", "d8", "d10", "d12", "d20", "d100", "z9"]
 
 from dicechanics.interface import d, z
