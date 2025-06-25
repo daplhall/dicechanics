@@ -12,8 +12,8 @@ type Mem_T = dict[object, T]
 
 
 def linear_combs(inpt: Inpt_T, layer: int, func: BinaryFunc_T, mem: Mem_T) -> T:
-	if layer in mem:
-		return mem[layer]
+	if mem:
+		return mem
 	if layer >= len(inpt):
 		return {}
 	res: T = defaultdict(int)
@@ -23,7 +23,7 @@ def linear_combs(inpt: Inpt_T, layer: int, func: BinaryFunc_T, mem: Mem_T) -> T:
 				res[func(f, sf)] += c * sc
 		else:
 			res[f] = c
-	mem[layer] = res
+	mem = res
 	return res
 
 
