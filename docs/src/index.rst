@@ -12,7 +12,7 @@ The project page can be found `here <https://github.com/daplhall/dicechanics>`_.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :titlesonly:
 
    api
    submodules
