@@ -38,7 +38,7 @@ def linear_combs(inpt: Inpt_T, layer: int, func: BinaryFunc_T, mem: Mem_T) -> T:
 	We use mem as a pointer, such that each layer can modify and access it,
 	hence the `0` indexing in mem
 	"""
-	if 0 in mem:
+	if 0 in mem:  # We use mem as a pointer to store our res dict
 		return mem[0]
 	if layer >= len(inpt):
 		return {}
