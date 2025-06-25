@@ -26,6 +26,10 @@ def convert_to_die(inpt: object) -> Die_T:
 
 
 class Die:
+	"""
+	The class that represents a statistical presentation of a die.
+	"""
+
 	def __init__(
 		self, faces: Iterable[float], /, rounding: PureFunc_T = lambda x: x
 	):

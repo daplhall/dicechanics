@@ -15,3 +15,5 @@ documentation for details.
    :maxdepth: 2
    :caption: Contents:
 
+.. autofunction:: dicechanics::d
+.. autoclass:: dicechanics::Die

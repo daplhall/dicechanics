@@ -14,6 +14,8 @@ def d(inpt: Iterable | int | Die | dict, **kwards) -> Die:
 	----------
 	inpt: Iterable | Int | Die | dict
 		the input for the function
+	**kwards
+		Rounding: Callable
 
 	Returns
 	-------
