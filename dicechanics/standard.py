@@ -1,3 +1,5 @@
+__all__ = ["d4", "d6", "d8", "d10", "d12", "d20", "d100", "z9"]
+
 from dicechanics.interface import d, z
 
 d4 = d(4)
@@ -9,5 +11,3 @@ d20 = d(20)
 d100 = d(100)
 
 z9 = z(9)
-
-__all__ = ["d4", "d6", "d8", "d10", "d12", "d20", "d100", "z9"]
