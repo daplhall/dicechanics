@@ -199,6 +199,8 @@ class Die:
 	def max(self) -> float:
 		"""
 		Returns the maximum face of the die.
+
+		Parameters
 		-------
 		out: float
 			The maximum face of the die.
@@ -208,6 +210,8 @@ class Die:
 	def min(self) -> float:
 		"""
 		Returns the minimum faces of the die
+
+		Parameters
 		-------
 		out: float
 			The minimum face of the die
