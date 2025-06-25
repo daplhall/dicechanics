@@ -44,18 +44,18 @@ When you import dicehancis you get the following imported
    :special-members:
    :members:
    :member-order: bysource
-   :exclude-members:  __weakref__, BooleanDie
+   :exclude-members:  __weakref__, BooleanDie, __str__, __repr__
 
 .. autoclass:: dicechanics.Die::BooleanDie
    :special-members:
    :members:
    :show-inheritance:
    :member-order: bysource
-   :exclude-members:  __weakref__
+   :exclude-members:  __weakref__, __str__, __repr__
 
 .. autoclass:: dicechanics::Pool
    :special-members:
    :members:
    :member-order: bysource
-   :exclude-members:  __weakref__
+   :exclude-members:  __weakref__, BooleanDie, __str__, __repr__
 
