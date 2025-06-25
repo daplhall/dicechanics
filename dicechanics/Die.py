@@ -244,7 +244,8 @@ class Die:
 		"""
 		Get the values of the internal dict.
 
-		Returns:
+		Returns
+		-------
 		out: ValuesView
 			The values if the internal data.
 		"""
@@ -254,7 +255,8 @@ class Die:
 		"""
 		Get the items (keys and values) of the internal dict.
 
-		Returns:
+		Returns
+		-------
 		out: ValuesView
 			The items if the internal data.
 		"""
@@ -379,8 +381,8 @@ class Die:
 		Function that checks if equality of objects.
 		If its not a Die object then it always return false.
 
-		Paramters
-		---------
+		Parameters
+		----------
 		rhs: object
 			The object thats we compare the die to.
 
@@ -483,8 +485,8 @@ class Die:
 		"""
 		Used to wrap die in as a decorator. It used the map function.
 
-		Paramters
-		---------
+		Parameters
+		----------
 		func:
 			The function to wrap.
 
@@ -577,52 +579,94 @@ class Die:
 			return self._binary_level0(rhs, ops)
 
 	def __add__(self, rhs: object) -> Die_T:
+		"""
+		Return self + value
+		"""
 		return self._binary_op(rhs, op.add)
 
 	def __radd__(self, lhs: object) -> Die_T:
+		"""
+		Return value + self
+		"""
 		return self._binary_op(lhs, op.add)
 
 	def __sub__(self, rhs: object) -> Die_T:
 		# needs to react to rounding
+		"""
+		Return self - value
+		"""
 		return self._binary_op(rhs, op.sub)
 
 	def __rsub__(self, lhs: object) -> Die_T:
+		"""
+		Return value - self
+		"""
 		return (-self)._binary_op(lhs, op.add)
 
 	def __mul__(self, rhs: object) -> Die_T:
+		"""
+		Return self * value
+		"""
 		# Needs to react to rounding
 		return self._binary_op(rhs, op.mul)
 
 	def __rmul__(self, lhs: object) -> Die_T:
+		"""
+		Return value * self
+		"""
 		return self._binary_op(lhs, op.mul)
 
 	def __truediv__(self, rhs: object) -> Die_T:
+		"""
+		Return self / value
+		"""
 		# needs to reach to rounding
 		return self._binary_op(rhs, op.truediv)
 
 	def __floordiv__(self, rhs: object) -> Die_T:
+		"""
+		Return self // value
+		"""
 		# needs to reach to rounding
 		return self._binary_op(rhs, op.floordiv)
 
 	def __lt__(self, rhs: object) -> Die_T:
+		"""
+		Return self < value
+		"""
 		return self._binary_op(rhs, op.lt)
 
 	def __le__(self, rhs: object) -> Die_T:
+		"""
+		Return self <= value
+		"""
 		return self._binary_op(rhs, op.le)
 
 	def __ge__(self, rhs: object) -> Die_T:
+		"""
+		Return self => value
+		"""
 		return self._binary_op(rhs, op.ge)
 
 	def __gt__(self, rhs: object) -> Die_T:
+		"""
+		Return self > value
+		"""
 		return self._binary_op(rhs, op.gt)
 
 	def __eq__(self, rhs: object) -> BooleanDie_T:
+		"""
+		Return self == value
+		"""
 		return BooleanDie.from_dice(
 			self._binary_op(rhs, op.eq),
 			self.equal(rhs),
 		)
 
 	def __ne__(self, rhs: object) -> BooleanDie_T:
+		"""
+		Return self != value
+		"""
 		return BooleanDie.from_dice(
 			self._binary_op(rhs, op.ne),
 			not self.equal(rhs),
@@ -702,9 +746,15 @@ class Die:
 			raise Exception("Unexpected type in dice matmul")
 
 	def __rmatmul__(self, lhs: int) -> Die_T:
+		"""
+		Return self @ value
+		"""
 		return self._binary_rolln(lhs, op.add)
 
 	def __matmul__(self, rhs) -> Die_T:
+		"""
+		Return value @ self
+		"""
 		return rhs._binary_rolln(self, op.add)
 
 	def _unary_level0(self, ops: UnaryFunc_T) -> Die_T:
@@ -724,9 +774,15 @@ class Die:
 		return Die(self._rounding(ops(i)) for i in self)
 
 	def __neg__(self) -> Die_T:
+		"""
+		Return -self
+		"""
 		return self._unary_level0(op.neg)
 
 	def __pos__(self) -> Die_T:
+		"""
+		Return +self
+		"""
 		return self._unary_level0(op.pos)
 
 	def __getitem__(self, i) -> Die_T:

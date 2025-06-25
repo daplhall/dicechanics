@@ -17,3 +17,5 @@ documentation for details.
 
 .. automodule:: dicechanics
    :members:
+   :special-members:
+   :member-order: alphabetical

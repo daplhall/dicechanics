@@ -9,6 +9,10 @@ from dicechanics.typing import BinaryFunc_T
 # Pool needs to be invoked in the interface witha  decorator, in which
 # it is loaded with dice and the operations that needs to happen
 class Pool:
+	"""
+	Class that represents a pool of dice.
+	"""
+
 	def __init__(self, dice: list):
 		self._bag = dice
 		self._keep = None
@@ -20,8 +24,8 @@ class Pool:
 		must be linear, ie. the order in which the values are calulated
 		doesn't matter.
 
-		Paramters
-		---------
+		Parameters
+		----------
 		func: Callable
 			Function with the form f(x, y) -> z. It must apply a linear
 			operation
@@ -92,7 +96,7 @@ class Pool:
 		txt += "])"
 		return txt
 
-	def add_level2(self, rhs):
+	def _add_level2(self, rhs):
 		"""
 		Function that applies lvl 2 operations to the pool
 
@@ -110,7 +114,7 @@ class Pool:
 		res._bag.append(rhs)
 		return res
 
-	def add_level3(self, rhs):
+	def _add_level3(self, rhs):
 		"""
 		Function that applies lvl 3 operations to the pool
 
@@ -130,7 +134,7 @@ class Pool:
 
 	def __add__(self, rhs):
 		if isinstance(rhs, Pool):
-			return self.add_level3(rhs)
+			return self._add_level3(rhs)
 		else:
 			rhs = convert_to_die(rhs)
-			return self.add_level2(rhs)
+			return self._add_level2(rhs)
