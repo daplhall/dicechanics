@@ -15,5 +15,16 @@ max = max
 min = min
 
 
-def ceildiv(lhs: float, rhs: float) -> float:
-	return -(lhs // -rhs)
+def ceildiv(numer: float, denom: float) -> float:
+	"""
+	Division that rounds up instead of down.
+
+	Parameters
+	----------
+	numer: float
+		The numerator of the devision
+	denom: float
+		The denominator of the devision
+
+	"""
+	return -(numer // -denom)
