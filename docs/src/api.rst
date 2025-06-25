@@ -40,7 +40,7 @@ When you import dicehancis you get the following imported
 
    A 10 sided die with values [0..9]
 
-.. automodule:: dicechanics.Die
+.. autoclass:: dicechanics.Die
    :special-members:
    :members:
    :member-order: bysource
