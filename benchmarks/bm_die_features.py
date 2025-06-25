@@ -1,4 +1,5 @@
 import pytest
+from groups import group_die_features
 from macros import CREATION_FACES
 
 import dicechanics as ds
@@ -12,6 +13,7 @@ def reroll():
 	return ds.d10.reroll(10, depth=6)
 
 
+@group_die_features
 @pytest.mark.parametrize("inpt", [explode, reroll])
 def bm_unique_mechanics(inpt, benchmark):
 	res = benchmark(inpt)
@@ -33,6 +35,7 @@ def map(d):
 	return die_filter()
 
 
+@group_die_features
 @pytest.mark.parametrize("inpt", [count, map])
 def bm_modify(inpt, benchmark, stress_die):
 	d = stress_die
@@ -44,6 +47,7 @@ def cumulative(d):
 	return d.cdf
 
 
+@group_die_features
 def bm_cumulative(benchmark, stress_die):
 	d = stress_die
 	res = benchmark(cumulative, d)
@@ -54,6 +58,7 @@ def copy(d):
 	return d.copy()
 
 
+@group_die_features
 def bm_die_copy(stress_die, benchmark):
 	d = stress_die
 	res = benchmark(copy, d)

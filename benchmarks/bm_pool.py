@@ -1,4 +1,5 @@
 import pytest
+from groups import group_multiple_dice
 
 import dicechanics as ds
 
@@ -12,6 +13,7 @@ def pool_nonselective_max(p):
 
 
 # TODO once the selective is optimized, we paramterize this test
+@group_multiple_dice
 @pytest.mark.parametrize("pool", [pool_nonselective_max, pool_nonselective_add])
 def bm_pool_nonselective(pool, stress_pool, benchmark):
 	p = stress_pool
@@ -27,6 +29,7 @@ def pool_selective(p):
 	return p[3:].perform(ds.ops.add)
 
 
+@group_multiple_dice
 def bm_pool_selective(stress_pool_small, benchmark):
 	p = stress_pool_small
 	res = benchmark(pool_selective, p)
