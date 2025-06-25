@@ -1,3 +1,7 @@
+"""
+Module that contains some simple linear operations to use with :py:class:`dicechanics.Pool`
+"""  # noqa: E501
+
 __all__ = ["add", "sub", "mul", "floordiv", "div", "mod", "ceil", "floor"]
 
 import math
@@ -15,5 +19,16 @@ max = max
 min = min
 
 
-def ceildiv(lhs: float, rhs: float) -> float:
-	return -(lhs // -rhs)
+def ceildiv(numer: float, denom: float) -> float:
+	"""
+	Division that rounds up instead of down.
+
+	Parameters
+	----------
+	numer: float
+		The numerator of the devision
+	denom: float
+		The denominator of the devision
+
+	"""
+	return -(numer // -denom)

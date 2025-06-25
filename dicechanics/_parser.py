@@ -2,6 +2,23 @@ from dicechanics.typing import NumVector
 
 
 def text_to_faces(text: str) -> NumVector:
+	"""
+	Function that parses a string of "numbers" and expands them to a list.
+	Eg. "1..3,4:2" -> [1,2,3,4,4]
+
+	Parameters
+	----------
+	text: str
+		The input string.
+		Has the following syntax:
+		"a:b" - repeats a b times.
+		"a..b" - range of a to b, inclusive.
+
+	Returns
+	-------
+	out: list
+		List of expanded values
+	"""
 	if (
 		any(c.isalpha() for c in text) or ";" in text
 	):  # the alpha check out be ommited.
