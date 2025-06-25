@@ -13,6 +13,8 @@ def d(inpt: Iterable | int, **kwards) -> Die:
 		return Die(faces, **kwards)
 	elif isinstance(inpt, Iterable):
 		return Die(inpt, **kwards)
+	elif isinstance(inpt, Die):
+		return inpt
 	else:
 		raise Exception(f"Dice doens't support input type of {type(inpt)}")
 

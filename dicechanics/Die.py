@@ -16,7 +16,7 @@ type PureFunc_T = Callable[[Any], Any]
 PRIMITIVES = (float, int)
 
 
-def convert_to_dice(inpt: object) -> Die_T:
+def convert_to_die(inpt: object) -> Die_T:
 	if isinstance(inpt, PRIMITIVES):
 		return Die([inpt])
 	elif isinstance(inpt, Die):
@@ -666,7 +666,7 @@ class Die:
 		nrolls = max(lhs.min(), lhs.max())
 		for i in lhs:
 			base = units ** (nrolls - i)
-			res += list(self._binary_roll(i, ops)) * base
+			res += list(self._binary_rolln(i, ops)) * base
 		return Die(res)
 
 	def _binary_rolln(self, lhs: int, ops: BinaryFunc_T) -> Die_T:

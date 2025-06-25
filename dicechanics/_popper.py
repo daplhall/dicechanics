@@ -1,4 +1,4 @@
-from dicechanics.Die import Die, convert_to_dice
+from dicechanics.Die import Die, convert_to_die
 
 type DicePopper_T = DicePopper
 
@@ -13,7 +13,7 @@ class DicePopper:
 	count: list[int]
 
 	def __init__(self, dice: Die):
-		dice = convert_to_dice(dice)
+		dice = convert_to_die(dice)
 		data = dice._data
 		self.faces = list(data.keys())
 		self.count = list(data.values())

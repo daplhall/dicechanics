@@ -1,8 +1,9 @@
+import dicechanics as ds
 from dicechanics._dice_combinatorics import (
 	linear_non_selective,
 	linear_selective,
 )
-from dicechanics.Die import Die, convert_to_dice
+from dicechanics.Die import Die, convert_to_die
 
 
 # Pool needs to be invoked in the interface witha  decorator, in which
@@ -63,5 +64,5 @@ class Pool:
 		if isinstance(rhs, Pool):
 			return self.add_level3(rhs)
 		else:
-			rhs = convert_to_dice(rhs)
+			rhs = convert_to_die(rhs)
 			return self.add_level2(rhs)
