@@ -1,3 +1,7 @@
+"""
+Module that contains some simple linear operations to use with :py:class:`dicechanics.Pool`
+"""
+
 __all__ = ["add", "sub", "mul", "floordiv", "div", "mod", "ceil", "floor"]
 
 import math

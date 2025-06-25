@@ -1,3 +1,5 @@
+__all__ = ["Die", "BooleanDie"]
+
 import operator as op
 from collections import defaultdict
 from collections.abc import ItemsView, KeysView, ValuesView
@@ -33,6 +35,9 @@ class Die:
 	def __init__(
 		self, faces: Iterable[float], /, rounding: PureFunc_T = lambda x: x
 	):
+		"""
+		Initalizes the Die, its recommended to use :func:`d` interface.
+		"""
 		self._data = collect_faces(faces)
 		self._derived_attr()
 		self._rounding = rounding
@@ -268,8 +273,8 @@ class Die:
 
 		Parameters
 		----------
-		redo: array_like | args
-			the values that needs to be rerolled
+		*redo
+			Faces to reroll
 		depth: int
 			the number of rerolls allowed
 
@@ -299,7 +304,7 @@ class Die:
 		ops: callable
 			The operation; it is assumed that the face is first
 			ie. ops(f, die)
-		ploder: args
+		*ploder
 			The numbers that need to be rerolled
 		depth: int
 			How many times do we reroll
@@ -328,7 +333,7 @@ class Die:
 
 		Parameters
 		----------
-		exploder: args
+		*exploder
 			The numbers that need to be rerolled
 		depth: int
 			How many times do we reroll
@@ -347,7 +352,7 @@ class Die:
 
 		Parameters
 		----------
-		imploder: args
+		*imploder
 			The numbers that need to be rerolled
 		depth: int
 			How many times do we reroll

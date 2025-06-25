@@ -1,3 +1,5 @@
+__all__ = ["Pool"]
+
 from dicechanics._dice_combinatorics import (
 	linear_non_selective,
 	linear_selective,
@@ -10,10 +12,13 @@ from dicechanics.typing import BinaryFunc_T
 # it is loaded with dice and the operations that needs to happen
 class Pool:
 	"""
-	Class that represents a pool of dice.
-	"""
+	Class that represents a pool of dice."""
 
 	def __init__(self, dice: list):
+		"""
+		Initializes the pool.It is recommened to use :func:`pool`
+		interface.
+		"""
 		self._bag = dice
 		self._keep = None
 
@@ -133,6 +138,9 @@ class Pool:
 		return res
 
 	def __add__(self, rhs):
+		"""
+		Return self + value
+		"""
 		if isinstance(rhs, Pool):
 			return self._add_level3(rhs)
 		else:
