@@ -1,12 +1,14 @@
 import pytest
+from groups import group_multiple_dice, group_ops
 
 import dicechanics as ds
 
 
-def matmult(n,d):  # TODO Remove d50 from test i need to test onlt 50@
+def matmult(n, d):  # TODO Remove d50 from test i need to test onlt 50@
 	return n @ d
 
 
+@group_multiple_dice
 def bm_matmult(d50, benchmark):
 	d = d50
 	res = benchmark(matmult, 50, d)
@@ -39,6 +41,7 @@ def dice_add_pool(d):
 	return ds.pool([d, d]).perform(ds.ops.add)
 
 
+@group_ops
 @pytest.mark.parametrize("inpt", [dice_add, dice_add_pool, dice_sub])
 def bm_binary_ops(inpt, ops_dice, benchmark):
 	d = ops_dice
@@ -46,8 +49,9 @@ def bm_binary_ops(inpt, ops_dice, benchmark):
 	assert res._units == 25000000
 
 
+@group_ops
 @pytest.mark.parametrize("inpt", [dice_mul, dice_div])
 def bm_binary_ops_2(inpt, benchmark):
-	d = ds.d(500)
+	d = ds.d(1500)
 	res = benchmark(inpt, d)
-	assert res._units == 250000
+	assert res._units == 2250000
