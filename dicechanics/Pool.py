@@ -1,4 +1,3 @@
-import dicechanics as ds
 from dicechanics._dice_combinatorics import (
 	linear_non_selective,
 	linear_selective,
