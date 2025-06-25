@@ -31,6 +31,12 @@ def linear_combs(inpt: Inpt_T, layer: int, func: BinaryFunc_T, mem: Mem_T) -> T:
 	-------
 	out : dict
 		A dict with the outcomes as keys and occurrences as data
+
+
+	Developer notes
+	---------------
+	We use mem as a pointer, such that each layer can modify and access it,
+	hence the `0` indexing in mem
 	"""
 	if 0 in mem:
 		return mem[0]
