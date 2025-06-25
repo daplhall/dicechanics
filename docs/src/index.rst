@@ -5,10 +5,9 @@
 
 Dicechanics documentation
 =========================
+Dicechanics is a python library for modeling dice mechanics.
 
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
+The project page can be found `here <https://github.com/daplhall/dicechanics>`_.
 
 
 .. toctree::
