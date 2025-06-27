@@ -1,3 +1,5 @@
+import pytest
+
 import dicechanics as ds
 
 
@@ -228,6 +230,7 @@ def test_rmatmul2():
 	]
 
 
+@pytest.mark.filterwarnings("ignore: A 0d")
 def test_rmatmul3():
 	f = ds.d("0,1")
 	g = ds.d("1,2,3")
