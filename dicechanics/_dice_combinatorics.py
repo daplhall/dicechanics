@@ -20,7 +20,7 @@ def linear_combs(inpt: Inpt_T, layer: int, func: BinaryFunc_T, mem: Mem_T) -> T:
 	inpt: Sequence
 		A sequence of Die.
 	layer: int
-		An arbitary integer that indicates the depth.
+		An arbitrary integer that indicates the depth.
 	func: Callable
 		The function that is applied to the set of outcomes.
 		Takes values at a time and combines them.
@@ -67,7 +67,7 @@ def linear_non_selective(inpt: Inpt_T, func: BinaryFunc_T) -> ds.Die:
 
 	Returns
 	-------
-		the resault of the combinatiorics calculations in the form of
+		the result of the combinatorics calculations in the form of
 		a die representation.
 	"""
 	mem: Mem_T = {}
@@ -79,7 +79,7 @@ def selective_comb(
 	bag: Bag_T, func: BinaryFunc_T, keep: list[int], mem: Mem_T
 ) -> T:
 	"""
-	Function that goes through the combinatiorics of ordered outcomes.
+	Function that goes through the combinatorics of ordered outcomes.
 
 	Parameters
 	----------
@@ -137,7 +137,7 @@ def linear_selective(
 
 	Returns
 	-------
-		the resault of the combinatiorics calculations in the form of
+		the result of the combinatorics calculations in the form of
 		a die representation.
 	"""
 	mem: Mem_T = {}

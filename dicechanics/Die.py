@@ -36,7 +36,7 @@ class Die:
 		self, faces: Iterable[float], /, rounding: PureFunc_T = lambda x: x
 	):
 		"""
-		Initalizes the Die, its recommended to use :func:`d` interface.
+		Initializes the Die, its recommended to use :func:`d` interface.
 		"""
 		self._data = collect_faces(faces)
 		self._derived_attr()
@@ -66,7 +66,7 @@ class Die:
 
 	def _derived_attr(self):
 		"""
-		A helper function that sets all dervied stats and clean up funcs.
+		A helper function that sets all derived stats.
 
 		Returns
 		-------
@@ -86,12 +86,12 @@ class Die:
 
 	def _cumulative(self) -> list[float]:
 		"""
-		Function that calulates the cumulative properbility of the Die.
+		Function that calculates the cumulative probability of the Die.
 
 		Returns
 		-------
 		out: list
-			The cumulative properbility
+			The cumulative probability
 		"""
 		out: list[float] = []
 		for p in (
@@ -102,7 +102,7 @@ class Die:
 
 	def _simplify(self):
 		"""
-		Helper function that simplifes the data.
+		Helper function that simplifies the data.
 
 		Returns
 		-------
@@ -132,12 +132,12 @@ class Die:
 	@property
 	def p(self) -> list:
 		"""
-		Returns the properbility of the die
+		Returns the probability of the die
 
 		Returns
 		-------
 		out: list
-			The properbility of the die.
+			The probability of the die.
 		"""
 		return self._p
 
@@ -168,24 +168,24 @@ class Die:
 	@property
 	def cdf(self) -> list:
 		"""
-		Returns the cumulative properbility of the die
+		Returns the cumulative probability of the die
 
 		Returns
 		-------
 		out: List
-			The cumulative properbility of the die.
+			The cumulative probability of the die.
 		"""
 		return self._cdf
 
 	@property
 	def var(self) -> float:
 		"""
-		Returns the varians of the die
+		Returns the variance of the die
 
 		Returns
 		-------
 		out: float
-			The varians of the die.
+			The variance of the die.
 		"""
 		return self._var
 
@@ -367,7 +367,7 @@ class Die:
 	def count(self, *count) -> Die_T:
 		"""
 		Function that counts the given number of faces
-		resualts in a true or false die
+		results in a true or false die
 
 		Parameters
 		----------
@@ -403,7 +403,7 @@ class Die:
 
 	def folding(self, rhs: object, ops: CompareFunc_T, into: object) -> Die_T:
 		"""
-		Function that takes values of the die, that are evalueted true
+		Function that takes values of the die, that are evaluated true
 		when compared with @rhs through @ops. It them puts the counts into the
 		value defined by @into
 
@@ -476,7 +476,7 @@ class Die:
 		Returns
 		-------
 		out: Die
-			The die with the resaults of the mapping
+			The die with the results of the mapping
 		"""
 		return Die(func(i) for i in self)
 
@@ -766,7 +766,7 @@ class Die:
 		"""
 		Function for applying level 0 unary operations to self
 
-		Paramaters
+		Parameters
 		----------
 		ops:Callable
 			The unary ops

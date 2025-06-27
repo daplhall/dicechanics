@@ -26,9 +26,9 @@ def ceildiv(numer: float, denom: float) -> float:
 	Parameters
 	----------
 	numer: float
-		The numerator of the devision
+		The numerator of the division
 	denom: float
-		The denominator of the devision
+		The denominator of the division
 
 	"""
 	return -(numer // -denom)

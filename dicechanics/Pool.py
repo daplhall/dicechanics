@@ -16,7 +16,7 @@ class Pool:
 
 	def __init__(self, dice: list):
 		"""
-		Initializes the pool.It is recommened to use :func:`pool`
+		Initializes the pool.It is recommend to use :func:`pool`
 		interface.
 		"""
 		self._bag = dice
@@ -24,9 +24,9 @@ class Pool:
 
 	def perform(self, func: BinaryFunc_T) -> Die:
 		"""
-		Function that performs a function to the elements in the pool.
+		Function that applies a given function to the elements in the pool.
 		The function must have the form f(x, y)	-> z, and its operation
-		must be linear, ie. the order in which the values are calulated
+		must be linear, ie. the order in which the values are calculated
 		doesn't matter.
 
 		Parameters

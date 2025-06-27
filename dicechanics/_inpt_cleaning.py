@@ -26,8 +26,8 @@ def expand_dice(data: dict) -> dict:
 	"""
 	Function that expands dice into a sequence of numbers.
 
-	Paramters
-	---------
+	Parameters
+	----------
 	data: dict
 		Dict of numbers and dict which are then expanded.
 		Eg. [1,2,3,d4] -> [1,2,3,4]
@@ -57,8 +57,8 @@ def clean_faces(faces: dict) -> dict:
 	"""
 	Function that  sorts and exapnds a dictionary
 
-	Paramters
-	---------
+	Parameters
+	----------
 	faces: dict
 		Dict which represents the faces of a die. The face can itself
 		be a die.

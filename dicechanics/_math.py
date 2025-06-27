@@ -3,9 +3,9 @@ from typing import Iterable
 
 def unique(array: Iterable[float]) -> tuple[list, list]:
 	"""
-	Function that finds the unique values in an iterable and their occurences.
+	Function that finds the unique values in an iterable and their occurrences.
 
-	Paramters
+	Parameters
 	---------
 	array: Iterable
 		The array of objects which one wants to find the unique values of.
@@ -15,7 +15,7 @@ def unique(array: Iterable[float]) -> tuple[list, list]:
 	uniques: list
 		The unique values.
 	count: list
-		The occurences of the unique values.
+		The occurrences of the unique values.
 	"""
 	uf = []
 	c = []
@@ -31,7 +31,7 @@ def unique(array: Iterable[float]) -> tuple[list, list]:
 
 def gcd(a: int, b: int) -> int:
 	"""
-	Find the greatest commen demoninator between a and b
+	Find the greatest common denominator between a and b
 
 	Parameters
 	----------
@@ -41,7 +41,7 @@ def gcd(a: int, b: int) -> int:
 	Returns
 	-------
 	out: int
-		Greatest common demominator
+		Greatest common denominator
 	"""
 	while b != 0:
 		r = a % b

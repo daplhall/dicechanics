@@ -22,7 +22,7 @@ def text_to_faces(text: str) -> NumVector:
 	if (
 		any(c.isalpha() for c in text) or ";" in text
 	):  # the alpha check out be ommited.
-		raise Exception("illegal charaters in dice parsing")
+		raise Exception("illegal characters in dice parsing")
 
 	out: NumVector = []
 

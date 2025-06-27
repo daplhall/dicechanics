@@ -9,7 +9,7 @@ from dicechanics.Pool import Pool
 
 def d(inpt: Iterable | int | Die | dict, **kwards) -> Die:
 	"""
-	Function that creates a die from various inpt types
+	Function that creates a die from various input types
 	Currently takes int, str, Iterable, Die which it copies, and a dict
 
 	Parameters
@@ -36,12 +36,12 @@ def d(inpt: Iterable | int | Die | dict, **kwards) -> Die:
 	elif isinstance(inpt, Iterable):
 		return Die(inpt, **kwards)
 	else:
-		raise Exception(f"Dice doens't support input type of {type(inpt)}")
+		raise Exception(f"Dice doesn't support input type of {type(inpt)}")
 
 
 def z(inpt: int, **kwards) -> Die:
 	"""
-	Function that creates a z-die from various inpt types
+	Function that creates a z-die from various input types
 
 	A z-die is a die which starts from 0. So a z9 is a die going from [0..9]
 
