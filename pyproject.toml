@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = 'dicechanics'
-version = '2.0.0b'
+version = '2.0.0'
 authors = [
     {name = 'Daniel Hall', email = 'blankemail@email.com'},
 ]
