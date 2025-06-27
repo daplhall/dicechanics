@@ -4,10 +4,12 @@ An library for python which provides an interface for modelling dice mechanics.
 ## API Documentation
 [Documentation on github pages](https://daplhall.github.io/dicechanics)
 ## Build and install
-- `python -m build .`
-- `pip install dist\*.whl`
+```bash
+python -m build .
+pip install dist\*.whl
+```
 ## Usage
-2 classes are provided, a Dice class used for representing statistical data and can perform simple arithmetics, and a Pool class which allows one to do custom linear operations based on the outcomes of multiple separate dice (it only takes 2 values at a time, thus the operation declaration is `lambda x,y: ...`.
+2 classes are provided, a Dice class used for representing statistical data and can perform simple arithmetics, and a Pool class which allows one to do custom linear operations based on the outcomes of multiple separate dice (it only takes 2 values at a time, thus the operation declaration is `lambda x,y: ...`
 
 They are accessed through the `d(...)`, `z(...)`, `pool(...)` functions.
 
@@ -15,7 +17,7 @@ They are accessed through the `d(...)`, `z(...)`, `pool(...)` functions.
 The dice class can take a sting input, that if follows a givens tructure expands into multiple numbers.
 ```python
 d('1,2,3,4,5') # gives a dice with numbers 1 through 5
-d('1..6:2') # gives numbers 1 through 6 twice.
+d('1..6:2, 2') # gives numbers 1 through 6 twice and an extra 2
 d('1..4:4, 1:3, 1..2, 6') # is equivalent to the dict: {1:8,2:5,3:4,4:4,6:1}
 ```
 
@@ -30,7 +32,7 @@ C = A + B
 prop = C.p # get probability of result
 faces = C.f # get faces of result, 1:1 with probability
 ```
-Mapping outcomes on a dice to new ones.
+Mapping outcomes on a dice to create a new one.
 ```python
 def filter(outcome):
     if outcome == 4:
@@ -67,16 +69,28 @@ def mypool(x, y):
 res = mypool()
 ```
 
-## Running benchmarks and tests
-To run the benchmarks and saving them
+## Running benchmarks
+To run the benchmarks and saving them.
 ```bash
 pytest benchmarks --benchmark-autosave
 ```
-to run specific tests in a file
+to run specific tests in a file.
 ```bash
 pytest benchmarks\test_bm_dice.py::<Benchmark>
 ```
 to compare differnt runs
 ```bash
 pytest-benchmark compare [ids,...]
+```
+
+## Running tests
+The tests are executed by the following command.
+```
+pytest tests
+```
+
+## Building documentation
+```bash
+cd docs && mkdir build
+sphinx-build -M html src build
 ```
