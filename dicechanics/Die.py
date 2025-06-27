@@ -1,6 +1,7 @@
 __all__ = ["Die", "BooleanDie"]
 
 import operator as op
+import warnings as wa
 from collections import defaultdict
 from collections.abc import ItemsView, KeysView, ValuesView
 from itertools import product
@@ -693,6 +694,9 @@ class Die:
 		out: Die
 			The new die
 		"""
+		if lhs == 0:
+			wa.warn("A 0d have been rolled", RuntimeWarning)
+			return Die([0])
 		if neg := lhs < 0:
 			lhs *= -1
 		res = self
