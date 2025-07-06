@@ -62,5 +62,5 @@ def str_plot(data: Die) -> str:
 	pad = 1 + max(mag(i) for i in data.keys())
 	widths = calc_width(data)
 	for f, p, w in zip(data.f, data.p, widths):
-		res += f"{f:<{pad}}" + "|" + LINE_STYLE * w + f" {p:.2f}" + "\n"
+		res += f"{f:>{pad}}" + "|" + LINE_STYLE * w + f" {p:.2f}" + "\n"
 	return res
