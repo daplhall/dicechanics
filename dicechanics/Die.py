@@ -10,6 +10,7 @@ from typing import Any, Callable, Generator, Iterable
 
 from dicechanics._inpt_cleaning import collect_faces, expand_dice, sort_dict
 from dicechanics._math import gcd
+from dicechanics._strplot import str_plot
 from dicechanics.typing import BinaryFunc_T, CompareFunc_T, UnaryFunc_T
 
 type Die_T = Die
@@ -801,7 +802,9 @@ class Die:
 		return "Die(" + str(self._data) + ")"
 
 	def __str__(self) -> str:
-		return self.__repr__()
+		res = f"Die with mu - {self.mean:.2f}, sigma - {self.std:.2f}\n"
+		res += "-" * len(res) + "\n"
+		return res + str_plot(self)
 
 
 class BooleanDie(Die):

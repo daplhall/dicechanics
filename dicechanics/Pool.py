@@ -93,13 +93,16 @@ class Pool:
 
 		return wrapper
 
-	def __str__(self):
+	def __repr__(self):
 		n = len(self._bag)
 		txt = "Pool(["
 		for i, d in enumerate(self._bag):
-			txt += str(d) + (", " if i < n - 1 else "")
+			txt += repr(d) + (", " if i < n - 1 else "")
 		txt += "])"
 		return txt
+
+	def __str__(self):
+		return repr(self)
 
 	def _add_level2(self, rhs):
 		"""
