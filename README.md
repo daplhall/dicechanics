@@ -21,7 +21,7 @@ d('1..6:2, 2') # gives numbers 1 through 6 twice and an extra 2
 d('1..4:4, 1:3, 1..2, 6') # is equivalent to the dict: {1:8,2:5,3:4,4:4,6:1}
 ```
 
-### *Dice Example*:
+### *Dice Examples*
 Creating a dice which have the faces `1..6` and doing operations with it.
 ```python
 d6 = d(6)
@@ -71,7 +71,7 @@ Die with mu - 7.00, sigma - 2.42
 12|#### 2.78%
 ```
 
-### *Pool Example*
+### *Pool Examples*
 Calculating the probabilities for getting the sum of the highest 3 of 3d6 and 2d10
 ```python
 mypool = pool([d6]*3 + [d10]*2)
