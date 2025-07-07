@@ -7,14 +7,14 @@ ROUND = round
 LINE_STYLE = "#"
 
 
-def mag(x: float) -> int:
+def num_len(x: float) -> int:
 	"""
-	Calculates the order of magnitude of a given number.
+	Calculates how many characters a number needs to be written to screen
 
 	Parameters
 	----------
 	x : float
-		the value which the order of magnitude needs to be found.
+		the value which the length needs to be found
 
 	Returns
 	-------
@@ -65,7 +65,7 @@ def str_plot(data: Die) -> str:
 		The str with the ascii plot.
 	"""
 	res = ""
-	pad = 1 + max(mag(i) for i in data.keys())
+	pad = 1 + max(num_len(i) for i in data.keys())
 	widths = calc_width(data)
 	for f, p, w in zip(data.f, data.p, widths):
 		res += f"{f:>{pad}}" + "|" + LINE_STYLE * w + f" {p*100:.2f}%" + "\n"
