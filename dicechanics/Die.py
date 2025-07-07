@@ -18,7 +18,7 @@ type BooleanDie_T = BooleanDie
 type PureFunc_T = Callable[[Any], Any]
 
 PRIMITIVES = (float, int)
-MAX_WIDTH = 23
+MAX_WIDTH = 20
 
 
 def convert_to_die(inpt: object) -> Die_T:
