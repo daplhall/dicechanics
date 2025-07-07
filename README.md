@@ -96,7 +96,7 @@ to run specific tests in a file.
 ```bash
 pytest benchmarks\test_bm_dice.py::<Benchmark>
 ```
-to compare differnt runs
+to compare different runs
 ```bash
 pytest-benchmark compare [ids,...]
 ```
