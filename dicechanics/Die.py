@@ -279,7 +279,7 @@ class Die:
 		*redo
 			Faces to reroll
 		depth: int | str
-			the number of rerolls allowed. Inf for an infinite amount of time
+			the number of rerolls allowed. Inf for an infinite amount of times
 
 		Returns
 		out: Die
