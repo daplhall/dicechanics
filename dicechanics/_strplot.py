@@ -3,7 +3,7 @@ import math
 from dicechanics import Die
 
 MAX_WIDTH = 20
-FLOOR = int
+ROUND = round
 LINE_STYLE = "#"
 
 
@@ -40,7 +40,7 @@ def calc_width(data: Die) -> list[int]:
 		A list of the widths corresponding to the dies faces.
 	"""
 	mx = max(data.values())
-	width = [FLOOR(i / mx * MAX_WIDTH) for i in data.values()]
+	width = [ROUND(i / mx * MAX_WIDTH) for i in data.values()]
 	return width
 
 
