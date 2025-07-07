@@ -21,7 +21,13 @@ def mag(x: float) -> int:
 	out: int
 		The order of magnitude.
 	"""
-	return int(math.log10(x))
+	extra = 0
+	if x == 0:
+		return 1
+	elif x < 0:
+		x *= -1
+		extra += 1
+	return int(math.log10(x)) + extra
 
 
 def calc_width(data: Die) -> list[int]:
