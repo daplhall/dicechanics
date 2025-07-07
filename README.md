@@ -14,7 +14,7 @@ pip install dist\*.whl
 They are accessed through the `d(...)`, `z(...)`, `pool(...)` functions.
 
 ### *Dice parser*:
-The dice class can take a sting input, that if follows a givens tructure expands into multiple numbers.
+The dice class can take a sting input, that if follows a givens structure expands into multiple numbers.
 ```python
 d('1,2,3,4,5') # gives a dice with numbers 1 through 5
 d('1..6:2, 2') # gives numbers 1 through 6 twice and an extra 2
