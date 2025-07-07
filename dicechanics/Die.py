@@ -18,6 +18,7 @@ type BooleanDie_T = BooleanDie
 type PureFunc_T = Callable[[Any], Any]
 
 PRIMITIVES = (float, int)
+MAX_WIDTH = 23
 
 
 def convert_to_die(inpt: object) -> Die_T:
@@ -803,8 +804,8 @@ class Die:
 
 	def __str__(self) -> str:
 		res = f"Die with mu - {self.mean:.2f}, sigma - {self.std:.2f}\n"
-		res += "-" * len(res) + "\n"
-		return res + str_plot(self)
+		res += "-" * (len(res) - 1) + "\n"
+		return res + str_plot(self, MAX_WIDTH)
 
 
 class BooleanDie(Die):
