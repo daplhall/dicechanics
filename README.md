@@ -53,6 +53,23 @@ def mydice(outcome):
 
 funky_dice = mydice()
 ```
+The string representation of a die is a sideways bar plot.
+```cmd
+>>> print(2@d6)
+Die with mu - 7.00, sigma - 2.42
+--------------------------------
+ 2|#### 2.78%
+ 3|######## 5.56%
+ 4|############ 8.33%
+ 5|############### 11.11%
+ 6|################### 13.89%
+ 7|####################### 16.67%
+ 8|################### 13.89%
+ 9|############### 11.11%
+10|############ 8.33%
+11|######## 5.56%
+12|#### 2.78%
+```
 
 ### *Pool Example*
 Calculating the probabilities for getting the sum of the highest 3 of 3d6 and 2d10
@@ -68,6 +85,7 @@ def mypool(x, y):
 
 res = mypool()
 ```
+
 
 ## Running benchmarks
 To run the benchmarks and saving them.
