@@ -51,7 +51,7 @@ def mydice(outcome):
     elif outcome > 4:
         return 3
 
-funky_dice = mydice():
+funky_dice = mydice()
 ```
 
 ### *Pool Example*
