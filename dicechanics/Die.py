@@ -270,7 +270,7 @@ class Die:
 		"""
 		return self._data.items()
 
-	def reroll(self, *redo, depth: int = 1) -> Die_T:
+	def reroll(self, *redo, depth: int | str = 1) -> Die_T:
 		"""
 		Function that rerolls on a given set of values
 
@@ -278,8 +278,8 @@ class Die:
 		----------
 		*redo
 			Faces to reroll
-		depth: int
-			the number of rerolls allowed
+		depth: int | str
+			the number of rerolls allowed. Inf for an infinite amount of time
 
 		Returns
 		out: Die
