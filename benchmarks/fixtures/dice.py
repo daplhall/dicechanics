@@ -5,6 +5,11 @@ import dicechanics as ds
 
 
 @pytest.fixture
+def d10():
+	return ds.d10
+
+
+@pytest.fixture
 def d50():
 	return ds.d(50)
 
