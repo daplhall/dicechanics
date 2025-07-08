@@ -45,7 +45,7 @@ def expand_dice(data: dict) -> dict:
 		for f in numbers.keys():
 			numbers[f] *= die._units
 		for d in dice:
-			if d != die:
+			if not d.is_equal(die):
 				dice[d] *= die._units
 	for die, c in dice.items():
 		for f, cd in die.items():

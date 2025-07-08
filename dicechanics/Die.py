@@ -387,7 +387,7 @@ class Die:
 		"""
 		return Die(i in count for i in self)
 
-	def equal(self, rhs: object) -> bool:
+	def is_equal(self, rhs: object) -> bool:
 		"""
 		Function that checks if equality of objects.
 		If its not a Die object then it always return false.
@@ -670,7 +670,7 @@ class Die:
 		"""
 		return BooleanDie.from_dice(
 			self._binary_op(rhs, op.eq),
-			self.equal(rhs),
+			self.is_equal(rhs),
 		)
 
 	def __ne__(self, rhs: object) -> BooleanDie_T:
@@ -679,7 +679,7 @@ class Die:
 		"""
 		return BooleanDie.from_dice(
 			self._binary_op(rhs, op.ne),
-			not self.equal(rhs),
+			not self.is_equal(rhs),
 		)
 
 	def _rolln_level0(self, lhs: int, ops: BinaryFunc_T) -> Die_T:
