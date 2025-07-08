@@ -18,6 +18,14 @@ def bm_matmult(d50, benchmark):
 	)
 
 
+@group_multiple_dice
+def bm_dicematmult(d10, d50, benchmark):
+	d = d50
+	f = d10
+	res = benchmark(matmult, f, d)
+	assert res._units == 976562500000000000
+
+
 def dice_add(d):
 	return d + d
 

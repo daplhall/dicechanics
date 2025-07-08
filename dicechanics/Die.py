@@ -8,7 +8,7 @@ from itertools import product
 from math import sqrt
 from typing import Any, Callable, Generator, Iterable
 
-from dicechanics._inpt_cleaning import collect_faces, expand_dice, sort_dict
+from dicechanics._inpt_cleaning import collect_faces, expand_dice, sort_dict, clean_faces
 from dicechanics._math import gcd
 from dicechanics._strplot import str_plot
 from dicechanics.typing import BinaryFunc_T, CompareFunc_T, UnaryFunc_T
@@ -62,7 +62,7 @@ class Die:
 		out: Die
 		"""
 		self = cls.__new__(cls)
-		self._data = sort_dict(data)
+		self._data = clean_faces(data)
 		self._derived_attr()
 		self._rounding = rounding
 		return self
@@ -724,13 +724,11 @@ class Die:
 		out: Die
 			The new die representing the operation
 		"""
-		res = []
-		units = self._units
-		nrolls = max(lhs.min(), lhs.max())
-		for i in lhs:
-			base = units ** (nrolls - i)
-			res += list(self._binary_rolln(i, ops)) * base
-		return Die(res)
+		dice = defaultdict(int)
+		for f,c in lhs.items():
+			d = self._binary_rolln(f,ops)
+			dice[d] += c
+		return Die.from_dict(dice)
 
 	def _binary_rolln(self, lhs: int, ops: BinaryFunc_T) -> Die_T:
 		"""

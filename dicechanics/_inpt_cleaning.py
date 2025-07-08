@@ -69,8 +69,7 @@ def clean_faces(faces: dict) -> dict:
 		The expanded and sorted dict.
 
 	"""
-	faces = sort_dict(faces)
-	return expand_dice(faces)
+	return sort_dict(expand_dice(faces))
 
 
 def collect_faces(faces: Iterable[float]) -> dict:
