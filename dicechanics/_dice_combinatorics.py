@@ -3,7 +3,7 @@ from typing import Sequence
 
 import dicechanics as ds
 from dicechanics._popper import DicePopper
-from dicechanics.typing import BinaryFunc_T
+from dicechanics._typing import BinaryFunc_T
 
 type T = dict[object, int]
 type Inpt_T = Sequence[ds.Die]

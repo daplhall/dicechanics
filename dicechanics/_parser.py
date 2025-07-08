@@ -1,4 +1,4 @@
-from dicechanics.typing import NumVector
+from dicechanics._typing import NumVector
 
 
 def text_to_faces(text: str) -> NumVector:

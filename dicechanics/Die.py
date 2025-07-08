@@ -8,17 +8,22 @@ from itertools import product
 from math import sqrt
 from typing import Any, Callable, Generator, Iterable
 
-from dicechanics._inpt_cleaning import collect_faces, expand_dice, sort_dict, clean_faces
+from dicechanics._inpt_cleaning import (
+	clean_faces,
+	collect_faces,
+	expand_dice,
+	sort_dict,
+)
 from dicechanics._math import gcd
 from dicechanics._strplot import str_plot
-from dicechanics.typing import BinaryFunc_T, CompareFunc_T, UnaryFunc_T
+from dicechanics._typing import BinaryFunc_T, CompareFunc_T, UnaryFunc_T
 
 type Die_T = Die
 type BooleanDie_T = BooleanDie
 type PureFunc_T = Callable[[Any], Any]
 
 PRIMITIVES = (float, int)
-MAX_WIDTH = 20
+PLOT_WIDTH = 20
 
 
 def convert_to_die(inpt: object) -> Die_T:
@@ -97,9 +102,7 @@ class Die:
 			The cumulative probability
 		"""
 		out: list[float] = []
-		for p in (
-			self.p
-		):  # can fold this out an call with iter to clean up the if statement
+		for p in self.p:
 			out.append(p + out[-1] if out else p)
 		return out
 
@@ -557,7 +560,6 @@ class Die:
 			A new die representing the operation between original die
 			and rhs
 		"""
-		# add "condenser" here [condesner is new word for what collects faces]
 		data = defaultdict[object, int](int)
 		for (f1, c1), (f2, c2) in product(self.items(), rhs.items()):
 			key = self._rounding(ops(f1, f2))
@@ -725,9 +727,9 @@ class Die:
 			The new die representing the operation
 		"""
 		dice = defaultdict(int)
-		for f,c in lhs.items():
-			d = self._binary_rolln(f,ops)
-			dice[d] += c
+		for f, c in lhs.items():
+			die = self._binary_rolln(f, ops)
+			dice[die] += c
 		return Die.from_dict(dice)
 
 	def _binary_rolln(self, lhs: int, ops: BinaryFunc_T) -> Die_T:
@@ -803,7 +805,7 @@ class Die:
 	def __str__(self) -> str:
 		res = f"Die with mu - {self.mean:.2f}, sigma - {self.std:.2f}\n"
 		res += "-" * (len(res) - 1) + "\n"
-		return res + str_plot(self, MAX_WIDTH)
+		return res + str_plot(self, PLOT_WIDTH)
 
 
 class BooleanDie(Die):
