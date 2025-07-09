@@ -8,3 +8,5 @@ dist/
 build/
 **/__pycache__/
 main.py
+notes/
+profile*

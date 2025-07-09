@@ -108,12 +108,10 @@ def test_less_equal_than(d10):
 
 
 def test_not_equal(d10):
-	d = d10 != 9
-	assert d.f == [0, 1]
-	assert d.c == [1, 9]
+	d = d10 != d10
+	assert not d
 
 
 def test_equal(d10):
-	d = d10 == 9
-	assert d.f == [0, 1]
-	assert d.c == [9, 1]
+	d = d10 == d10
+	assert d

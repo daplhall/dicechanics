@@ -289,8 +289,7 @@ class Die:
 			A die that represents the rerolled properbilites
 		-------
 		"""
-		if depth == "inf":  # TODO make this react to math.inf
-			# TODO this sould just produce 0 for the face, not remove it
+		if depth == "inf":
 			return Die(i for i in self if i not in redo)
 		faces = self._data
 		for _ in range(depth):
@@ -321,7 +320,6 @@ class Die:
 			A die representing the operation
 		"""
 		faces = self._data
-		# redo needs to be updated, so every combination of redo adds another.
 		if depth > 0:
 			numbers = {f: c for f, c in faces.items() if f not in ploder}
 			dice = {
@@ -406,6 +404,12 @@ class Die:
 			return False
 		else:
 			return self._hash == rhs._hash
+
+	def equal(self, rhs: object) -> bool:
+		return self._binary_op(rhs, op.eq)
+
+	def not_equal(self, rhs: object) -> bool:
+		return self._binary_op(rhs, op.ne)
 
 	def folding(self, rhs: object, ops: CompareFunc_T, into: object) -> Die_T:
 		"""
@@ -668,19 +672,13 @@ class Die:
 		"""
 		Return self == value
 		"""
-		return BooleanDie.from_dice(
-			self._binary_op(rhs, op.eq),
-			self.is_equal(rhs),
-		)
+		return self.is_equal(rhs)
 
-	def __ne__(self, rhs: object) -> BooleanDie_T:
+	def __ne__(self, rhs: object) -> bool:
 		"""
 		Return self != value
 		"""
-		return BooleanDie.from_dice(
-			self._binary_op(rhs, op.ne),
-			not self.is_equal(rhs),
-		)
+		return not self.is_equal(rhs)
 
 	def _rolln_level0(self, lhs: int, ops: BinaryFunc_T) -> Die_T:
 		"""
@@ -795,6 +793,9 @@ class Die:
 		Return +self
 		"""
 		return self._unary_level0(op.pos)
+
+	def __invert__(self) -> Die_T:
+		return self._unary_level0(op.inv)
 
 	def __getitem__(self, i) -> Die_T:
 		return self._data[i]
