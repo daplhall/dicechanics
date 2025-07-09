@@ -8,17 +8,22 @@ from itertools import product
 from math import sqrt
 from typing import Any, Callable, Generator, Iterable
 
-from dicechanics._inpt_cleaning import collect_faces, expand_dice, sort_dict, clean_faces
+from dicechanics._inpt_cleaning import (
+	clean_faces,
+	collect_faces,
+	expand_dice,
+	sort_dict,
+)
 from dicechanics._math import gcd
 from dicechanics._strplot import str_plot
-from dicechanics.typing import BinaryFunc_T, CompareFunc_T, UnaryFunc_T
+from dicechanics._typing import BinaryFunc_T, CompareFunc_T, UnaryFunc_T
 
 type Die_T = Die
 type BooleanDie_T = BooleanDie
 type PureFunc_T = Callable[[Any], Any]
 
 PRIMITIVES = (float, int)
-MAX_WIDTH = 20
+PLOT_WIDTH = 20
 
 
 def convert_to_die(inpt: object) -> Die_T:
@@ -97,9 +102,7 @@ class Die:
 			The cumulative probability
 		"""
 		out: list[float] = []
-		for p in (
-			self.p
-		):  # can fold this out an call with iter to clean up the if statement
+		for p in self.p:
 			out.append(p + out[-1] if out else p)
 		return out
 
@@ -286,8 +289,7 @@ class Die:
 			A die that represents the rerolled properbilites
 		-------
 		"""
-		if depth == "inf":  # TODO make this react to math.inf
-			# TODO this sould just produce 0 for the face, not remove it
+		if depth == "inf":
 			return Die(i for i in self if i not in redo)
 		faces = self._data
 		for _ in range(depth):
@@ -318,7 +320,6 @@ class Die:
 			A die representing the operation
 		"""
 		faces = self._data
-		# redo needs to be updated, so every combination of redo adds another.
 		if depth > 0:
 			numbers = {f: c for f, c in faces.items() if f not in ploder}
 			dice = {
@@ -384,7 +385,7 @@ class Die:
 		"""
 		return Die(i in count for i in self)
 
-	def equal(self, rhs: object) -> bool:
+	def is_equal(self, rhs: object) -> bool:
 		"""
 		Function that checks if equality of objects.
 		If its not a Die object then it always return false.
@@ -403,6 +404,12 @@ class Die:
 			return False
 		else:
 			return self._hash == rhs._hash
+
+	def equal(self, rhs: object) -> bool:
+		return self._binary_op(rhs, op.eq)
+
+	def not_equal(self, rhs: object) -> bool:
+		return self._binary_op(rhs, op.ne)
 
 	def folding(self, rhs: object, ops: CompareFunc_T, into: object) -> Die_T:
 		"""
@@ -557,7 +564,6 @@ class Die:
 			A new die representing the operation between original die
 			and rhs
 		"""
-		# add "condenser" here [condesner is new word for what collects faces]
 		data = defaultdict[object, int](int)
 		for (f1, c1), (f2, c2) in product(self.items(), rhs.items()):
 			key = self._rounding(ops(f1, f2))
@@ -666,19 +672,13 @@ class Die:
 		"""
 		Return self == value
 		"""
-		return BooleanDie.from_dice(
-			self._binary_op(rhs, op.eq),
-			self.equal(rhs),
-		)
+		return self.is_equal(rhs)
 
-	def __ne__(self, rhs: object) -> BooleanDie_T:
+	def __ne__(self, rhs: object) -> bool:
 		"""
 		Return self != value
 		"""
-		return BooleanDie.from_dice(
-			self._binary_op(rhs, op.ne),
-			not self.equal(rhs),
-		)
+		return not self.is_equal(rhs)
 
 	def _rolln_level0(self, lhs: int, ops: BinaryFunc_T) -> Die_T:
 		"""
@@ -725,9 +725,9 @@ class Die:
 			The new die representing the operation
 		"""
 		dice = defaultdict(int)
-		for f,c in lhs.items():
-			d = self._binary_rolln(f,ops)
-			dice[d] += c
+		for f, c in lhs.items():
+			die = self._binary_rolln(f, ops)
+			dice[die] += c
 		return Die.from_dict(dice)
 
 	def _binary_rolln(self, lhs: int, ops: BinaryFunc_T) -> Die_T:
@@ -794,6 +794,9 @@ class Die:
 		"""
 		return self._unary_level0(op.pos)
 
+	def __invert__(self) -> Die_T:
+		return self._unary_level0(op.inv)
+
 	def __getitem__(self, i) -> Die_T:
 		return self._data[i]
 
@@ -803,7 +806,7 @@ class Die:
 	def __str__(self) -> str:
 		res = f"Die with mu - {self.mean:.2f}, sigma - {self.std:.2f}\n"
 		res += "-" * (len(res) - 1) + "\n"
-		return res + str_plot(self, MAX_WIDTH)
+		return res + str_plot(self, PLOT_WIDTH)
 
 
 class BooleanDie(Die):

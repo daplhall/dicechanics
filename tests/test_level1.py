@@ -135,13 +135,13 @@ def test_greater_equal_than(d6):
 
 
 def test_not_equal_than(d6):
-	d = d6 != d6
+	d = d6.not_equal(d6)
 	assert d.f == [0, 1]
 	assert d.c == [1, 5]
 
 
 def test_equal_than(d6):
-	d = d6 == d6
+	d = d6.equal(d6)
 	assert d.f == [0, 1]
 	assert d.c == [5, 1]
 
