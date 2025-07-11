@@ -3,6 +3,7 @@ from typing import Sequence
 
 import dicechanics as ds
 from dicechanics._popper import DicePopper
+from dicechanics._referance import Ref
 from dicechanics._typing import BinaryFunc_T
 
 type T = dict[object, int]
@@ -10,8 +11,10 @@ type Inpt_T = Sequence[ds.Die]
 type Bag_T = Sequence[DicePopper]
 type Mem_T = dict[object, T]
 
+I_AM_A_POINTER = 0
 
-def linear_combs(inpt: Inpt_T, layer: int, func: BinaryFunc_T, mem: Mem_T) -> T:
+
+def linear_combs(inpt: Inpt_T, layer: int, func: BinaryFunc_T, mem: Ref) -> T:
 	"""
 	Function that applies a linear operation to a set of unordered combinations
 
@@ -38,8 +41,8 @@ def linear_combs(inpt: Inpt_T, layer: int, func: BinaryFunc_T, mem: Mem_T) -> T:
 	We use mem as a pointer, such that each layer can modify and access it,
 	hence the `0` indexing in mem
 	"""
-	if 0 in mem:  # We use mem as a pointer to store our res dict
-		return mem[0]
+	if mem:
+		return mem.get()
 	if layer >= len(inpt):
 		return {}
 	res: T = defaultdict(int)
@@ -49,7 +52,7 @@ def linear_combs(inpt: Inpt_T, layer: int, func: BinaryFunc_T, mem: Mem_T) -> T:
 				res[func(f, sf)] += c * sc
 		else:
 			res[f] = c
-	mem[0] = res
+	mem.set(res)
 	return res
 
 
@@ -70,7 +73,7 @@ def linear_non_selective(inpt: Inpt_T, func: BinaryFunc_T) -> ds.Die:
 		the result of the combinatorics calculations in the form of
 		a die representation.
 	"""
-	mem: Mem_T = {}
+	mem = Ref()
 	res = linear_combs(inpt, 0, func, mem)
 	return ds.Die.from_dict(res)
 
