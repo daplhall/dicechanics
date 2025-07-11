@@ -11,6 +11,8 @@ type Inpt_T = Sequence[ds.Die]
 type Bag_T = Sequence[DicePopper]
 type Mem_T = dict[object, T]
 
+ARBITRARY_INT = 0
+
 
 def linear_combs(
 	inpt: Inpt_T, layer: int, func: BinaryFunc_T, mem: Reference
@@ -73,8 +75,8 @@ def linear_non_selective(inpt: Inpt_T, func: BinaryFunc_T) -> ds.Die:
 		the result of the combinatorics calculations in the form of
 		a die representation.
 	"""
-	mem = Reference(None)
-	res = linear_combs(inpt, 0, func, mem)
+
+	res = linear_combs(inpt, ARBITRARY_INT, func, Reference(None))
 	return ds.Die.from_dict(res)
 
 
