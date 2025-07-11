@@ -11,7 +11,7 @@ type Inpt_T = Sequence[ds.Die]
 type Bag_T = Sequence[DicePopper]
 type Mem_T = dict[object, T]
 
-ARBITRARY_INT = 0
+ARRAY_START_INDEX = 0
 
 
 def linear_combs(
@@ -25,7 +25,7 @@ def linear_combs(
 	inpt: Sequence
 		A sequence of Die.
 	layer: int
-		An arbitrary integer that indicates the depth.
+		An integer that should always be 0 when first called.
 	func: Callable
 		The function that is applied to the set of outcomes.
 		Takes values at a time and combines them.
@@ -76,7 +76,7 @@ def linear_non_selective(inpt: Inpt_T, func: BinaryFunc_T) -> ds.Die:
 		a die representation.
 	"""
 
-	res = linear_combs(inpt, ARBITRARY_INT, func, Reference(None))
+	res = linear_combs(inpt, ARRAY_START_INDEX, func, Reference(None))
 	return ds.Die.from_dict(res)
 
 
