@@ -18,6 +18,8 @@ from dicechanics._math import gcd
 from dicechanics._strplot import str_plot
 from dicechanics._typing import BinaryFunc_T, CompareFunc_T, UnaryFunc_T
 
+from line_profiler import profile
+
 type Die_T = Die
 type BooleanDie_T = BooleanDie
 type PureFunc_T = Callable[[Any], Any]
@@ -680,6 +682,7 @@ class Die:
 		"""
 		return not self.is_equal(rhs)
 
+	@profile
 	def _rolln_level0(self, lhs: int, ops: BinaryFunc_T) -> Die_T:
 		"""
 		Function for rolling self lhs times.
@@ -706,6 +709,7 @@ class Die:
 			res = ops(res, self)
 		return -res if neg else res
 
+	@profile
 	def _rolln_level1(self, lhs: Die_T, ops: BinaryFunc_T) -> Die_T:
 		"""
 		Function for rolling self n times, where n is a value in lhs.
@@ -730,6 +734,7 @@ class Die:
 			dice[die] += c
 		return Die.from_dict(dice)
 
+	@profile
 	def _binary_rolln(self, lhs: int, ops: BinaryFunc_T) -> Die_T:
 		"""
 		Function for applying binary operations in which you roll self
