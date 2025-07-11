@@ -11,8 +11,6 @@ type Inpt_T = Sequence[ds.Die]
 type Bag_T = Sequence[DicePopper]
 type Mem_T = dict[object, T]
 
-I_AM_A_POINTER = 0
-
 
 def linear_combs(
 	inpt: Inpt_T, layer: int, func: BinaryFunc_T, mem: Reference
