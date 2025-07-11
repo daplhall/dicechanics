@@ -3,7 +3,7 @@ from typing import Sequence
 
 import dicechanics as ds
 from dicechanics._popper import DicePopper
-from dicechanics._referance import Ref
+from dicechanics._referance import Reference
 from dicechanics._typing import BinaryFunc_T
 
 type T = dict[object, int]
@@ -14,7 +14,9 @@ type Mem_T = dict[object, T]
 I_AM_A_POINTER = 0
 
 
-def linear_combs(inpt: Inpt_T, layer: int, func: BinaryFunc_T, mem: Ref) -> T:
+def linear_combs(
+	inpt: Inpt_T, layer: int, func: BinaryFunc_T, mem: Reference
+) -> T:
 	"""
 	Function that applies a linear operation to a set of unordered combinations
 
@@ -73,7 +75,7 @@ def linear_non_selective(inpt: Inpt_T, func: BinaryFunc_T) -> ds.Die:
 		the result of the combinatorics calculations in the form of
 		a die representation.
 	"""
-	mem = Ref()
+	mem = Reference(None)
 	res = linear_combs(inpt, 0, func, mem)
 	return ds.Die.from_dict(res)
 
