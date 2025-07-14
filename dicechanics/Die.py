@@ -407,12 +407,6 @@ class Die:
 		else:
 			return self._hash == rhs._hash
 
-	def equal(self, rhs: object) -> bool:
-		return self._binary_op(rhs, op.eq)
-
-	def not_equal(self, rhs: object) -> bool:
-		return self._binary_op(rhs, op.ne)
-
 	def folding(self, rhs: object, ops: CompareFunc_T, into: object) -> Die_T:
 		"""
 		Function that takes values of the die, that are evaluated true
