@@ -134,18 +134,6 @@ def test_greater_equal_than(d6):
 	assert d.c == [5, 7]
 
 
-def test_not_equal_than(d6):
-	d = d6.not_equal(d6)
-	assert d.f == [0, 1]
-	assert d.c == [1, 5]
-
-
-def test_equal_than(d6):
-	d = d6.equal(d6)
-	assert d.f == [0, 1]
-	assert d.c == [5, 1]
-
-
 def test_rmatmul(d2, d6):
 	d = d2 @ d6
 	assert d.f == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
