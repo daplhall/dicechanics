@@ -18,6 +18,7 @@ class DicePopper:
 		self.faces = list(data.keys())
 		self.count = list(data.values())
 		self.i = len(self.faces) - 1
+		self._basehash = tuple(self.faces)
 
 	def identifier(self) -> tuple:
 		"""
@@ -28,7 +29,7 @@ class DicePopper:
 		out: tuple
 			tuple that can be hashed to identify the object
 		"""
-		return tuple(self.faces) + (self.i,)
+		return self._basehash + (self.i,)
 
 	def max(self) -> object:
 		"""
@@ -72,6 +73,7 @@ class DicePopper:
 		res.faces = self.faces
 		res.count = self.count
 		res.i = self.i
+		res._basehash = self._basehash
 		return res
 
 	def __bool__(self):
@@ -81,4 +83,6 @@ class DicePopper:
 		return repr(self)
 
 	def __repr__(self):
-		return f"i: {self.i} - " + str(tuple(zip(self.faces, self.count)))
+		return f"i: {self.i} - " + str(
+			tuple(zip(self.faces[: self.i], self.count[: self.i]))
+		)

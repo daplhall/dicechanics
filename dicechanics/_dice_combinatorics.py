@@ -136,7 +136,7 @@ def selective_comb(
 			else:
 				key = func(o, sf)
 			res[key] += c * sc
-		if sorted_bag and len(sorted_bag) > 1 and sorted_bag[0]:
+		if sorted_bag[0]:
 			sorted_bag.sort(key=lambda key: key.max(), reverse=True)
 	mem[cache_key] = res
 	return res
