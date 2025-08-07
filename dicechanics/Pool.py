@@ -54,8 +54,7 @@ class Pool:
 		out: Pool
 			A copy of the current pool
 		"""
-		res = Pool.__new__(Pool)
-		res._bag = self._bag
+		res = Pool(self._bag)
 		res._keep = self._keep
 		return res
 
