@@ -4,8 +4,8 @@ from dicechanics._dice_combinatorics import (
 	linear_non_selective,
 	linear_selective,
 )
-from dicechanics.Die import Die, convert_to_die
 from dicechanics._typing import BinaryFunc_T
+from dicechanics.Die import Die, convert_to_die
 
 
 # Pool needs to be invoked in the interface witha  decorator, in which
