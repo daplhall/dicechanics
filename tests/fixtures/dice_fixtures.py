@@ -26,3 +26,8 @@ def d4():
 @pytest.fixture
 def d2():
 	return ds.d(2)
+
+
+@pytest.fixture
+def f2d6():
+	return 2 @ ds.d6
