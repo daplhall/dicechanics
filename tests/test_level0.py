@@ -115,3 +115,9 @@ def test_not_equal(d10):
 def test_equal(d10):
 	d = d10 == d10
 	assert d
+
+
+def test_rmul(d6):
+	d = 2 * d6
+	assert d.f == [2, 4, 6, 8, 10, 12]
+	assert d.c == [1, 1, 1, 1, 1, 1]

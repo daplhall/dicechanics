@@ -4,8 +4,13 @@ import dicechanics as ds
 
 
 @pytest.fixture
-def folding_faces():
+def folding_under_faces():
 	return [3, 4, 5, 6, 7, 8, 9, 10]
+
+
+@pytest.fixture
+def folding_over_faces():
+	return [1, 2, 3, 4, 5, 6, 7, 8]
 
 
 def test_reroll1(d6):
@@ -161,21 +166,39 @@ def test_implode(d6):
 	assert d.c == [1, 1, 1, 1, 1, 1, 6, 6, 6, 6, 6]
 
 
-def test_fold_under(d10, folding_faces):
+def test_fold_under(d10, folding_under_faces):
 	d = d10.fold_under(3)
-	assert d.f == folding_faces
+	assert d.f == folding_under_faces
 	assert d.c == [3, 1, 1, 1, 1, 1, 1, 1]
 
 
-def test_fold_under_into(d10, folding_faces):
+def test_fold_under_into(d10, folding_under_faces):
 	d = d10.fold_under(3, into=4)
-	assert d.f == folding_faces
+	assert d.f == folding_under_faces
 	assert d.c == [1, 3, 1, 1, 1, 1, 1, 1]
 
 
-def test_fold_under_into_0(d10, folding_faces):
+def test_fold_under_into_0(d10, folding_under_faces):
 	d = d10.fold_under(3, into=0)
-	assert d.f == [0] + folding_faces
+	assert d.f == [0] + folding_under_faces
+	assert d.c == [2, 1, 1, 1, 1, 1, 1, 1, 1]
+
+
+def test_fold_over(d10, folding_over_faces):
+	d = d10.fold_over(8)
+	assert d.f == folding_over_faces
+	assert d.c == [1, 1, 1, 1, 1, 1, 1, 3]
+
+
+def test_fold_over_into(d10, folding_over_faces):
+	d = d10.fold_over(8, into=7)
+	assert d.f == folding_over_faces
+	assert d.c == [1, 1, 1, 1, 1, 1, 3, 1]
+
+
+def test_fold_over_into_0(d10, folding_over_faces):
+	d = d10.fold_over(8, into=0)
+	assert d.f == [0] + folding_over_faces
 	assert d.c == [2, 1, 1, 1, 1, 1, 1, 1, 1]
 
 

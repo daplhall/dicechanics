@@ -225,7 +225,6 @@ def test_rmatmul3():
 	D = f @ g
 	assert D.f == [0, 1, 2, 3]
 	assert D.c == [3, 1, 1, 1]
-	# missing counts
 
 
 def test_dice_nroll_raise(d6):
