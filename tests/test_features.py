@@ -207,6 +207,26 @@ def test_dice_getitem(d6):
 	assert (d6[0] - 0.16666666666666666) <= 1e-15
 
 
+def test_dice_max(d6):
+	d = 2 @ d6
+	assert d.max() == 12
+
+
+def test_dice_min(d6):
+	d = 2 @ d6
+	assert d.min() == 2
+
+
+def test_dice_var(d6):
+	d = 2 @ d6
+	assert d.var == 5.833333333333333
+
+
+def test_dice_std(d6):
+	d = 2 @ d6
+	assert d.std == 2.41522945769824
+
+
 def test_string(d6):
 	assert (
 		str(d6)
