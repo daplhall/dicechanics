@@ -732,8 +732,8 @@ class Die:
 			The new die representing the operation
 		"""
 		dice = defaultdict(int)
-		for f, c in lhs.items():
-			die = self._binary_rolln(f, ops)
+		for f, c in self.items():
+			die = lhs._binary_rolln(f, ops)
 			dice[die] += c
 		return Die.from_dict(dice)
 
@@ -759,19 +759,20 @@ class Die:
 		elif isinstance(lhs, Die):
 			return self._rolln_level1(lhs, ops)
 		else:
-			raise Exception("Unexpected type in dice matmul")
+			raise ValueError("Unexpected type in dice matmul")
 
 	def __rmatmul__(self, lhs: int) -> Die_T:
 		"""
-		Return self @ value
+		Return value @ self
 		"""
 		return self._binary_rolln(lhs, op.add)
 
 	def __matmul__(self, rhs) -> Die_T:
 		"""
-		Return value @ self
+		Return self @ value
+		if value is a Die then we roll that depending on the values in self
 		"""
-		return rhs._binary_rolln(self, op.add)
+		return self._binary_rolln(rhs, op.add)
 
 	def _unary_level0(self, ops: UnaryFunc_T) -> Die_T:
 		"""
@@ -800,9 +801,6 @@ class Die:
 		Return +self
 		"""
 		return self._unary_level0(op.pos)
-
-	def __invert__(self) -> Die_T:
-		return self._unary_level0(op.inv)
 
 	def __getitem__(self, i) -> Die_T:
 		return self.p[i]
