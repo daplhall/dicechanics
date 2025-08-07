@@ -80,9 +80,9 @@ class DicePopper:
 		return self.i > -1
 
 	def __str__(self):
-		return repr(self)
+		return repr(self)  # pragma: no cover
 
 	def __repr__(self):
 		return f"i: {self.i} - " + str(
 			tuple(zip(self.faces[: self.i], self.count[: self.i]))
-		)
+		)  # pragma: no cover

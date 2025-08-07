@@ -57,8 +57,8 @@ funky_dice = mydice()
 The string representation of a die is a sideways bar plot.
 ```cmd
 >>> print(2@d6)
-Die with mu - 7.00, sigma - 2.42
---------------------------------
+Die with mu - 7.00, sigma - 2.42, faces - 36
+--------------------------------------------
  2|### 2.78%
  3|####### 5.56%
  4|########## 8.33%
