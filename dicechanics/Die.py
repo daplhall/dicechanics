@@ -136,6 +136,19 @@ class Die:
 		return list(self._data.keys())
 
 	@property
+	def nfaces(self) -> int:
+		"""
+		Returns the number of faces a physical die needs to represent
+		this die.
+
+		Returns
+		-------
+		out: int
+			Number of faces needed to present this die as a physical die.
+		"""
+		return self._units
+
+	@property
 	def p(self) -> list:
 		"""
 		Returns the probability of the die
@@ -798,7 +811,7 @@ class Die:
 		return "Die(" + str(self._data) + ")"
 
 	def __str__(self) -> str:
-		res = f"Die with mu - {self.mean:.2f}, sigma - {self.std:.2f}\n"
+		res = f"Die with mu - {self.mean:.2f}, sigma - {self.std:.2f}, faces - {self.nfaces}\n"  # noqa: E501h
 		res += "-" * (len(res) - 1) + "\n"
 		return res + str_plot(self, PLOT_WIDTH)
 
