@@ -191,13 +191,6 @@ def test_string(d6):
 	)
 
 
-def test_dice_nroll_raise(d6):
-	with pytest.raises(ValueError):
-		"a" @ d6
-	with pytest.raises(ValueError):
-		d6 @ "a"
-
-
 def test_pool_string(d6):
 	pool = ds.pool([d6, d6])
 	assert (

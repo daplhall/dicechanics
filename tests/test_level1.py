@@ -224,4 +224,12 @@ def test_rmatmul3():
 	g = ds.d("1,2,3")
 	D = f @ g
 	assert D.f == [0, 1, 2, 3]
+	assert D.c == [3, 1, 1, 1]
 	# missing counts
+
+
+def test_dice_nroll_raise(d6):
+	with pytest.raises(ValueError):
+		"a" @ d6
+	with pytest.raises(ValueError):
+		d6 @ "a"
