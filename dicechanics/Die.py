@@ -1,4 +1,4 @@
-__all__ = ["Die", "BooleanDie"]
+__all__ = ["Die"]
 
 import operator as op
 import warnings as wa
@@ -19,7 +19,6 @@ from dicechanics._strplot import str_plot
 from dicechanics._typing import BinaryFunc_T, CompareFunc_T, UnaryFunc_T
 
 type Die_T = Die
-type BooleanDie_T = BooleanDie
 type PureFunc_T = Callable[[Any], Any]
 
 PRIMITIVES = (float, int)
@@ -675,7 +674,7 @@ class Die:
 		"""
 		return self._binary_op(rhs, op.gt)
 
-	def __eq__(self, rhs: object) -> BooleanDie_T:
+	def __eq__(self, rhs: object) -> bool:
 		"""
 		Return self == value
 		"""
@@ -812,35 +811,3 @@ class Die:
 		res = f"Die with mu - {self.mean:.2f}, sigma - {self.std:.2f}, faces - {self.nfaces}\n"  # noqa: E501h
 		res += "-" * (len(res) - 1) + "\n"
 		return res + str_plot(self, PLOT_WIDTH)
-
-
-class BooleanDie(Die):
-	def __init__(self, faces, truth: bool):
-		super().__init__(faces)
-		self._truth = truth
-
-	@classmethod
-	def from_dice(cls, dice: Die, truth: bool) -> BooleanDie_T:
-		"""
-		Constructor that creates a BooleanDie directly from a dict.
-
-		Parameters
-		----------
-		data: dict
-			The data in the form of a dict.
-		rounding: Callable
-			A function that determines how to round outcomes.
-
-		Returns
-		-------
-		out: BooleanDie
-		"""
-		self = cls.__new__(cls)
-		self._data = dice._data
-		self._rounding = dice._rounding
-		self._truth = truth
-		self._derived_attr()
-		return self
-
-	def __bool__(self) -> bool:
-		return self._truth
