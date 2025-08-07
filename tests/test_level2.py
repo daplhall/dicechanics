@@ -1,3 +1,5 @@
+import pytest
+
 import dicechanics as ds
 
 
@@ -14,3 +16,8 @@ def test_addfloat(pool_1d6, d6):
 def test_adddice(pool_1d6, d6, d10):
 	newpool = pool_1d6 + d10
 	assert newpool._bag == [d6, d10]
+
+
+def test_add_raise(pool_1d6, d6, d10):
+	with pytest.raises(ValueError):
+		pool_1d6 + "a"
