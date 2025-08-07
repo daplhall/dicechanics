@@ -80,24 +80,6 @@ def linear_non_selective(inpt: Inpt_T, func: BinaryFunc_T) -> ds.Die:
 	return ds.Die.from_dict(res)
 
 
-def combine(a, b, ops):
-	res = defaultdict(int)
-	for f1, c1 in a.items():
-		for f2, c2 in b.items():
-			res[ops(f1, f2)] += c1 * c2
-	return res
-
-
-def linear_combs_specialized(
-	inpt: ds.Die, n: int, func: BinaryFunc_T, mem: Reference
-):
-	sub = linear_combs_specialized(inpt, n // 2, func, mem)
-	if n <= 1:
-		return inpt
-	else:
-		return combine(sub, sub, func)
-
-
 def selective_comb(
 	bag: Bag_T, func: BinaryFunc_T, keep: list[int], mem: Mem_T
 ) -> T:
