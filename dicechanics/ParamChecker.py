@@ -9,21 +9,6 @@ which checks it for you when the function is defined
 """
 
 
-def lev(a: str, b: str):
-	"""
-	levenshtein_distance
-	https://en.wikipedia.org/wiki/Levenshtein_distance
-	"""
-	if len(b) == 0:
-		return len(a)
-	elif len(a) == 0:
-		return len(b)
-	elif a[0] == b[0]:
-		return lev(a[1:], b[1:])
-	else:
-		return 1 + min(lev(a[1:], b), lev(a, b[1:]), lev(a[1:], b[1:]))
-
-
 class OptionsMatcher:
 	"""
 	needs to contain options
@@ -38,9 +23,28 @@ class OptionsMatcher:
 		""" """
 		tmp = []
 		for option in self.options:
-			tmp.append((lev(option, arg), option))
+			tmp.append((OptionsMatcher.lev(option, arg), option))
 		tmp.sort()
 		return [i[1] for i in tmp if min(tmp)[0] == i[0]]
+
+	@staticmethod
+	def lev(a: str, b: str):
+		"""
+		levenshtein_distance
+		https://en.wikipedia.org/wiki/Levenshtein_distance
+		"""
+		if len(b) == 0:
+			return len(a)
+		elif len(a) == 0:
+			return len(b)
+		elif a[0] == b[0]:
+			return OptionsMatcher.lev(a[1:], b[1:])
+		else:
+			return 1 + min(
+				OptionsMatcher.lev(a[1:], b),
+				OptionsMatcher.lev(a, b[1:]),
+				OptionsMatcher.lev(a[1:], b[1:]),
+			)
 
 
 class Signature:
