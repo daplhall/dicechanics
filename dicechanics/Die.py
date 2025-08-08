@@ -309,7 +309,7 @@ class Die:
 
 		Returns
 		out: Die
-			A die that represents the rerolled properbilites
+			A die that represents the rerolled probabilities
 		-------
 		"""
 		if depth == "inf":

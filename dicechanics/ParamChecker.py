@@ -22,7 +22,8 @@ class UnsupportedParameters(Exception):
 				msg += (
 					f"* Parameter '{written}' is not supported, did you mean:\n"
 				)
-				msg += f"\t- {match}\n"
+				for suggestion in match:
+					msg += f"\t- {suggestion}\n"
 		super().__init__(
 			f"\nError in the signature of '{function.__name__}'"
 			"in {inspect.getsourcefile(function)}\n" + msg
@@ -60,7 +61,7 @@ class OptionsMatcher:
 		for option in self.options:
 			tmp.append((lev(option, arg), option))
 		tmp.sort()
-		return tmp[0][1]
+		return [i[1] for i in tmp if min(tmp)[0] == i[0]]
 
 
 class Signature:
@@ -103,7 +104,3 @@ class ParamChecker(Signature):
 		self = cls(template_function)
 		self.with_types = True
 		return self
-
-
-if __name__ == "__main__":
-	pass

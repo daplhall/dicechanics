@@ -7,7 +7,7 @@ def SomePrototype(a, b, c):
 	pass
 
 
-def UserInpt(a, b, potato):
+def UserInpt(a, b, p):
 	pass
 
 
