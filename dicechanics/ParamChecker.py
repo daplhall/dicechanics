@@ -53,7 +53,7 @@ class OptionsMatcher:
 	"""
 
 	def __init__(self, options: dict):
-		self.options = list(options.keys())
+		self.options = options
 
 	def match(self, arg) -> Tuple[bool, float]:
 		""" """
@@ -75,10 +75,9 @@ class Signature:
 		}
 
 
-class ParamChecker(Signature):
+class ParamChecker(OptionsMatcher, Signature):
 	def __init__(self, func_prototype):
-		self.options = ParamChecker.signature(func_prototype)
-		self.matcher = OptionsMatcher(self.options)
+		super().__init__(ParamChecker.signature(func_prototype))
 		self.with_types = False
 
 	def check(self, function) -> set:
@@ -93,7 +92,7 @@ class ParamChecker(Signature):
 					wrong_types.append((param, mytype, self.options[param]))
 		my_matches = []
 		for miss in missing:
-			if matches := self.matcher.match(miss):
+			if matches := self.match(miss):
 				my_matches.append((miss, matches))
 		if my_matches or wrong_types:
 			raise UnsupportedParameters(my_matches, wrong_types, function)
