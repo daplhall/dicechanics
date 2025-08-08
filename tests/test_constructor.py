@@ -68,10 +68,10 @@ def test_copy():
 
 def test_decorator():
 	@ds.d("5..6:3,6,6")
-	def funky_dice(face):
-		if face == 1:
+	def funky_dice(outcome):
+		if outcome == 1:
 			return 32
-		elif face == 6:
+		elif outcome == 6:
 			return 42
 		else:
 			return -1
@@ -83,11 +83,11 @@ def test_decorator():
 
 def test_decorator_explode(faces_d6):
 	@ds.d(faces_d6)
-	def funky_dice(face):
-		if face == 6:
+	def funky_dice(outcome):
+		if outcome == 6:
 			return ds.d(faces_d6)
 		else:
-			return face
+			return outcome
 
 	d = funky_dice()
 	assert d.f == [1, 2, 3, 4, 5, 6]
@@ -96,11 +96,11 @@ def test_decorator_explode(faces_d6):
 
 def test_decorator_d6_to_d4(faces_d6, faces_d4):
 	@ds.d(faces_d6)
-	def funky_dice(face):
-		if face == 6:
+	def funky_dice(outcome):
+		if outcome == 6:
 			return ds.d(faces_d4)
 		else:
-			return face
+			return outcome
 
 	d = funky_dice()
 	assert d.f == [1, 2, 3, 4, 5]

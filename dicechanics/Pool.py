@@ -6,6 +6,17 @@ from dicechanics._dice_combinatorics import (
 )
 from dicechanics._typing import BinaryFunc_T
 from dicechanics.Die import Die, convert_to_die
+from dicechanics.ParamChecker import ParamChecker
+
+
+@ParamChecker
+def pool_func_template(x, y):
+	pass
+
+
+def PoolFunction(func):
+	pool_func_template.check(func)
+	return func
 
 
 # Pool needs to be invoked in the interface witha  decorator, in which
@@ -86,6 +97,7 @@ class Pool:
 		"""
 		A wrapper for perform, allows the pool to be used as a decorator
 		"""
+		pool_func_template.check(func)
 
 		def wrapper():
 			return self.perform(func)

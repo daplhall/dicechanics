@@ -9,13 +9,14 @@ which checks it for you when the function is defined
 """
 
 
-class UnsupportedParamters(Exception):
+class UnsupportedParameters(Exception):
 	def __init__(self, matches, wrong_types, function):
 		msg = ""
 		if wrong_types:
 			for param, curr_type, corr_type in wrong_types:
 				msg += f"* Wrong Type - Parameter {param}\n"
-				msg += f"\t it is '{curr_type.__name__}' it should be '{corr_type.__name__}'\n"
+				msg += f"\t it is '{curr_type.__name__}' "
+				f"it should be '{corr_type.__name__}'\n"
 		if matches:
 			for written, match in matches:
 				msg += (
@@ -23,8 +24,8 @@ class UnsupportedParamters(Exception):
 				)
 				msg += f"\t- {match}\n"
 		super().__init__(
-			f"\nError in the signature of '{function.__name__}' in {inspect.getsourcefile(function)}\n"
-			+ msg
+			f"\nError in the signature of '{function.__name__}'"
+			"in {inspect.getsourcefile(function)}\n" + msg
 		)
 
 
@@ -65,9 +66,6 @@ class OptionsMatcher:
 class Signature:
 	"""Collects signature"""
 
-	def __init__(self, template_function):
-		self.options = Signature.signature(template_function)
-
 	@staticmethod
 	def signature(template):
 		return {
@@ -77,15 +75,12 @@ class Signature:
 
 
 class ParamChecker(Signature):
-	def __init__(self, function):
-		super().__init__(function)
+	def __init__(self, func_prototype):
+		self.options = ParamChecker.signature(func_prototype)
 		self.matcher = OptionsMatcher(self.options)
 		self.with_types = False
 
-	def check(self, function):
-		"""
-		TODO I am not checking fully illegals
-		"""
+	def check(self, function) -> set:
 		wrong_types = []
 		params = ParamChecker.signature(function)
 		missing = set(params) - set(self.options)
@@ -100,42 +95,14 @@ class ParamChecker(Signature):
 			if matches := self.matcher.match(miss):
 				my_matches.append((miss, matches))
 		if my_matches or wrong_types:
-			raise UnsupportedParamters(my_matches, wrong_types, function)
-		return True
+			raise UnsupportedParameters(my_matches, wrong_types, function)
+		return hits
 
 	@classmethod
 	def with_typing(cls, template_function):
 		self = cls(template_function)
 		self.with_types = True
 		return self
-
-
-@ParamChecker
-def test_template(x, y, maximum, minimum):
-	pass
-
-
-@ParamChecker
-def test_template_empty():
-	pass
-
-
-@ParamChecker.with_typing
-def test_template_types(x, y: object, maximum: int, minimum: float):
-	pass
-
-
-print(test_template.options)
-print(test_template_types.options)
-print(test_template_empty.options)
-print("================")
-
-
-def sanity(x, y, maimum, minim, frog):
-	pass
-
-
-test_template_types.check(sanity)
 
 
 if __name__ == "__main__":

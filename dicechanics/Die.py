@@ -17,12 +17,23 @@ from dicechanics._inpt_cleaning import (
 from dicechanics._math import gcd
 from dicechanics._strplot import str_plot
 from dicechanics._typing import BinaryFunc_T, CompareFunc_T, UnaryFunc_T
+from dicechanics.ParamChecker import ParamChecker
 
 type Die_T = Die
 type PureFunc_T = Callable[[Any], Any]
 
 PRIMITIVES = (float, int)
 PLOT_WIDTH = 20
+
+
+@ParamChecker
+def die_map_template(outcome):
+	pass
+
+
+def DieFunction(func):
+	ParamChecker.check(func)
+	return func
 
 
 def convert_to_die(inpt: object) -> Die_T:
@@ -516,6 +527,7 @@ class Die:
 		out: callable
 			A function that returns a die of the mapped function
 		"""
+		die_map_template.check(func)
 
 		def wrapper():
 			return self.map(func)

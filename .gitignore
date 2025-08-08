@@ -4,9 +4,10 @@
 .mypy_cache
 .pytest_cache
 .benchmarks
+.coverage
 dist/
 build/
 **/__pycache__/
 main.py
-notes/
-profil*
+dicechanics-profiling
+notes
