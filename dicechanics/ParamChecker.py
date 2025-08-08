@@ -5,34 +5,23 @@ from typing import Tuple
 class OptionsMatcher:
 	"""
 	needs to contain options
+	Idea:
+	https://en.wikipedia.org/wiki/Levenshtein_distance
+	https://stackoverflow.com/questions/5859561/getting-the-closest-string-match
 	"""
 
 	def __init__(self, options: dict):
 		self.options = {i: set(i) for i in options.keys()}
 
 	def match(self, arg, acpt_crit=0.7) -> Tuple[bool, float]:
-		"""
-		should return a list of possible matches in args.
-		eg.
-		minim -> minimum, mini
-		maxim -> maximum
-
-		returns
-		minim, wrong, did you mean ->
-		minimum?
-		mini?
-
-		maxim wrong, did you mean ->
-		maximum?
-
-		if there multiple matches we
-		"""
-		out = []
+		""" """
+		tmp = []
 		for option, matcher in self.options.items():
 			prcnt_match = len(matcher & set(arg)) / len(matcher)
 			if prcnt_match >= acpt_crit:
-				out.append(option)
-		return out
+				tmp.append((option, prcnt_match))
+		tmp.sort(key=lambda key: key[1], reverse=True)
+		return [i for i, _ in tmp]
 
 
 class Signature:
@@ -57,7 +46,7 @@ class ParamChecker(Signature):
 
 	def check(self, function):
 		"""
-		i need to check that params is not empty!!!
+		TODO I am not checking fully illegals
 		"""
 		wrong_type = []
 		params = ParamChecker.signature(function)
@@ -72,6 +61,7 @@ class ParamChecker(Signature):
 		for miss in missing:
 			if matches := self.matcher.match(miss):
 				my_matches.append((miss, matches))
+		# TODO make Exception raising its own special exception
 		msg = ""
 		if wrong_type:
 			for param, curr_type, corr_type in wrong_type:
@@ -84,7 +74,7 @@ class ParamChecker(Signature):
 					msg += f"\t- {match}\n"
 		if msg:
 			raise Exception(
-				f"\nFor function '{function.__name__}' in {inspect.getfile(function)}\n"
+				f"\nError in the signature of '{function.__name__}' in {inspect.getsoucefile(function)}\n"
 				+ msg
 			)
 		return True
@@ -117,11 +107,11 @@ print(test_template_empty.options)
 print("================")
 
 
-def sanity(x, y, maximum, minim):
+def sanity(x, y, maimum, minim):
 	pass
 
 
-test_template_types.check(sanity)
+test_template.check(sanity)
 
 
 if __name__ == "__main__":
