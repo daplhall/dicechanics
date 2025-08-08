@@ -9,27 +9,6 @@ which checks it for you when the function is defined
 """
 
 
-class UnsupportedParameters(Exception):
-	def __init__(self, matches, wrong_types, function):
-		msg = ""
-		if wrong_types:
-			for param, curr_type, corr_type in wrong_types:
-				msg += f"* Wrong Type - Parameter {param}\n"
-				msg += f"\t it is '{curr_type.__name__}' "
-				f"it should be '{corr_type.__name__}'\n"
-		if matches:
-			for written, match in matches:
-				msg += (
-					f"* Parameter '{written}' is not supported, did you mean:\n"
-				)
-				for suggestion in match:
-					msg += f"\t- {suggestion}\n"
-		super().__init__(
-			f"\nError in the signature of '{function.__name__}'"
-			"in {inspect.getsourcefile(function)}\n" + msg
-		)
-
-
 def lev(a: str, b: str):
 	"""
 	levenshtein_distance
@@ -103,3 +82,24 @@ class ParamChecker(OptionsMatcher, Signature):
 		self = cls(template_function)
 		self.with_types = True
 		return self
+
+
+class UnsupportedParameters(Exception):
+	def __init__(self, matches, wrong_types, function):
+		msg = ""
+		if wrong_types:
+			for param, curr_type, corr_type in wrong_types:
+				msg += f"* Wrong Type - Parameter {param}\n"
+				msg += f"\t it is '{curr_type.__name__}' "
+				f"it should be '{corr_type.__name__}'\n"
+		if matches:
+			for written, match in matches:
+				msg += (
+					f"* Parameter '{written}' is not supported, did you mean:\n"
+				)
+				for suggestion in match:
+					msg += f"\t- {suggestion}\n"
+		super().__init__(
+			f"\nError in the signature of '{function.__name__}'"
+			"in {inspect.getsourcefile(function)}\n" + msg
+		)
