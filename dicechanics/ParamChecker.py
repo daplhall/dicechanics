@@ -66,9 +66,7 @@ class ParamChecker(OptionsMatcher, Signature):
 		params = ParamChecker.signature(function)
 		misses = set(params) - set(self.options)
 		hits = set(params) & set(self.options)
-		wrong_types = (
-			self.check_types(hits, params) if self.with_types else None
-		)
+		wrong_types = self.check_types(hits, params)
 		matches = self.match_parameter(misses)
 		if matches or wrong_types:
 			raise UnsupportedParameters(matches, wrong_types, function)
@@ -78,11 +76,13 @@ class ParamChecker(OptionsMatcher, Signature):
 		"""
 		Checks types and returns the params with types that doesn't match
 		"""
-		return [
-			(param, mytype, self.options[param])
-			for param, mytype in filter(lambda x: x[0] in hits, params.items())
-			if mytype != self.options[param]
-		]
+		wrong_types = []
+		if not self.with_types:
+			return wrong_types
+		for param, mytype in filter(lambda x: x[0] in hits, params.items()):
+			if mytype != self.options[param]:
+				wrong_types.append((param, mytype, self.options[param]))
+		return wrong_types
 
 	def match_parameter(self, misses):
 		my_matches = []
