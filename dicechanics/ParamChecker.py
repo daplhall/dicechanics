@@ -60,7 +60,7 @@ class Signature:
 class ParamChecker(OptionsMatcher, Signature):
 	def __init__(self, func_prototype):
 		super().__init__(ParamChecker.signature(func_prototype))
-		self.with_types = False
+		self.typing = False
 
 	def check(self, function: callable) -> set[str]:
 		params = ParamChecker.signature(function)
@@ -76,7 +76,7 @@ class ParamChecker(OptionsMatcher, Signature):
 		"""
 		Checks types and returns the params with types that doesn't match
 		"""
-		if not self.with_types:
+		if not self.typing:
 			return []
 		return [
 			(param, mytype, self.options[param])
@@ -94,7 +94,7 @@ class ParamChecker(OptionsMatcher, Signature):
 	@classmethod
 	def with_typing(cls, template_function):
 		self = cls(template_function)
-		self.with_types = True
+		self.typing = True
 		return self
 
 
