@@ -69,9 +69,9 @@ class ParamChecker(OptionsMatcher, Signature):
 		wrong_types = (
 			self.check_types(hits, params) if self.with_types else None
 		)
-		my_matches = self.get_matches(misses)
-		if my_matches or wrong_types:
-			raise UnsupportedParameters(my_matches, wrong_types, function)
+		matches = self.get_matches(misses)
+		if matches or wrong_types:
+			raise UnsupportedParameters(matches, wrong_types, function)
 		return hits
 
 	def check_types(self, hits, params):
