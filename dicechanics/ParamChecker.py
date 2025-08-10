@@ -63,22 +63,33 @@ class ParamChecker(OptionsMatcher, Signature):
 		self.with_types = False
 
 	def check(self, function: callable) -> set[str]:
-		wrong_types = []
 		params = ParamChecker.signature(function)
-		missing = set(params) - set(self.options)
+		misses = set(params) - set(self.options)
 		hits = set(params) & set(self.options)
-		if self.with_types:
-			options = filter(lambda x: x[0] in hits, params.items())
-			for param, mytype in options:
-				if mytype != self.options[param]:
-					wrong_types.append((param, mytype, self.options[param]))
-		my_matches = []
-		for miss in missing:
-			if matches := self.match(miss):
-				my_matches.append((miss, matches))
+		wrong_types = (
+			self.check_types(hits, params) if self.with_types else None
+		)
+		my_matches = self.get_matches(misses)
 		if my_matches or wrong_types:
 			raise UnsupportedParameters(my_matches, wrong_types, function)
 		return hits
+
+	def check_types(self, hits, params):
+		"""
+		Checks types and returns the params with types that doesn't match
+		"""
+		return [
+			(param, mytype, self.options[param])
+			for param, mytype in filter(lambda x: x[0] in hits, params.items())
+			if mytype != self.options[param]
+		]
+
+	def get_matches(self, misses):
+		my_matches = []
+		for miss in misses:
+			if matches := self.match(miss):
+				my_matches.append((miss, matches))
+		return my_matches
 
 	@classmethod
 	def with_typing(cls, template_function):
@@ -97,9 +108,8 @@ class UnsupportedParameters(Exception):
 				f"it should be '{corr_type.__name__}'\n"
 		if matches:
 			for written, match in matches:
-				msg += (
-					f"* Parameter '{written}' is not supported, did you mean:\n"
-				)
+				msg += f"* Parameter '{written}' is not supported,"
+				"did you mean:\n"
 				for suggestion in match:
 					msg += f"\t- {suggestion}\n"
 		super().__init__(
