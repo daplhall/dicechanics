@@ -1,5 +1,4 @@
 import inspect
-from typing import Tuple
 
 """
 the idea is that when pool is used as a decorator we do a check on the function
@@ -19,7 +18,7 @@ class OptionsMatcher:
 	def __init__(self, options: dict):
 		self.options = options
 
-	def match(self, arg) -> Tuple[bool, float]:
+	def match(self, arg: str) -> list[str]:
 		""" """
 		tmp = []
 		for option in self.options:
@@ -28,7 +27,7 @@ class OptionsMatcher:
 		return [i[1] for i in tmp if min(tmp)[0] == i[0]]
 
 	@staticmethod
-	def lev(a: str, b: str):
+	def lev(a: str, b: str) -> int:
 		"""
 		levenshtein_distance
 		https://en.wikipedia.org/wiki/Levenshtein_distance
@@ -63,7 +62,7 @@ class ParamChecker(OptionsMatcher, Signature):
 		super().__init__(ParamChecker.signature(func_prototype))
 		self.with_types = False
 
-	def check(self, function) -> set:
+	def check(self, function: callable) -> set[str]:
 		wrong_types = []
 		params = ParamChecker.signature(function)
 		missing = set(params) - set(self.options)
@@ -94,7 +93,7 @@ class UnsupportedParameters(Exception):
 		if wrong_types:
 			for param, curr_type, corr_type in wrong_types:
 				msg += f"* Wrong Type - Parameter {param}\n"
-				msg += f"\t it is '{curr_type.__name__}' "
+				f"\t it is '{curr_type.__name__}' "
 				f"it should be '{corr_type.__name__}'\n"
 		if matches:
 			for written, match in matches:
