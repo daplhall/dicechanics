@@ -64,10 +64,10 @@ class ParamChecker(OptionsMatcher, Signature):
 
 	def check(self, function: callable) -> set[str]:
 		params = ParamChecker.signature(function)
-		misses = set(params) - set(self.options)
+		odd_param = set(params) - set(self.options)
 		hits = set(params) & set(self.options)
 		wrong_types = self.check_types(hits, params)
-		matches = self.match_parameter(misses)
+		matches = self.match_parameter(odd_param)
 		if matches or wrong_types:
 			raise UnsupportedParameters(matches, wrong_types, function)
 		return hits
@@ -84,11 +84,11 @@ class ParamChecker(OptionsMatcher, Signature):
 			if mytype != self.options[param]
 		]
 
-	def match_parameter(self, misses):
+	def match_parameter(self, odd_params):
 		my_matches = []
-		for miss in misses:
-			if matches := self.match(miss):
-				my_matches.append((miss, matches))
+		for odd in odd_params:
+			if matches := self.match(odd):
+				my_matches.append((odd, matches))
 		return my_matches
 
 	@classmethod
