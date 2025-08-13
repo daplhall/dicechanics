@@ -16,7 +16,7 @@ class OptionsMatcher:
 	"""
 
 	def __init__(self, options: dict):
-		self.options = options
+		self._options = options
 
 	def match(self, arg: str) -> list[str]:
 		""" """
@@ -25,6 +25,10 @@ class OptionsMatcher:
 			tmp.append((OptionsMatcher.lev(option, arg), option))
 		tmp.sort()
 		return [i[1] for i in tmp if min(tmp)[0] == i[0]]
+
+	@property
+	def options(self):
+		return self._options
 
 	@staticmethod
 	def lev(a: str, b: str) -> int:
