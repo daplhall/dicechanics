@@ -1,9 +1,11 @@
-build==1.2.2
-line_profiler==4.2.0
-matplotlib==3.10.3
+build>=1.2.2
+matplotlib>=3.10.3
 mypy
-pytest==8.4.0
-pytest_benchmark==5.1.0
+pytest>=8.4.0
+pytest_benchmark>=5.1.0
 pytest-cov
-sphinx==8.2.3
+sphinx>=8.2.3
 sphinx_rtd_theme
+pyinstrument
+memray
+pycrunch-trace
