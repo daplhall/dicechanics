@@ -22,6 +22,9 @@ class StatisticalUnit(UserDict):
 		self._std = math.sqrt(self._var) if self.isnum else None
 		self._cdf = self.calc_cumulative(self.p)
 
+	def map(self, mapping):
+		return NotImplemented
+
 	@staticmethod
 	def calc_mean(probability, outcomes):
 		return sum(p * f for p, f in zip(probability, outcomes))
@@ -93,4 +96,4 @@ class StatisticalUnit(UserDict):
 			if r == 1:
 				break
 		for key, count in super().items():
-			super().__setitem__(key, count / r)
+			super().__setitem__(key, count // r)

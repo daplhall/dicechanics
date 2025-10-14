@@ -1,1 +1,2 @@
 from dicechanics.baseunits.statistical_unit import StatisticalUnit
+from dicechanics.baseunits.mathops_unit import MathOpsUnit
