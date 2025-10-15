@@ -1,6 +1,6 @@
 import pytest
 
-from dicechanics.baseunits.mathops_unit import MathOpsUnit
+from dicechanics.baseunits.CombinationsUnit import MathOpsUnit
 
 
 @pytest.fixture

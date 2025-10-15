@@ -53,7 +53,7 @@ def expand_dice(data: dict) -> dict:
 	return numbers
 
 
-def clean_faces(faces: dict) -> dict:
+def sort_expand(faces: dict) -> dict:
 	"""
 	Function that  sorts and exapnds a dictionary
 
@@ -88,4 +88,4 @@ def collect_faces(faces: Iterable[float]) -> dict:
 		The input converted to a dict
 	"""
 	out = dict(zip(*unique(faces)))
-	return clean_faces(out)
+	return sort_expand(out)

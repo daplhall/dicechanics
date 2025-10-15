@@ -2,7 +2,7 @@ import operator as ops
 from collections import defaultdict
 from itertools import product
 
-from dicechanics.baseunits.statistical_unit import StatisticalUnit
+from dicechanics.baseunits.StatisticalUnit import StatisticalUnit
 
 
 class MathOpsUnit(StatisticalUnit):
@@ -88,13 +88,13 @@ class MathOpsUnit(StatisticalUnit):
 		"""
 		Return self == value
 		"""
-		return self.is_equal(rhs)
+		return self.isequal(rhs)
 
 	def __ne__(self, rhs):
 		"""
 		Return self != value
 		"""
-		return not self.is_equal(rhs)
+		return not self.isequal(rhs)
 
 	def unary(self, ops):
 		return type(self)({ops(key): value for key, value in self.items()})
@@ -110,3 +110,6 @@ class MathOpsUnit(StatisticalUnit):
 		Return +self
 		"""
 		return self.unary(ops.pos)
+
+	def __hash__(self):
+		return super().__hash__()

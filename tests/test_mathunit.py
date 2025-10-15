@@ -1,4 +1,4 @@
-from dicechanics.baseunits.mathops_unit import MathOpsUnit
+from dicechanics.baseunits.CombinationsUnit import MathOpsUnit
 
 
 def test_add(StandardMathUnit):

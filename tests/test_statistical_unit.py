@@ -1,6 +1,6 @@
 import math
 
-from dicechanics.baseunits.statistical_unit import StatisticalUnit
+from dicechanics.baseunits.StatisticalUnit import StatisticalUnit
 
 
 def test_create():

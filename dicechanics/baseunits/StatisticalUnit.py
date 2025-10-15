@@ -22,6 +22,9 @@ class StatisticalUnit(UserDict):
 		self._std = math.sqrt(self._var) if self.isnum else None
 		self._cdf = self.calc_cumulative(self.p)
 
+	def __hash__(self):
+		return hash(tuple(self.items()) + (self.mean,))
+
 	def map(self, mapping):
 		return NotImplemented
 

@@ -9,7 +9,7 @@ from math import sqrt
 from typing import Any, Callable, Generator, Iterable
 
 from dicechanics._inpt_cleaning import (
-	clean_faces,
+	sort_expand,
 	collect_faces,
 	expand_dice,
 	sort_dict,
@@ -66,7 +66,7 @@ class Die:
 		out: Die
 		"""
 		self = cls.__new__(cls)
-		self._data = clean_faces(data)
+		self._data = sort_expand(data)
 		self._derived_attr()
 		self._rounding = rounding
 		return self
