@@ -1,11 +1,22 @@
 __all__ = ["Pool"]
 
+from numbers import Number
+
 from dicechanics._dice_combinatorics import (
 	linear_non_selective,
 	linear_selective,
 )
 from dicechanics._typing import BinaryFunc_T
-from dicechanics.Die import Die, convert_to_die
+from dicechanics.Die import Die
+
+
+def convert_to_die(inpt: object):
+	if isinstance(inpt, Number):
+		return Die({inpt: 1})
+	elif isinstance(inpt, Die):
+		return inpt
+	else:
+		raise ValueError("Inpt is not a primitive or a Die")
 
 
 # Pool needs to be invoked in the interface witha  decorator, in which
@@ -43,7 +54,7 @@ class Pool:
 			res = linear_non_selective(self._bag, func)
 		else:
 			res = linear_selective(self._bag, self._keep, func)
-		return Die.from_dict(res)
+		return res
 
 	def copy(self):
 		"""

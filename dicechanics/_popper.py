@@ -1,6 +1,17 @@
-from dicechanics.Die import Die, convert_to_die
+from numbers import Number
+
+from dicechanics.Die import Die
 
 type DicePopper_T = DicePopper
+
+
+def convert_to_die(inpt: object):
+	if isinstance(inpt, Number):
+		return Die({inpt: 1})
+	elif isinstance(inpt, Die):
+		return inpt
+	else:
+		raise ValueError("Inpt is not a primitive or a Die")
 
 
 class DicePopper:
@@ -14,9 +25,8 @@ class DicePopper:
 
 	def __init__(self, dice: Die):
 		dice = convert_to_die(dice)
-		data = dice._data
-		self.faces = list(data.keys())
-		self.count = list(data.values())
+		self.faces = list(dice.keys())
+		self.count = list(dice.values())
 		self.i = len(self.faces) - 1
 		self._basehash = tuple(self.faces)
 

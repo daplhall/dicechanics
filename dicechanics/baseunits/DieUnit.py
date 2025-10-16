@@ -13,22 +13,24 @@ class DieUnit(MathOpsUnit):
 	def __init__(self, data=None, /, **kwargs):
 		super().__init__(self.expand(data), **kwargs)
 		self.sort()
+		self.simplify()
 
 	f = MathOpsUnit.outcomes
 
-	def reroll(self, redo, depth=1):
+	def reroll(self, *redo, depth=1):
 		if depth == "inf":
 			return type(self)(
-				{key: value for key, value in self if key not in redo}
+				{key: value for key, value in self.items() if key not in redo}
 			)
-		faces = self._data
+		faces = self.copy()
 		for _ in range(depth):
 			numbers = {f: c for f, c in faces.items() if f not in redo}
 			dice = {self: sum(c for f, c in faces.items() if f in redo)}
 			faces = self.expand(numbers | dice)
 		return type(self)(faces)
 
-	def _plode(self, ops, ploder, depth=1):
+	def _plode(self, ops, *ploder, depth=1):
+		faces = self.copy()
 		if depth > 0:
 			numbers = {f: c for f, c in self.items() if f not in ploder}
 			dice = {
@@ -36,19 +38,19 @@ class DieUnit(MathOpsUnit):
 				for f, c in self.items()
 				if f in ploder
 			}
-			faces = self.expand(numbers | dice)
+			faces = faces.expand(numbers | dice)
 		return type(self)(faces)
 
-	def explode(self, exploder, depth=1):
+	def explode(self, *exploder, depth=1):
 		return self._plode(ops.add, *exploder, depth=depth)
 
-	def implode(self, imploder, depth=1):
+	def implode(self, *imploder, depth=1):
 		return self._plode(ops.sub, *imploder, depth=depth)
 
-	def count(self, targets):
+	def count(self, *targets):
 		res = defaultdict(int)
 		for key, val in self.items():
-			res[key in self] += val
+			res[key in targets] += val
 		return type(self)(res)
 
 	def folding(self, rhs, ops, into):
@@ -109,13 +111,10 @@ class DieUnit(MathOpsUnit):
 	def __str__(self):
 		res = (
 			f"Die with mu - {self.mean:.2f}, sigma - {self.std:.2f},"
-			" faces - {len(self.outcomes)}\n"
+			f" faces - {len(self.outcomes)}\n"
 		)  # noqa: E501h
 		res += "-" * (len(res) - 1) + "\n"
 		return res + str_plot(self, PLOT_WIDTH)
-
-	def __repr__(self):
-		return super().__repr__()
 
 	def __hash__(self):
 		return super().__hash__()

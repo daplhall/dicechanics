@@ -25,16 +25,16 @@ def d(inpt: Iterable | int | Die | dict, **kwards) -> Die:
 		The die created from the input
 	"""
 	if isinstance(inpt, int):
-		return Die(range(1, inpt + 1), **kwards)
+		return Die(dict.fromkeys(range(1, inpt + 1), 1), **kwards)
 	elif isinstance(inpt, str):
 		faces = text_to_faces(inpt)
 		return Die(faces, **kwards)
 	elif isinstance(inpt, Die):
 		return inpt.copy()
 	elif isinstance(inpt, dict):
-		return Die.from_dict(inpt)
+		return Die(inpt)
 	elif isinstance(inpt, Iterable):
-		return Die(inpt, **kwards)
+		return Die(dict.fromkeys(inpt, 1), **kwards)
 	else:
 		raise Exception(f"Dice doesn't support input type of {type(inpt)}")
 
@@ -55,7 +55,7 @@ def z(inpt: int, **kwards) -> Die:
 	out: Die
 		The die created from the input
 	"""
-	return Die(range(0, inpt + 1), **kwards)
+	return Die(dict.fromkeys(range(0, inpt + 1), 1), **kwards)
 
 
 def pool(inpt: list) -> Pool:

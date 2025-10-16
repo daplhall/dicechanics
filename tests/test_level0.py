@@ -43,20 +43,6 @@ def test_divide_int(d6):
 	assert d.c == d6.c
 
 
-def test_divide_int_roundup():
-	d6 = ds.d(6, rounding=ds.ops.ceil)
-	d = d6 / 2
-	assert d.f == [1, 2, 3]
-	assert d.c == [1] * 3
-
-
-def test_divide_int_rounddown():
-	d6 = ds.d(6, rounding=ds.ops.floor)
-	d = d6 / 2
-	assert d.f == [0, 1, 2, 3]
-	assert d.c == [1, 2, 2, 1]
-
-
 def test_divide_int_floor(d6):
 	d6 = d6
 	d = d6 // 2

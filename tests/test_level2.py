@@ -5,12 +5,12 @@ import dicechanics as ds
 
 def test_addint(pool_1d6, d6):
 	newpool = pool_1d6 + 1
-	assert newpool._bag == [d6, ds.Die([1])]
+	assert newpool._bag == [d6, ds.Die({1: 1})]
 
 
 def test_addfloat(pool_1d6, d6):
 	newpool = pool_1d6 + 1.5
-	assert newpool._bag == [d6, ds.Die([1.5])]
+	assert newpool._bag == [d6, ds.Die({1.5: 1})]
 
 
 def test_adddice(pool_1d6, d6, d10):

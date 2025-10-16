@@ -70,22 +70,3 @@ def sort_expand(faces: dict) -> dict:
 
 	"""
 	return sort_dict(expand_dice(faces))
-
-
-def collect_faces(faces: Iterable[float]) -> dict:
-	"""
-	Function that transform an iterable of faces and converts them to
-	a dict.
-
-	Parameters
-	----------
-	faces: Iterable
-		A iterable of faces.
-
-	Returns
-	-------
-	out: dict
-		The input converted to a dict
-	"""
-	out = dict(zip(*unique(faces)))
-	return sort_expand(out)

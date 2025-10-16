@@ -1,5 +1,5 @@
 import math
-from collections import UserDict
+from collections import UserDict, defaultdict
 from numbers import Number
 
 
@@ -25,8 +25,14 @@ class StatisticalUnit(UserDict):
 	def __hash__(self):
 		return hash(tuple(self.items()) + (self.mean,))
 
+	def copy(self):
+		return type(self)(self)
+
 	def map(self, mapping):
-		return NotImplemented
+		res = defaultdict(int)
+		for key, value in self.items():
+			res[mapping(key)] += value
+		return type(self)(res)
 
 	@staticmethod
 	def calc_mean(probability, outcomes):
@@ -92,11 +98,19 @@ class StatisticalUnit(UserDict):
 		return max(self.outcomes) if self.isnum else None
 
 	def simplify(self):
+		r = None
 		neigh = iter(super().values())
 		next(neigh)
 		for a, b in zip(super().values(), neigh):
-			r = self.gcd(a, b)
+			if r is not None:
+				r = self.gcd(r, b)
+			else:
+				r = self.gcd(a, b)
 			if r == 1:
 				break
-		for key, count in super().items():
-			super().__setitem__(key, count // r)
+		if len(self) > 1:
+			for key, count in super().items():
+				super().__setitem__(key, count // r)
+
+	def __repr__(self):
+		return f"{type(self).__name__}({self.data})"

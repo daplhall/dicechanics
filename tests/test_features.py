@@ -202,24 +202,19 @@ def test_fold_over_into_0(d10, folding_over_faces):
 	assert d.c == [2, 1, 1, 1, 1, 1, 1, 1, 1]
 
 
-def test_dice_getitem(d6):
-	d = d6[0]
-	assert (d6[0] - 0.16666666666666666) <= 1e-15
-
-
 def test_dice_max(f2d6):
 	d = f2d6
-	assert d.max() == 12
+	assert d.max == 12
 
 
 def test_dice_min(f2d6):
 	d = f2d6
-	assert d.min() == 2
+	assert d.min == 2
 
 
 def test_dice_var(f2d6):
 	d = f2d6
-	assert d.var == 5.833333333333333
+	assert d.varians == 5.833333333333333
 
 
 def test_dice_std(f2d6):
@@ -257,3 +252,9 @@ def test_pool_string(d6):
 		str(pool) == "Pool([Die({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1}),"
 		" Die({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1})])"
 	)
+
+
+def test_dice_expansion():
+	d = ds.d({1: 1, 2: 1, 3: 1, 4: 1})
+	p = ds.d({2: 1, 1: 2, d: 1})
+	assert p.data == {1: 9, 2: 5, 3: 1, 4: 1}

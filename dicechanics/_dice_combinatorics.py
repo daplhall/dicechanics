@@ -77,7 +77,7 @@ def linear_non_selective(inpt: Inpt_T, func: BinaryFunc_T) -> ds.Die:
 	"""
 
 	res = linear_combs(inpt, ARRAY_START_INDEX, func, Reference(None))
-	return ds.Die.from_dict(res)
+	return ds.Die(res)
 
 
 def selective_comb(
@@ -148,4 +148,4 @@ def linear_selective(
 	mem: Mem_T = {}
 	poppers = [DicePopper(i) for i in inpt]
 	res = selective_comb(poppers, func, keep, mem)
-	return ds.Die.from_dict(res)
+	return ds.Die(res)

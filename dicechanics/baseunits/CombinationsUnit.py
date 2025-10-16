@@ -16,7 +16,10 @@ class MathOpsUnit(StatisticalUnit):
 			return False
 
 	def bin_lvl0(self, rhs, ops):
-		return type(self)({ops(key, rhs): value for key, value in self.items()})
+		retrn = defaultdict(int)
+		for key, value in self.items():
+			retrn[ops(key, rhs)] += value
+		return type(self)(retrn)
 
 	def bin_lvl1(self, rhs, ops):
 		res = defaultdict(int)
@@ -52,7 +55,7 @@ class MathOpsUnit(StatisticalUnit):
 		"""
 		Return self / value
 		"""
-		return self.bin_op(rhs, ops.truediv)
+		return self.bin_ops(rhs, ops.truediv)
 
 	def __floordiv__(self, rhs):
 		"""
