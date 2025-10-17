@@ -1,6 +1,3 @@
-from dicechanics.baseunits.CombinationsUnit import MathOpsUnit
-
-
 def test_add(StandardMathUnit):
 	unit1 = StandardMathUnit + StandardMathUnit
 	unit1.simplify()

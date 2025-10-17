@@ -1,7 +1,5 @@
 import math
 
-from dicechanics import Die
-
 ROUND = round
 LINE_STYLE = "#"
 
@@ -29,7 +27,7 @@ def num_len(x: float) -> int:
 	return int(math.log10(x)) + extra
 
 
-def calc_width(data: Die, max_width) -> list[int]:
+def calc_width(data, max_width) -> list[int]:
 	"""
 	Calculates the width/height of the plot values normalized to the macro
 	MAX_WIDTH.
@@ -49,7 +47,7 @@ def calc_width(data: Die, max_width) -> list[int]:
 	return width
 
 
-def str_plot(data: Die, max_width) -> str:
+def str_plot(data, max_width) -> str:
 	"""
 	Function that creates a string representation of the Die as a bar graph.
 
@@ -67,5 +65,5 @@ def str_plot(data: Die, max_width) -> str:
 	pad = 1 + max(num_len(i) for i in data.keys())
 	widths = calc_width(data, max_width)
 	for f, p, w in zip(data.f, data.p, widths):
-		res += f"{f:>{pad}}" + "|" + LINE_STYLE * w + f" {p*100:.2f}%" + "\n"
+		res += f"{f:>{pad}}" + "|" + LINE_STYLE * w + f" {p * 100:.2f}%" + "\n"
 	return res

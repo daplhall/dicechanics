@@ -214,7 +214,7 @@ def test_dice_min(f2d6):
 
 def test_dice_var(f2d6):
 	d = f2d6
-	assert d.varians == 5.833333333333333
+	assert d.variance == 5.833333333333333
 
 
 def test_dice_std(f2d6):

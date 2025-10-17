@@ -7,7 +7,7 @@ from dicechanics._dice_combinatorics import (
 	linear_selective,
 )
 from dicechanics._typing import BinaryFunc_T
-from dicechanics.Die import Die
+from dicechanics.die import Die
 
 
 def convert_to_die(inpt: object):

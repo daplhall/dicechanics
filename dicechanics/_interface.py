@@ -3,7 +3,7 @@ __all__ = ["d", "pool", "z"]
 from collections.abc import Iterable
 
 from dicechanics._parser import text_to_faces
-from dicechanics.Die import Die
+from dicechanics.die import Die
 from dicechanics.Pool import Pool
 
 

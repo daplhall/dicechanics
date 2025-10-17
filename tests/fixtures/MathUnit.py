@@ -1,8 +1,8 @@
 import pytest
 
-from dicechanics.baseunits.CombinationsUnit import MathOpsUnit
+from dicechanics.baseunits.combinationsunit import CombinationsUnit
 
 
 @pytest.fixture
 def StandardMathUnit():
-	return MathOpsUnit({1: 2, 3: 4, 5.5: 2})
+	return CombinationsUnit({1: 2, 3: 4, 5.5: 2})

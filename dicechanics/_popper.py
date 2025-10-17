@@ -1,6 +1,6 @@
 from numbers import Number
 
-from dicechanics.Die import Die
+from dicechanics.die import Die
 
 type DicePopper_T = DicePopper
 

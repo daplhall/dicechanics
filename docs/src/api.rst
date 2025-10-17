@@ -1,5 +1,6 @@
 API
 ==================
+Through out this documentation the work unit is used to refer to the current type you are look at.  
 When you import dicehancis you get the following imported
 
 .. py:module:: dicechanics
@@ -40,11 +41,13 @@ When you import dicehancis you get the following imported
 
    A 10 sided die with values [0..9]
 
-.. autoclass:: dicechanics.Die
-   :special-members:
+.. autoclass:: dicechanics::Die
    :members:
-   :member-order: bysource
-   :exclude-members:  __weakref__, __str__, __repr__
+   :undoc-members: 
+   :special-members: __add__, __radd__, __sub__, __rsub__, __mul__, __rmul__, __truediv__, __flordiv__, __lt__, __ge__, __gt__, __eq__, __ne__, __neg__, __call__ , __rmatmul__, __matmul__
+   :inherited-members: UserDict
+   :member-order: groupwise
+   :exclude-members: setdefault, __weakref__, __str__, __repr__, __new__
 
 
 .. autoclass:: dicechanics::Pool

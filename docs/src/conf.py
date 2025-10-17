@@ -20,7 +20,7 @@ extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon"]
 
 templates_path = ["_templates"]
 exclude_patterns = []
-
+exclude_trees = [".venv"]
 
 sys.path.insert(0, str(Path("..\\..", ".").resolve()))
 # -- Options for HTML output -------------------------------------------------

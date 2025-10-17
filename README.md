@@ -115,3 +115,4 @@ pytest tests
 cd docs && mkdir build
 sphinx-build -M html src build
 ```
+remember to install its `requirements.txt` when code updates

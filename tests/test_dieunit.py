@@ -1,4 +1,4 @@
-from dicechanics.baseunits.DieUnit import DieUnit
+from dicechanics.baseunits.dieunit import DieUnit
 
 
 def test_dice_expansion():

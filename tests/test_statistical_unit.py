@@ -1,6 +1,6 @@
 import math
 
-from dicechanics.baseunits.StatisticalUnit import StatisticalUnit
+from dicechanics.baseunits.statisticalunit import StatisticalUnit
 
 
 def test_create():
@@ -20,7 +20,7 @@ def test_numbers():
 		+ 4 / 8 * (3 - refmean) ** 2
 		+ 2 / 8 * (5.5 - refmean) ** 2
 	)
-	assert sunit.varians == refvar
+	assert sunit.variance == refvar
 	assert sunit.std == math.sqrt(refvar)
 
 
@@ -30,7 +30,7 @@ def test_nan():
 	assert sunit.c == [2, 4, 2]
 	assert sunit.o == ["a", "b", "c"]
 	assert sunit.mean is None
-	assert sunit.varians is None
+	assert sunit.variance is None
 	assert sunit.std is None
 
 
@@ -40,7 +40,7 @@ def test_objects():
 	assert sunit.c == [2, 4, 2]
 	assert sunit.o == ["a", (1, 2), 5.4]
 	assert sunit.mean is None
-	assert sunit.varians is None
+	assert sunit.variance is None
 	assert sunit.std is None
 
 

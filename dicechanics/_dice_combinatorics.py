@@ -58,7 +58,7 @@ def linear_combs(
 	return res
 
 
-def linear_non_selective(inpt: Inpt_T, func: BinaryFunc_T) -> ds.Die:
+def linear_non_selective(inpt: Inpt_T, func: BinaryFunc_T):
 	"""
 	The function that sets up the parameters for linear_combs
 
@@ -124,9 +124,7 @@ def selective_comb(
 	return res
 
 
-def linear_selective(
-	inpt: Inpt_T, keep: list[int], func: BinaryFunc_T
-) -> ds.Die:
+def linear_selective(inpt: Inpt_T, keep: list[int], func: BinaryFunc_T):
 	"""
 	Function that applies a linear operation to a set of ordered combinations
 
