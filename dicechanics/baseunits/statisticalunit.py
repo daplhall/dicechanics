@@ -1,5 +1,5 @@
 import math
-from collections import UserDict, defaultdict
+from collections import defaultdict, UserDict
 from numbers import Number
 
 
@@ -7,7 +7,7 @@ class StatisticalUnit(UserDict):
 	"""test"""
 
 	def __init__(self, data=None, /, **kwargs):
-		super().__init__(data, **kwargs)
+		self.data = data.copy()
 		self._derived_attr()
 
 	def _derived_attr(self):
@@ -71,8 +71,7 @@ class StatisticalUnit(UserDict):
 			if r == 1:
 				break
 		if len(self) > 1:
-			for key, count in self.items():
-				self.__setitem__(key, count // r)
+			self.data = {key: count // r for key, count in self.items()}
 
 	def __repr__(self):
 		return f"{type(self).__name__}({super().__repr__()})"
