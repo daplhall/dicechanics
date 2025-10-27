@@ -10,23 +10,11 @@ class StatisticalUnit(dict):
 
 	def __init__(self, data=None, /, **kwargs):
 		super().__init__(data, **kwargs)
-		# self.data = data.copy()
 		self._derived_attr()
 
 	def _derived_attr(self):
 		self.isnum = all(isinstance(i, Number) for i in self.keys())
 		self._units = sum(self.values())
-
-		self._mean = (  # this actually premature optimization, the calulations might be zero performance loss
-			self._calc_mean(self.p, self.outcomes) if self.isnum else None
-		)
-		self._var = (
-			self._calc_varians(self.p, self.outcomes, self.mean)
-			if self.isnum
-			else None
-		)
-		self._std = math.sqrt(self._var) if self.isnum else None
-		self._cdf = self._calc_cumulative(self.p)
 
 	def copy(self):
 		"""
@@ -142,37 +130,6 @@ class StatisticalUnit(dict):
 		return super().keys()
 
 	@staticmethod
-	def _calc_mean(probability, outcomes):
-		"""
-		Static method; calculates the mean of probability and paired outcomes by:
-		:math: `\sum_i^n p_i * o_i`
-
-		Parameters
-		----------
-		probability: Iterable
-			The probability; pairs with outcomes
-		outcomes: Iterable
-			The outcomes paired with the probability
-
-		Returns
-		-------
-		out : Number
-			The mean.
-		"""
-		return sum(p * f for p, f in zip(probability, outcomes))
-
-	@staticmethod
-	def _calc_varians(probability, outcomes, mean):
-		return sum(p * (x - mean) ** 2 for x, p in zip(outcomes, probability))
-
-	@staticmethod
-	def _calc_cumulative(properbility):
-		cdf = []
-		for p in properbility:
-			cdf.append(p + cdf[-1] if cdf else p)
-		return cdf
-
-	@staticmethod
 	def _gcd(a, b):
 		while b != 0:
 			a, b = b, a % b
@@ -191,18 +148,6 @@ class StatisticalUnit(dict):
 		return [i / self._units for i in sort_dict(self).values()]
 
 	p = probability
-
-	@property
-	def cdf(self):
-		"""
-		Returns the cumulative probability of the die
-
-		Returns
-		-------
-		out: List
-			The cumulative probability for the outcomes.
-		"""
-		return self._cdf
 
 	@property
 	def counts(self):
@@ -242,7 +187,9 @@ class StatisticalUnit(dict):
 		out: Number
 			The mean of the unit.
 		"""
-		return self._mean
+		if not self.isnum:
+			return None
+		return sum(p * f for p, f in zip(self.probability, self.outcomes))
 
 	@property
 	def variance(self):
@@ -254,7 +201,12 @@ class StatisticalUnit(dict):
 		out: Number
 			The variance of the unit.
 		"""
-		return self._var
+		if not self.isnum:
+			return None
+		return sum(
+			p * (x - self.mean) ** 2
+			for x, p in zip(self.outcomes, self.probability)
+		)
 
 	@property
 	def std(self):
@@ -266,7 +218,26 @@ class StatisticalUnit(dict):
 		out: Number
 			The standard deviations of the unit.
 		"""
-		return self._std
+		if not self.isnum:
+			return None
+		return math.sqrt(self.variance)
+
+	@property
+	def cdf(self):
+		"""
+		Returns the cumulative probability of the die
+
+		Returns
+		-------
+		out: List
+			The cumulative probability for the outcomes.
+		"""
+		if not self.isnum:
+			return None
+		cdf = []
+		for p in self.probability:
+			cdf.append(p + cdf[-1] if cdf else p)
+		return cdf
 
 	@property
 	def min(self):
