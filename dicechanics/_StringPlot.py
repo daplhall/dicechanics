@@ -7,7 +7,7 @@ LINE_STYLE = "#"
 
 class StringPlot:
 	@staticmethod
-	def entry_height(y: list[Number], max_width: int) -> list[int]:
+	def _entry_height(y: list[Number], max_width: int) -> list[int]:
 		"""
 		Calculates the height of the bars plot
 
@@ -29,11 +29,12 @@ class StringPlot:
 		return width
 
 	@staticmethod
-	def bars(
+	def plot(
 		x: list[Any],
 		y: list[Number],
 		txt: list[str] | None = None,
 		max_width: int = 20,
+		line_style: str = "#",
 	) -> str:
 		"""
 		Function that creates a string representation of the Die as a bar graph.
@@ -61,7 +62,16 @@ class StringPlot:
 			txt = [""] * len(x)
 		res = ""
 		pad = max(len(str(i)) for i in x)
-		widths = StringPlot.entry_height(y, max_width)
+		widths = StringPlot._entry_height(y, max_width)
 		for key, top, w in zip(x, txt, widths):
-			res += f"{key:>{pad}}" + "|" + LINE_STYLE * w + f" {top}" + "\n"
+			res += f"{key:>{pad}}" + "|" + line_style * w + f" {top}" + "\n"
 		return res
+
+	@staticmethod
+	def bars(
+		x: list[Any],
+		y: list[Number],
+		txt: list[str] | None = None,
+		max_width: int = 20,
+	):
+		return StringPlot.plot(x, y, txt, max_width, "#")
