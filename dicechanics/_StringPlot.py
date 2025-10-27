@@ -1,37 +1,11 @@
-import math
 from numbers import Number
 from typing import Any
-from warnings import deprecated
 
 ROUND = round
 LINE_STYLE = "#"
 
 
 class StringPlot:
-	@deprecated("Found a easier way")
-	@staticmethod
-	def significant_numbers(x: Number) -> Number:
-		"""
-		Calculates how many characters a number needs to be written to screen
-
-		Parameters
-		----------
-		x : float
-			the value which the length needs to be found
-
-		Returns
-		-------
-		out: int
-			The order of magnitude.
-		"""
-		extra = 0
-		if x == 0:
-			return 1
-		elif x < 0:
-			x *= -1
-			extra += 1
-		return int(math.log10(x)) + extra
-
 	@staticmethod
 	def entry_height(y: list[Number], max_width: int) -> list[int]:
 		"""
