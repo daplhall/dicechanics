@@ -1,7 +1,11 @@
+from dicechanics.baseunits.combinationsunit import CombinationsUnit
+
+
 def test_add(StandardMathUnit):
 	unit1 = StandardMathUnit + StandardMathUnit
 	unit1.simplify()
-	assert unit1.data == {2: 1, 4: 4, 6.5: 2, 6: 4, 8.5: 4, 11.0: 1}
+	res = CombinationsUnit({2: 1, 4: 4, 6.5: 2, 6: 4, 8.5: 4, 11.0: 1})
+	assert unit1 == res
 
 
 def test_add_num(StandardMathUnit):

@@ -257,4 +257,5 @@ def test_pool_string(d6):
 def test_dice_expansion():
 	d = ds.d({1: 1, 2: 1, 3: 1, 4: 1})
 	p = ds.d({2: 1, 1: 2, d: 1})
-	assert p.data == {1: 9, 2: 5, 3: 1, 4: 1}
+	res = ds.d({1: 9, 2: 5, 3: 1, 4: 1})
+	assert p == res

@@ -1,15 +1,16 @@
 import math
-from collections import UserDict, defaultdict
+from collections import defaultdict
 from numbers import Number
 
 from dicechanics._inpt_cleaning import sort_dict
 
 
-class StatisticalUnit(UserDict):
+class StatisticalUnit(dict):
 	"""test"""
 
 	def __init__(self, data=None, /, **kwargs):
-		self.data = data.copy()
+		super().__init__(data, **kwargs)
+		# self.data = data.copy()
 		self._derived_attr()
 
 	def _derived_attr(self):
@@ -72,7 +73,7 @@ class StatisticalUnit(UserDict):
 			if r == 1:
 				break
 		if len(self) > 1:
-			self.data = {key: count // r for key, count in self.items()}
+			self.update({key: count // r for key, count in self.items()})
 
 	def __repr__(self):
 		return f"{type(self).__name__}({super().__repr__()})"
@@ -292,7 +293,7 @@ class StatisticalUnit(UserDict):
 		return max(self.outcomes) if self.isnum else None
 
 	def __hash__(self):
-		return hash(tuple(self.items()) + (self.mean,))
+		return hash(tuple(self.outcomes) + tuple(self.counts) + (self.mean,))
 
 	def __setitem__(self, key, item):
 		"""
