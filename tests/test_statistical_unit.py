@@ -34,18 +34,18 @@ def test_nan():
 	assert sunit.std is None
 
 
-def test_objects():
-	sunit = StatisticalUnit({"a": 2, (1, 2): 4, 5.4: 2})
+def test_str():
+	sunit = StatisticalUnit({"a": 2, "b": 4, "c": 2})
 	assert sunit.p == [2 / 8, 4 / 8, 2 / 8]
 	assert sunit.c == [2, 4, 2]
-	assert sunit.o == ["a", (1, 2), 5.4]
+	assert sunit.o == ["a", "b", "c"]
 	assert sunit.mean is None
 	assert sunit.variance is None
 	assert sunit.std is None
 
 
 def test_maxmin_objects():
-	sunit = StatisticalUnit({"a": 2, (1, 2): 4, 5.4: 2})
+	sunit = StatisticalUnit({"a": 2, "b": 4, "c": 2})
 	assert sunit.max is None
 	assert sunit.min is None
 

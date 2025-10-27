@@ -16,7 +16,7 @@ def test_sub_num(StandardMathUnit):
 
 def test_lsub_num(StandardMathUnit):
 	unit = 1 - StandardMathUnit
-	assert unit.outcomes == [0, -2, -4.5]
+	assert unit.outcomes == [-4.5, -2, 0]
 
 
 def test_mul_num(StandardMathUnit):
@@ -31,7 +31,7 @@ def test_lmul_num(StandardMathUnit):
 
 def test_neg_num(StandardMathUnit):
 	unit = -StandardMathUnit
-	assert unit.outcomes == [-1, -3, -5.5]
+	assert unit.outcomes == [-5.5, -3, -1]
 
 
 def test_pos_num(StandardMathUnit):

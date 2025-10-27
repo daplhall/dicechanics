@@ -3,10 +3,7 @@ import warnings as wa
 from collections import defaultdict
 from numbers import Number
 
-from dicechanics._strplot import str_plot
 from dicechanics.baseunits.combinationsunit import CombinationsUnit
-
-PLOT_WIDTH = 20
 
 
 class DieUnit(CombinationsUnit):
@@ -14,7 +11,6 @@ class DieUnit(CombinationsUnit):
 
 	def __init__(self, data=None, /, **kwargs):
 		super().__init__(self._expand(data), **kwargs)
-		self.sort()
 		self.simplify()
 
 	@property
@@ -305,14 +301,6 @@ class DieUnit(CombinationsUnit):
 		"""
 		return self._nrolls(rhs, ops.add)
 
-	def __str__(self):
-		res = (
-			f"Die with mu - {self.mean:.2f}, sigma - {self.std:.2f},"
-			f" faces - {len(self.outcomes)}\n"
-		)  # noqa: E501h
-		res += "-" * (len(res) - 1) + "\n"
-		return res + str_plot(self, PLOT_WIDTH)
-
 	def __hash__(self):
 		return super().__hash__()
 
@@ -349,9 +337,3 @@ class DieUnit(CombinationsUnit):
 			for f, cd in die.items():
 				numbers[f] += c * cd
 		return numbers
-
-	def sort(self):
-		"""
-		Function that sorts a the unit outcomes
-		"""
-		self.data = dict(sorted(self.items(), key=lambda pair: pair[0]))

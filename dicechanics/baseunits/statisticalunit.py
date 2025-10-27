@@ -1,6 +1,8 @@
 import math
-from collections import defaultdict, UserDict
+from collections import UserDict, defaultdict
 from numbers import Number
+
+from dicechanics._inpt_cleaning import sort_dict
 
 
 class StatisticalUnit(UserDict):
@@ -13,9 +15,8 @@ class StatisticalUnit(UserDict):
 	def _derived_attr(self):
 		self.isnum = all(isinstance(i, Number) for i in self.keys())
 		self._units = sum(self.values())
-		self._p = [i / self._units for i in self.values()]
 
-		self._mean = (
+		self._mean = (  # this actually premature optimization, the calulations might be zero performance loss
 			self._calc_mean(self.p, self.outcomes) if self.isnum else None
 		)
 		self._var = (
@@ -186,7 +187,7 @@ class StatisticalUnit(UserDict):
 		out: List
 			The probability of the outcomes.
 		"""
-		return self._p
+		return [i / self._units for i in sort_dict(self).values()]
 
 	p = probability
 
@@ -212,7 +213,7 @@ class StatisticalUnit(UserDict):
 		out: list
 			The number pr face of the unit.
 		"""
-		return list(super().values())
+		return list(sort_dict(super()).values())
 
 	c = counts
 
@@ -226,7 +227,7 @@ class StatisticalUnit(UserDict):
 		out: list
 			The outcomes of the unit.
 		"""
-		return list(super().keys())
+		return list(sort_dict(super()).keys())
 
 	o = outcomes
 
