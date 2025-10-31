@@ -2,7 +2,7 @@ __all__ = ["Pool"]
 
 from numbers import Number
 
-from dicechanics._dice_combinatorics import (
+from dicechanics._combinatorics import (
 	linear_non_selective,
 	linear_selective,
 )
