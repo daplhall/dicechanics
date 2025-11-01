@@ -1,4 +1,4 @@
-from typing import Iterable
+from collections.abc import Iterable
 
 
 def unique(array: Iterable[float]) -> tuple[list, list]:

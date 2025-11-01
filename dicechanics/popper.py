@@ -17,7 +17,7 @@ def convert_to_die(inpt: object):
 class DicePopper:
 	"""
 	Class responsible for "popping" the highest value data of a die
-	Used in _dice_combinatorics
+	Used in combinatorics
 	"""
 
 	faces: list[object]

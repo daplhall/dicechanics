@@ -2,12 +2,12 @@ __all__ = ["Pool"]
 
 from numbers import Number
 
-from dicechanics._combinatorics import (
+from dicechanics.combinatorics import (
 	linear_non_selective,
 	linear_selective,
 )
-from dicechanics._typing import BinaryFunc_T
 from dicechanics.die import Die
+from dicechanics.typing import BinaryFunc_T
 
 
 def convert_to_die(inpt: object):

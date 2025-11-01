@@ -2,7 +2,7 @@ import math
 from collections import defaultdict
 from numbers import Number
 
-from dicechanics._cleaning import sort_dict
+from dicechanics.utils import sort_dict
 
 
 class StatisticalUnit(dict):

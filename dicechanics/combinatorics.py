@@ -1,10 +1,10 @@
 from collections import defaultdict
-from typing import Sequence
+from collections.abc import Sequence
 
 import dicechanics as ds
-from dicechanics._popper import DicePopper
-from dicechanics._referance import Reference
-from dicechanics._typing import BinaryFunc_T
+from dicechanics.popper import DicePopper
+from dicechanics.referance import Reference
+from dicechanics.typing import BinaryFunc_T
 
 type T = dict[object, int]
 type Inpt_T = Sequence[ds.Die]

@@ -1,5 +1,5 @@
-from dicechanics._StringPlot import StringPlot
 from dicechanics.baseunits.dieunit import DieUnit
+from dicechanics.plot import StringPlot
 
 
 class Die(DieUnit):

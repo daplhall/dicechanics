@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from dicechanics._typing import NumVector
+from dicechanics.typing import NumVector
 
 
 def text_to_faces(text: str) -> NumVector:
@@ -20,10 +20,8 @@ def text_to_faces(text: str) -> NumVector:
 	-------
 	out: list
 		List of expanded values
-	"""
-	if (
-		any(c.isalpha() for c in text) or ";" in text
-	):  # the alpha check out be ommited.
+	"""  # the alpha check out be ommited.
+	if any(c.isalpha() for c in text) or ";" in text:
 		raise Exception("illegal characters in dice parsing")
 
 	res = defaultdict(int)

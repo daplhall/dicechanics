@@ -1,4 +1,4 @@
-from dicechanics._parser import text_to_faces
+from dicechanics.parser import text_to_faces
 
 
 def test_parse():

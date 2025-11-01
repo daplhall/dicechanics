@@ -1,4 +1,4 @@
-from dicechanics._math import gcd
+from dicechanics.math import gcd
 
 
 def test_GCD():
