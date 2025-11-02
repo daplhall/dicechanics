@@ -1,7 +1,4 @@
-from collections.abc import UserString
-
-
-class SortedString(UserString):
+class SortedString(str):
 	def __new__(cls, value):
 		return str.__new__(cls, "".join(sorted(value)))
 

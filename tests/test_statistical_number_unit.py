@@ -1,10 +1,6 @@
 import math
 
-from dicechanics.baseunits.statisticalunit import (
-	StatUnitAny,
-	StatUnitNum,
-	StatUnitStr,
-)
+from dicechanics.baseunits.statisticalunit import StatUnitNum, StatUnitStr
 
 
 def test_create():
@@ -13,6 +9,12 @@ def test_create():
 	assert sunit.c == [2, 4, 2]
 	assert sunit.o == [1, 3, 5.5]
 	assert sunit.cdf == [2 / 8, 6 / 8, 1]
+
+
+def test_create_str():
+	sunit = StatUnitStr({"ab": 4, "bc": 2, "ba": 4, "cb": 2})
+	assert sunit.o == ["ab", "bc"]
+	assert sunit.p == [8 / 12, 4 / 12]
 
 
 def test_numbers():
@@ -26,22 +28,6 @@ def test_numbers():
 	)
 	assert sunit.variance == refvar
 	assert sunit.std == math.sqrt(refvar)
-
-
-def test_str():
-	sunit = StatUnitStr({"a": 2, "b": 4, "c": 2})
-	assert sunit.p == [2 / 8, 4 / 8, 2 / 8]
-	assert sunit.c == [2, 4, 2]
-	assert sunit.o == ["a", "b", "c"]
-	assert sunit.mean is None
-	assert sunit.variance is None
-	assert sunit.std is None
-
-
-def test_maxmin_objects():
-	sunit = StatUnitAny({"a": 2, "b": 4, "c": 2})
-	assert sunit.max is None
-	assert sunit.min is None
 
 
 def test_maxmin_numbers():

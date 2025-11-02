@@ -1,26 +1,42 @@
+import math
 import operator as ops
 import warnings as wa
 from collections import defaultdict
 from numbers import Number
 
 from dicechanics.baseunits.combinationsunit import CombinationsUnit
+from dicechanics.baseunits.statisticalunit import StatUnitNum
 
 
 class DieUnit(CombinationsUnit):
 	"""test"""
 
-	def __init__(self, data=None, /, **kwargs):
-		super().__init__(self._expand(data), **kwargs)
-		self.simplify()
+	def __init__(self, data=None, /, backend=StatUnitNum, **kwargs):
+		super().__init__(backend(self._expand(data)), **kwargs)
+		self.data.simplify()
 
 	@property
 	def faces(self):
 		"""
 		Mirror for self.outcomes, that translates outcomes to faces
 		"""
-		return self.outcomes
+		return self.data.outcomes
 
 	f = faces
+
+	@property
+	def probability(self):
+		"""
+		Returns the probability for the outcomes
+
+		Returns
+		-------
+		out: List
+			The probability of the outcomes.
+		"""
+		return self.data.probability
+
+	p = probability
 
 	def reroll(self, *redo, depth=1):
 		"""
@@ -269,6 +285,10 @@ class DieUnit(CombinationsUnit):
 		else:
 			raise ValueError("Unexpected type in dice matmul")
 
+	@property
+	def units(self):
+		return self.data._units
+
 	def __call__(self, mapping):
 		"""
 		Used to wrap the unit in as decorator. It used the map function.
@@ -328,12 +348,109 @@ class DieUnit(CombinationsUnit):
 		)
 		for i, die in enumerate(dice):
 			for f in numbers.keys():
-				numbers[f] *= die._units
+				numbers[f] *= die.units
 			for d in dice:
 				if d == die:
 					continue
-				dice[d] *= die._units
+				dice[d] *= die.units
 		for die, c in dice.items():
 			for f, cd in die.items():
 				numbers[f] += c * cd
 		return numbers
+
+	@property
+	def min(self):
+		"""
+		Returns the minimum faces of the unit
+
+		Parameters
+		-------
+		out: Number | None
+			The minimum face of the unit
+		"""
+		return min(self.faces)
+
+	@property
+	def max(self):
+		"""
+		Returns the maximum face of the unit.
+
+		Parameters
+		-------
+		out: float
+			The maximum face of the unit.
+		"""
+		return max(self.faces)
+
+	@property
+	def mean(self):
+		"""
+		Returns the mean of the unit
+
+		Returns
+		-------
+		out: Number
+			The mean of the unit.
+		"""
+		return sum(p * f for p, f in zip(self.probability, self.faces))
+
+	@property
+	def variance(self):
+		"""
+		Returns the variance of the unit
+
+		Returns
+		-------
+		out: Number
+			The variance of the unit.
+		"""
+		return sum(
+			p * (x - self.mean) ** 2
+			for x, p in zip(self.faces, self.probability)
+		)
+
+	@property
+	def std(self):
+		"""
+		Returns the standard deviation of the unit
+
+		Returns
+		-------
+		out: Number
+			The standard deviations of the unit.
+		"""
+		return math.sqrt(self.variance)
+
+	@property
+	def cdf(self):
+		"""
+		Returns the cumulative probability of the die
+
+		Returns
+		-------
+		out: List
+			The cumulative probability for the outcomes.
+		"""
+		cdf = []
+		for p in self.probability:
+			cdf.append(p + cdf[-1] if cdf else p)
+		return cdf
+
+	def map(self, mapping):
+		"""
+		Maps a function onto the die
+
+		Parameters
+		----------
+		func: Callable
+			The function to be mapped
+
+		Returns
+		-------
+		out: type(self)
+			The die with the results of the mapping
+		"""
+		res = defaultdict(int)
+		for key, value in self.items():
+			res[mapping(key)] += value
+		return type(self)(res)

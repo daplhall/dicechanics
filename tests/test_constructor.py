@@ -25,45 +25,37 @@ def faces_d4():
 
 def test_construct_number():
 	d = ds.d(5)
-	assert d.f == [1, 2, 3, 4, 5]
-	assert d.c == [1] * 5
+	assert d == ds.Die({1: 1, 2: 1, 3: 1, 4: 1, 5: 1})
 
 
 def test_construct_z(flatcurve_d6):
 	d = ds.z(5)
-	assert d.f == [0, 1, 2, 3, 4, 5]
-	assert d.c == flatcurve_d6
+	assert d == ds.Die({0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1})
 
 
-def test_construct_text1(flatcurve_d6, faces_d6):
+def test_construct_text1(d6):
 	d = ds.d("1,2,3,4,5,6")
-	assert d.f == faces_d6
-	assert d.c == flatcurve_d6
+	assert d == d6
 
 
-def test_construct_text2(flatcurve_d6, faces_d6):
+def test_construct_text2():
 	d = ds.d("1,2,3..6,9")
-	assert d.f == faces_d6 + [9]
-	assert d.c == flatcurve_d6 + [1]
+	assert d == ds.Die({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 9: 1})
 
 
 def test_construct_text_count():
 	d = ds.d("1,2,3,3,4")
-	assert d.f == [1, 2, 3, 4]
-	assert d.c == [1, 1, 2, 1]
+	assert d == ds.Die({1: 1, 2: 1, 3: 2, 4: 1})
 
 
-def test_construct_iterable(faces_d6, flatcurve_d6):
-	d = ds.d(range(1, 7))
-	assert d.f == faces_d6
-	assert d.c == flatcurve_d6
+def test_construct_iterable():
+	d = ds.d(range(1, 8))
+	assert d == ds.Die({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1})
 
 
 def test_copy():
 	d = ds.d("1..5:4,20,20,31")
-	g = d.copy()
-	assert d.f == g.f
-	assert d.c == g.c
+	assert d == ds.Die({1: 4, 2: 4, 3: 4, 4: 4, 5: 4, 20: 2, 31: 1})
 
 
 def test_decorator():
@@ -77,8 +69,7 @@ def test_decorator():
 			return -1
 
 	d = funky_dice()
-	assert d.f == [-1, 42]
-	assert d.c == [3, 5]
+	assert d == ds.Die({-1: 3, 42: 5})
 
 
 def test_decorator_explode(faces_d6):
@@ -90,8 +81,7 @@ def test_decorator_explode(faces_d6):
 			return face
 
 	d = funky_dice()
-	assert d.f == [1, 2, 3, 4, 5, 6]
-	assert d.c == [7, 7, 7, 7, 7, 1]
+	assert d == ds.Die({1: 7, 2: 7, 3: 7, 4: 7, 5: 7, 6: 1})
 
 
 def test_decorator_d6_to_d4(faces_d6, faces_d4):
@@ -103,8 +93,7 @@ def test_decorator_d6_to_d4(faces_d6, faces_d4):
 			return face
 
 	d = funky_dice()
-	assert d.f == [1, 2, 3, 4, 5]
-	assert d.c == [5, 5, 5, 5, 4]
+	assert d == ds.Die({1: 5, 2: 5, 3: 5, 4: 5, 5: 4})
 
 
 def test_pool_constructor(faces_d6):

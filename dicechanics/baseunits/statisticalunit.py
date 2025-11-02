@@ -1,20 +1,21 @@
 import math
+from abc import abstractmethod
 from collections import defaultdict
 from collections.abc import MutableMapping
 from numbers import Number
 
+from dicechanics.types.sortedstring import SortedString
 from dicechanics.utils import sort_dict
 
 
 class StatisticalUnit[T](MutableMapping[T, int]):
 	"""test"""
 
-	def __init__(self, data=None, /, **kwargs):
+	def __init__(self, data: MutableMapping = {}, /, **kwargs):
 		self.data = data
 		self._derived_attr()
 
 	def _derived_attr(self):
-		self.isnum = all(isinstance(i, Number) for i in self.keys())
 		self._units = sum(self.values())
 
 	def copy(self):
@@ -114,49 +115,19 @@ class StatisticalUnit[T](MutableMapping[T, int]):
 	o = outcomes
 
 	@property
+	@abstractmethod
 	def mean(self):
-		"""
-		Returns the mean of the unit
-
-		Returns
-		-------
-		out: Number
-			The mean of the unit.
-		"""
-		if not self.isnum:
-			return None
-		return sum(p * f for p, f in zip(self.probability, self.outcomes))
+		raise NotImplementedError
 
 	@property
+	@abstractmethod
 	def variance(self):
-		"""
-		Returns the variance of the unit
-
-		Returns
-		-------
-		out: Number
-			The variance of the unit.
-		"""
-		if not self.isnum:
-			return None
-		return sum(
-			p * (x - self.mean) ** 2
-			for x, p in zip(self.outcomes, self.probability)
-		)
+		raise NotImplementedError
 
 	@property
+	@abstractmethod
 	def std(self):
-		"""
-		Returns the standard deviation of the unit
-
-		Returns
-		-------
-		out: Number
-			The standard deviations of the unit.
-		"""
-		if not self.isnum:
-			return None
-		return math.sqrt(self.variance)
+		raise NotImplementedError
 
 	@property
 	def cdf(self):
@@ -168,41 +139,25 @@ class StatisticalUnit[T](MutableMapping[T, int]):
 		out: List
 			The cumulative probability for the outcomes.
 		"""
-		if not self.isnum:
-			return None
 		cdf = []
 		for p in self.probability:
 			cdf.append(p + cdf[-1] if cdf else p)
 		return cdf
 
 	@property
+	@abstractmethod
 	def min(self):
-		"""
-		Returns the minimum faces of the unit
-
-		Parameters
-		-------
-		out: Number | None
-			The minimum face of the unit
-		"""
-		return min(self.outcomes) if self.isnum else None
+		raise NotImplementedError
 
 	@property
+	@abstractmethod
 	def max(self):
-		"""
-		Returns the maximum face of the unit.
-
-		Parameters
-		-------
-		out: float
-			The maximum face of the unit.
-		"""
-		return max(self.outcomes) if self.isnum else None
+		raise NotImplementedError
 
 	def __hash__(self):
 		return hash(tuple(self.outcomes) + tuple(self.counts) + (self.mean,))
 
-	def __setitem__(self, key, item):
+	def __setitem__(self, key: T, item: int):
 		"""
 		Sets the item located at key.
 
@@ -232,3 +187,141 @@ class StatisticalUnit[T](MutableMapping[T, int]):
 			f"{', '.join('{}: {}'.format(*i) for i in self.items())}"
 			"})"
 		)
+
+
+class StatUnitNum(StatisticalUnit):
+	def __init__(self, data=None, /, **kwargs):
+		super().__init__(data, **kwargs)
+
+	@property
+	def mean(self):
+		"""
+		Returns the mean of the unit
+
+		Returns
+		-------
+		out: Number
+			The mean of the unit.
+		"""
+		return sum(p * f for p, f in zip(self.probability, self.outcomes))
+
+	@property
+	def variance(self):
+		"""
+		Returns the variance of the unit
+
+		Returns
+		-------
+		out: Number
+			The variance of the unit.
+		"""
+		return sum(
+			p * (x - self.mean) ** 2
+			for x, p in zip(self.outcomes, self.probability)
+		)
+
+	@property
+	def std(self):
+		"""
+		Returns the standard deviation of the unit
+
+		Returns
+		-------
+		out: Number
+			The standard deviations of the unit.
+		"""
+		return math.sqrt(self.variance)
+
+	@property
+	def min(self):
+		"""
+		Returns the minimum faces of the unit
+
+		Parameters
+		-------
+		out: Number | None
+			The minimum face of the unit
+		"""
+		return min(self.outcomes)
+
+	@property
+	def max(self):
+		"""
+		Returns the maximum face of the unit.
+
+		Parameters
+		-------
+		out: float
+			The maximum face of the unit.
+		"""
+		return max(self.outcomes)
+
+
+class StatUnitAny(StatisticalUnit):
+	@property
+	def mean(self):
+		"""
+		Returns the mean of the unit
+
+		Returns
+		-------
+		out: Number
+			The mean of the unit.
+		"""
+		return None
+
+	@property
+	def variance(self):
+		"""
+		Returns the variance of the unit
+
+		Returns
+		-------
+		out: Number
+			The variance of the unit.
+		"""
+		return None
+
+	@property
+	def std(self):
+		"""
+		Returns the standard deviation of the unit
+
+		Returns
+		-------
+		out: Number
+			The standard deviations of the unit.
+		"""
+		return None
+
+	@property
+	def min(self):
+		"""
+		Returns the minimum faces of the unit
+
+		Parameters
+		-------
+		out: Number | None
+			The minimum face of the unit
+		"""
+		return None
+
+	@property
+	def max(self):
+		"""
+		Returns the maximum face of the unit.
+
+		Parameters
+		-------
+		out: float
+			The maximum face of the unit.
+		"""
+		return None
+
+
+class StatUnitStr(StatUnitAny):
+	def __init__(self, data: MutableMapping = {}, /, **kwargs):
+		inpt: defaultdict[SortedString, int] = defaultdict(int)
+		for k, v in data.items():
+			inpt[SortedString(k)] += v
+		super().__init__(inpt, **kwargs)

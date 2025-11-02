@@ -42,10 +42,10 @@ def expand_dice(data: dict) -> dict:
 	numbers = defaultdict(int, filter(lambda x: x[0] not in dice, data.items()))
 	for i, die in enumerate(dice):
 		for f in numbers.keys():
-			numbers[f] *= die._units
+			numbers[f] *= die.units
 		for d in dice:
 			if d != die:
-				dice[d] *= die._units
+				dice[d] *= die.units
 	for die, c in dice.items():
 		for f, cd in die.items():
 			numbers[f] += c * cd

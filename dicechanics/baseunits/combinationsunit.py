@@ -1,14 +1,15 @@
 import operator as ops
 from collections import defaultdict
+from collections.abc import Mapping
 from itertools import product
 
-from dicechanics.baseunits.statisticalunit import StatisticalUnit
+from dicechanics.baseunits.statisticalunit import StatisticalUnit, StatUnitNum
 
 
-class CombinationsUnit(StatisticalUnit):
+class CombinationsUnit[T](Mapping[T, int]):
 	"test"
 
-	def __init__(self, data=None, /, **kwargs):
+	def __init__(self, data: StatisticalUnit, /, backend=StatUnitNum, **kwargs):
 		"""
 		Initializes the unit, its recommended to use :func:`d` interface.
 
@@ -17,7 +18,19 @@ class CombinationsUnit(StatisticalUnit):
 		data: dict
 			A dict as input
 		"""
-		super().__init__(data, **kwargs)
+		self.data = backend(data)
+		self.data.simplify()
+
+	def copy(self):
+		"""
+		Function that creates a copy of the unit
+
+		Returns
+		-------
+		out: type(self)
+			The copy
+		"""
+		return type(self)(self)
 
 	def _isequal(self, rhs):
 		"""
@@ -220,4 +233,21 @@ class CombinationsUnit(StatisticalUnit):
 		return self._unary(ops.pos)
 
 	def __hash__(self):
-		return super().__hash__()
+		return self.data.__hash__()
+
+	def __getitem__(self, key):
+		return self.data[key]
+
+	def __iter__(self):
+		return iter(self.data)
+
+	def __len__(self):
+		return len(self.data)
+
+	def __repr__(self):
+		return (
+			f"{type(self).__name__}"
+			"({"
+			f"{', '.join('{}: {}'.format(*i) for i in self.data.items())}"
+			"})"
+		)

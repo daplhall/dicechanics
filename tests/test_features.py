@@ -15,191 +15,224 @@ def folding_over_faces():
 
 def test_reroll1(d6):
 	d = d6.reroll(6)
-	assert d.f == d6.f
-	assert d.c == [7] * 5 + [1]
+	assert d == ds.Die({1: 7, 2: 7, 3: 7, 4: 7, 5: 7, 6: 1})
 
 
 def test_reroll2(d6):
 	d = 2 @ d6
 	g = d.reroll(7)
-	assert g.f == d.f
-	assert g.c == [7, 14, 21, 28, 35, 6, 35, 28, 21, 14, 7]
+	assert g == ds.Die(
+		{
+			2: 7,
+			3: 14,
+			4: 21,
+			5: 28,
+			6: 35,
+			7: 6,
+			8: 35,
+			9: 28,
+			10: 21,
+			11: 14,
+			12: 7,
+		}
+	)
 
 
 def test_reroll3(d6):
 	d = 3 @ d6
 	g = d.reroll(7)
-	assert d.f == g.f
-	assert g.c == [
-		77,
-		231,
-		462,
-		770,
-		75,
-		1617,
-		1925,
-		2079,
-		2079,
-		1925,
-		1617,
-		1155,
-		770,
-		462,
-		231,
-		77,
-	]
+	assert g == ds.Die(
+		{
+			3: 77,
+			4: 231,
+			5: 462,
+			6: 770,
+			7: 75,
+			8: 1617,
+			9: 1925,
+			10: 2079,
+			11: 2079,
+			12: 1925,
+			13: 1617,
+			14: 1155,
+			15: 770,
+			16: 462,
+			17: 231,
+			18: 77,
+		}
+	)
 
 
 def test_reroll_depth(d6):
 	d = d6.reroll(5, 6, depth=2)
-	assert d.f == d6.f
-	assert d.c == [13, 13, 13, 13, 1, 1]
+	assert d == ds.Die({1: 13, 2: 13, 3: 13, 4: 13, 5: 1, 6: 1})
 
 
 def test_reroll_depth2(d10):
 	d = d10.reroll(1, 4, 6, 8, 10, depth=6)
-	assert d.f == d10.f
-	assert d.c == [1, 127, 127, 1, 127, 1, 127, 1, 127, 1]
+	assert d == ds.Die(
+		{
+			1: 1,
+			2: 127,
+			3: 127,
+			4: 1,
+			5: 127,
+			6: 1,
+			7: 127,
+			8: 1,
+			9: 127,
+			10: 1,
+		}
+	)
 
 
 def test_reroll_inf(d10, d6):
 	d = d10.reroll(7, 8, 9, 10, depth="inf")
-	assert d.f == d6.f
-	assert d.c == [1] * 6
+	assert d == ds.Die({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1})
 
 
 def test_count1(d10):
 	d = d10.count(5, 6)
-	assert d.f == [0, 1]
-	assert d.c == [4, 1]
+	assert d == ds.Die({0: 4, 1: 1})
 
 
 def test_explode(d6):
 	d = d6.explode(6)
-	assert d.f == [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12]
-	assert d.c == [6, 6, 6, 6, 6, 1, 1, 1, 1, 1, 1]
+	assert d == ds.Die(
+		dict(
+			zip(
+				[1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12],
+				[6, 6, 6, 6, 6, 1, 1, 1, 1, 1, 1],
+			)
+		)
+	)
 
 
 def test_explode_double(d6):
 	d = d6.explode(5, 6)
-	assert d.f == [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12]
-	assert d.c == [6, 6, 6, 6, 1, 2, 2, 2, 2, 2, 1]
+
+	assert d == ds.Die(
+		dict(
+			zip(
+				[1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12],
+				[6, 6, 6, 6, 1, 2, 2, 2, 2, 2, 1],
+			)
+		)
+	)
 
 
 def test_explode_depth(d6):
 	d = d6.explode(6, depth=3)
-	assert d.f == [
-		1,
-		2,
-		3,
-		4,
-		5,
-		7,
-		8,
-		9,
-		10,
-		11,
-		13,
-		14,
-		15,
-		16,
-		17,
-		19,
-		20,
-		21,
-		22,
-		23,
-		24,
-	]
-	assert d.c == [
-		216,
-		216,
-		216,
-		216,
-		216,
-		36,
-		36,
-		36,
-		36,
-		36,
-		6,
-		6,
-		6,
-		6,
-		6,
-		1,
-		1,
-		1,
-		1,
-		1,
-		1,
-	]
+	assert d == ds.Die(
+		dict(
+			zip(
+				[
+					1,
+					2,
+					3,
+					4,
+					5,
+					7,
+					8,
+					9,
+					10,
+					11,
+					13,
+					14,
+					15,
+					16,
+					17,
+					19,
+					20,
+					21,
+					22,
+					23,
+					24,
+				],
+				[
+					216,
+					216,
+					216,
+					216,
+					216,
+					36,
+					36,
+					36,
+					36,
+					36,
+					6,
+					6,
+					6,
+					6,
+					6,
+					1,
+					1,
+					1,
+					1,
+					1,
+					1,
+				],
+			)
+		)
+	)
 
 
 def test_explode_depth2(d6):
 	d = d6.explode(5, 6, depth=2)
-	assert d.f == [
-		1,
-		2,
-		3,
-		4,
-		6,
-		7,
-		8,
-		9,
-		10,
-		11,
-		12,
-		13,
-		14,
-		15,
-		16,
-		17,
-		18,
-	]
-	assert d.c == [36, 36, 36, 36, 6, 12, 12, 12, 6, 1, 3, 4, 4, 4, 4, 3, 1]
+	assert ds.Die(
+		dict(
+			zip(
+				[1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+				[36, 36, 36, 36, 6, 12, 12, 12, 6, 1, 3, 4, 4, 4, 4, 3, 1],
+			)
+		)
+	)
 
 
 def test_implode(d6):
 	d = d6.implode(1)
-	assert d.f == [-5, -4, -3, -2, -1, 0, 2, 3, 4, 5, 6]
-	assert d.c == [1, 1, 1, 1, 1, 1, 6, 6, 6, 6, 6]
+	d == ds.Die(
+		dict(
+			zip(
+				[-5, -4, -3, -2, -1, 0, 2, 3, 4, 5, 6],
+				[1, 1, 1, 1, 1, 1, 6, 6, 6, 6, 6],
+			)
+		)
+	)
 
 
 def test_fold_under(d10, folding_under_faces):
 	d = d10.fold_under(3)
-	assert d.f == folding_under_faces
-	assert d.c == [3, 1, 1, 1, 1, 1, 1, 1]
+	assert d == ds.Die(dict(zip(folding_under_faces, [3, 1, 1, 1, 1, 1, 1, 1])))
 
 
 def test_fold_under_into(d10, folding_under_faces):
 	d = d10.fold_under(3, into=4)
-	assert d.f == folding_under_faces
-	assert d.c == [1, 3, 1, 1, 1, 1, 1, 1]
+	assert d == ds.Die(dict(zip(folding_under_faces, [1, 3, 1, 1, 1, 1, 1, 1])))
 
 
 def test_fold_under_into_0(d10, folding_under_faces):
 	d = d10.fold_under(3, into=0)
-	assert d.f == [0] + folding_under_faces
-	assert d.c == [2, 1, 1, 1, 1, 1, 1, 1, 1]
+	assert d == ds.Die(
+		dict(zip([0] + folding_under_faces, [2, 1, 1, 1, 1, 1, 1, 1, 1]))
+	)
 
 
 def test_fold_over(d10, folding_over_faces):
 	d = d10.fold_over(8)
-	assert d.f == folding_over_faces
-	assert d.c == [1, 1, 1, 1, 1, 1, 1, 3]
+	assert d == ds.Die(dict(zip(folding_over_faces, [1, 1, 1, 1, 1, 1, 1, 3])))
 
 
 def test_fold_over_into(d10, folding_over_faces):
 	d = d10.fold_over(8, into=7)
-	assert d.f == folding_over_faces
-	assert d.c == [1, 1, 1, 1, 1, 1, 3, 1]
+	assert d == ds.Die(dict(zip(folding_over_faces, [1, 1, 1, 1, 1, 1, 3, 1])))
 
 
 def test_fold_over_into_0(d10, folding_over_faces):
 	d = d10.fold_over(8, into=0)
-	assert d.f == [0] + folding_over_faces
-	assert d.c == [2, 1, 1, 1, 1, 1, 1, 1, 1]
+	assert d == ds.Die(
+		dict(zip([0] + folding_over_faces, [2, 1, 1, 1, 1, 1, 1, 1, 1]))
+	)
 
 
 def test_dice_max(f2d6):
