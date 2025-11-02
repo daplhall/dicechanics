@@ -1,3 +1,4 @@
+import math
 import operator as ops
 from collections import defaultdict
 from collections.abc import Mapping
@@ -251,3 +252,100 @@ class CombinationsUnit[T](Mapping[T, int]):
 			f"{', '.join('{}: {}'.format(*i) for i in self.data.items())}"
 			"})"
 		)
+
+	@property
+	def min(self):
+		"""
+		Returns the minimum faces of the unit
+
+		Parameters
+		-------
+		out: Number | None
+			The minimum face of the unit
+		"""
+		return min(self.faces)
+
+	@property
+	def max(self):
+		"""
+		Returns the maximum face of the unit.
+
+		Parameters
+		-------
+		out: float
+			The maximum face of the unit.
+		"""
+		return max(self.faces)
+
+	@property
+	def mean(self):
+		"""
+		Returns the mean of the unit
+
+		Returns
+		-------
+		out: Number
+			The mean of the unit.
+		"""
+		return sum(p * f for p, f in zip(self.probability, self.faces))
+
+	@property
+	def variance(self):
+		"""
+		Returns the variance of the unit
+
+		Returns
+		-------
+		out: Number
+			The variance of the unit.
+		"""
+		return sum(
+			p * (x - self.mean) ** 2
+			for x, p in zip(self.faces, self.probability)
+		)
+
+	@property
+	def std(self):
+		"""
+		Returns the standard deviation of the unit
+
+		Returns
+		-------
+		out: Number
+			The standard deviations of the unit.
+		"""
+		return math.sqrt(self.variance)
+
+	@property
+	def cdf(self):
+		"""
+		Returns the cumulative probability of the die
+
+		Returns
+		-------
+		out: List
+			The cumulative probability for the outcomes.
+		"""
+		cdf = []
+		for p in self.probability:
+			cdf.append(p + cdf[-1] if cdf else p)
+		return cdf
+
+	def map(self, mapping):
+		"""
+		Maps a function onto the die
+
+		Parameters
+		----------
+		func: Callable
+			The function to be mapped
+
+		Returns
+		-------
+		out: type(self)
+			The die with the results of the mapping
+		"""
+		res = defaultdict(int)
+		for key, value in self.items():
+			res[mapping(key)] += value
+		return type(self)(res)

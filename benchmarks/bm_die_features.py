@@ -17,7 +17,7 @@ def reroll():
 @pytest.mark.parametrize("inpt", [explode, reroll])
 def bm_unique_mechanics(inpt, benchmark):
 	res = benchmark(inpt)
-	assert res._units == 10000000
+	assert res.units == 10000000
 
 
 def count(d):
@@ -40,7 +40,7 @@ def map(d):
 def bm_modify(inpt, benchmark, stress_die):
 	d = stress_die
 	res = benchmark(inpt, d)
-	assert res._units == CREATION_FACES
+	assert res.units == CREATION_FACES
 
 
 def cumulative(d):

@@ -19,7 +19,7 @@ def bm_pool_nonselective(pool, stress_pool, benchmark):
 	p = stress_pool
 	res = benchmark(pool, p)
 	assert (
-		res._units
+		res.units
 		== 8881784197001252323389053344726562500000000000000000000000000000000000000000000000000  # noqa: E501
 	)
 
@@ -33,4 +33,4 @@ def pool_selective(p):
 def bm_pool_selective(stress_pool_small, benchmark):
 	p = stress_pool_small
 	res = benchmark(pool_selective, p)
-	assert res._units == 39062500000000
+	assert res.units == 39062500000000

@@ -13,7 +13,7 @@ def bm_matmult(d50, benchmark):
 	d = d50
 	res = benchmark(matmult, 50, d)
 	assert (
-		res._units
+		res.units
 		== 8881784197001252323389053344726562500000000000000000000000000000000000000000000000000  # noqa: E501
 	)
 
@@ -23,7 +23,7 @@ def bm_dicematmult(d10, d50, benchmark):
 	d = d50
 	f = d10
 	res = benchmark(matmult, f, d)
-	assert res._units == 976562500000000000
+	assert res.units == 976562500000000000
 
 
 def dice_add(d):
@@ -54,7 +54,7 @@ def dice_add_pool(d):
 def bm_binary_ops(inpt, ops_dice, benchmark):
 	d = ops_dice
 	res = benchmark(inpt, d)
-	assert res._units == 25000000
+	assert res.units == 25000000
 
 
 @group_ops
@@ -62,4 +62,4 @@ def bm_binary_ops(inpt, ops_dice, benchmark):
 def bm_binary_ops_2(inpt, benchmark):
 	d = ds.d(1500)
 	res = benchmark(inpt, d)
-	assert res._units == 2250000
+	assert res.units == 2250000
