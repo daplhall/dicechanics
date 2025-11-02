@@ -1,4 +1,3 @@
-from numbers import Number
 from typing import Any
 
 ROUND = round
@@ -7,7 +6,7 @@ LINE_STYLE = "#"
 
 class StringPlot:
 	@staticmethod
-	def _entry_height(y: list[Number], max_width: int) -> list[int]:
+	def _entry_height(y: list[int], max_width: int) -> list[int]:
 		"""
 		Calculates the height of the bars plot
 
@@ -31,7 +30,7 @@ class StringPlot:
 	@staticmethod
 	def plot(
 		x: list[Any],
-		y: list[Number],
+		y: list[int],
 		txt: list[str] | None = None,
 		max_width: int = 20,
 		line_style: str = "#",
@@ -70,7 +69,7 @@ class StringPlot:
 	@staticmethod
 	def bars(
 		x: list[Any],
-		y: list[Number],
+		y: list[int],
 		txt: list[str] | None = None,
 		max_width: int = 20,
 	):

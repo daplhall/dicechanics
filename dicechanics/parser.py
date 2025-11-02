@@ -1,9 +1,8 @@
 from collections import defaultdict
+from typing import Any
 
-from dicechanics.typing import NumVector
 
-
-def text_to_faces(text: str) -> NumVector:
+def text_to_faces(text: str) -> defaultdict[Any, int]:
 	"""
 	Function that parses a string of "numbers" and expands them to a list.
 	Eg. "1..3,4:2" -> [1,2,3,4,4]
@@ -24,7 +23,7 @@ def text_to_faces(text: str) -> NumVector:
 	if any(c.isalpha() for c in text) or ";" in text:
 		raise Exception("illegal characters in dice parsing")
 
-	res = defaultdict(int)
+	res: defaultdict[Any, int] = defaultdict(int)
 
 	f = text.split(",")
 	for strf in f:

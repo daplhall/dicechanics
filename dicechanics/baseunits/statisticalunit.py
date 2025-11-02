@@ -1,15 +1,16 @@
 import math
 from collections import defaultdict
+from collections.abc import MutableMapping
 from numbers import Number
 
 from dicechanics.utils import sort_dict
 
 
-class StatisticalUnit(dict):
+class StatisticalUnit[T](MutableMapping[T, int]):
 	"""test"""
 
 	def __init__(self, data=None, /, **kwargs):
-		super().__init__(data, **kwargs)
+		self.data = data
 		self._derived_attr()
 
 	def _derived_attr(self):
@@ -61,73 +62,8 @@ class StatisticalUnit(dict):
 			if r == 1:
 				break
 		if len(self) > 1:
-			self.update({key: count // r for key, count in self.items()})
-
-	def __repr__(self):
-		return f"{type(self).__name__}({super().__repr__()})"
-
-	def clear(self):
-		"""
-		clears the unit.
-
-		functions like dict.clear()
-		"""
-		super().clear()
-		self._derived_attr()
-
-	def pop(self, index=-1, /):
-		"""
-		pops the value for the given index
-
-		Functions like a dict.pop
-		"""
-		retrn = super().pop(index)
-		self._derived_attr()
-		return retrn
-
-	def popitem(self):
-		"""
-		pops the set of (key, item)
-
-		Functions like a dict.popitem
-		"""
-		retrn = super().popitem()
-		self._derived_attr()
-		return retrn
-
-	def extend(self, iterable, /):
-		"""
-		Extends the underlying dict.
-
-		functions like dict.extend
-		"""
-		super().extend(iterable)
-		self._derived_attr()
-
-	def update(self, other=None, **kwargs):
-		"""
-		updates the underlying dict.
-
-		functions like dict.update
-		"""
-		super().update(other, **kwargs)
-		self._derived_attr()
-
-	def items(self):
-		"""
-		returns an iterator for (keys, items) for the underlying dict.
-
-		functions like dict.items()
-		"""
-		return super().items()
-
-	def keys(self):
-		"""
-		returns an iterator for (key) for the underlying dict.
-
-		functions like dict.items()
-		"""
-		return super().keys()
+			self.data.update({key: count // r for key, count in self.items()})
+			self._derived_attr()
 
 	@staticmethod
 	def _gcd(a, b):
@@ -159,7 +95,7 @@ class StatisticalUnit(dict):
 		out: list
 			The number pr face of the unit.
 		"""
-		return list(sort_dict(super()).values())
+		return list(sort_dict(self.data).values())
 
 	c = counts
 
@@ -173,7 +109,7 @@ class StatisticalUnit(dict):
 		out: list
 			The outcomes of the unit.
 		"""
-		return list(sort_dict(super()).keys())
+		return list(sort_dict(self.data).keys())
 
 	o = outcomes
 
@@ -272,6 +208,27 @@ class StatisticalUnit(dict):
 
 		functions like a dict[key] = value
 		"""
-		retrn = super().__setitem__(key, item)
+		retrn = self.data[key] = item
 		self._derived_attr()
 		return retrn
+
+	def __getitem__(self, key):
+		return self.data[key]
+
+	def __delitem__(self, key):
+		del self.data[key]
+		self._derived_attr()
+
+	def __iter__(self):
+		return iter(self.data)
+
+	def __len__(self):
+		return len(self.data)
+
+	def __repr__(self):
+		return (
+			f"{type(self).__name__}"
+			"({"
+			f"{', '.join('{}: {}'.format(*i) for i in self.items())}"
+			"})"
+		)

@@ -1,9 +1,10 @@
 from collections import defaultdict
+from collections.abc import MutableMapping
 
 import dicechanics as ds
 
 
-def sort_dict(faces: dict) -> dict:
+def sort_dict(faces: MutableMapping) -> dict:
 	"""
 	Function that sorts a dictionary
 

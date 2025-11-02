@@ -1,22 +1,14 @@
 from collections import defaultdict
-from collections.abc import Sequence
 
 import dicechanics as ds
 from dicechanics.popper import DicePopper
 from dicechanics.referance import Reference
 from dicechanics.typing import BinaryFunc_T
 
-type T = dict[object, int]
-type Inpt_T = Sequence[ds.Die]
-type Bag_T = Sequence[DicePopper]
-type Mem_T = dict[object, T]
-
 ARRAY_START_INDEX = 0
 
 
-def linear_combs(
-	inpt: Inpt_T, layer: int, func: BinaryFunc_T, mem: Reference
-) -> T:
+def linear_combs(inpt, layer: int, func: BinaryFunc_T, mem: Reference):
 	"""
 	Function that applies a linear operation to a set of unordered combinations
 
@@ -47,7 +39,7 @@ def linear_combs(
 		return mem.get()
 	if layer >= len(inpt):
 		return {}
-	res: T = defaultdict(int)
+	res = defaultdict(int)
 	for f, c in inpt[layer].items():
 		if sub := linear_combs(inpt, layer + 1, func, mem):
 			for sf, sc in sub.items():
@@ -58,7 +50,7 @@ def linear_combs(
 	return res
 
 
-def linear_non_selective(inpt: Inpt_T, func: BinaryFunc_T):
+def linear_non_selective(inpt, func: BinaryFunc_T):
 	"""
 	The function that sets up the parameters for linear_combs
 
@@ -80,9 +72,7 @@ def linear_non_selective(inpt: Inpt_T, func: BinaryFunc_T):
 	return ds.Die(res)
 
 
-def selective_comb(
-	bag: Bag_T, func: BinaryFunc_T, keep: list[int], mem: Mem_T
-) -> T:
+def selective_comb(bag, func: BinaryFunc_T, keep: list[int], mem):
 	"""
 	Function that goes through the combinatorics of ordered outcomes.
 
@@ -104,7 +94,7 @@ def selective_comb(
 	if not bag:
 		mem[cache_key] = {None: 1}
 		return mem[cache_key]
-	res: T = defaultdict(int)
+	res = defaultdict(int)
 	sorted_bag = sorted(bag, key=lambda key: key.max(), reverse=True)
 	while dice := sorted_bag[0]:
 		o, c = dice.pop()
@@ -124,7 +114,7 @@ def selective_comb(
 	return res
 
 
-def linear_selective(inpt: Inpt_T, keep: list[int], func: BinaryFunc_T):
+def linear_selective(inpt, keep: list[int], func: BinaryFunc_T):
 	"""
 	Function that applies a linear operation to a set of ordered combinations
 
@@ -143,7 +133,7 @@ def linear_selective(inpt: Inpt_T, keep: list[int], func: BinaryFunc_T):
 		the result of the combinatorics calculations in the form of
 		a die representation.
 	"""
-	mem: Mem_T = {}
+	mem = {}
 	poppers = [DicePopper(i) for i in inpt]
 	res = selective_comb(poppers, func, keep, mem)
 	return ds.Die(res)
