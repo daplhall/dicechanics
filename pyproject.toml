@@ -27,6 +27,6 @@ Issues = "https://github.com/daplhall/DiceStatistics/issues"
 
 [tool.hatch.build.targets.sdist]
 include = [
-  "dicechanics/*",
+  "src/dicechanics/*",
   "tests/*"
 ]
