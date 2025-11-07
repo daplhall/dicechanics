@@ -15,6 +15,11 @@ def referenceStatisticalDict():
 
 
 @pytest.fixture
+def shiftedReferenceStatisticalDict():
+	return {2: 1 / 4, 3: 2 / 4, 4: 1 / 4}
+
+
+@pytest.fixture
 def referenceStringDict():
 	return {"a": 1 / 4, "b": 2 / 4, "c": 1 / 4}
 
