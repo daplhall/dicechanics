@@ -7,4 +7,4 @@ class Die(Mapping):
 		return False
 
 	def __add__(self, rhs: "Die"):
-		return Pool([self, rhs])
+		return Pool.from_list([self, rhs])

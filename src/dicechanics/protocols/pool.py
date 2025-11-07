@@ -7,5 +7,4 @@ from dicechanics.protocols import Mapping
 class Pool(Protocol):
 	bag: list[Mapping]
 
-	def isEmpty(self):
-		pass
+	def __bool__(self): ...

@@ -3,7 +3,7 @@ from dicechanics import protocols
 
 class Pool(protocols.Pool):
 	def __init__(self, data: list[protocols.Mapping] = []):
-		self.bag = data
+		self._bag = data
 
 	@classmethod
 	def from_list(cls, data: list[protocols.Mapping]):
@@ -20,7 +20,13 @@ class Pool(protocols.Pool):
 		return len(self.bag)
 
 	def __add__(self, rhs: protocols.Pool | protocols.Mapping) -> "Pool":
-		if issubclass(type(rhs), protocols.Mapping):
+		if isinstance(rhs, protocols.Mapping):
 			return type(self).from_list(self.bag + [rhs])
-		else:
+		elif isinstance(self, protocols.Pool):
 			return type(self).from_list(self.bag + rhs.bag)
+		else:
+			raise TypeError("Unsupported type")
+
+	@property
+	def bag(self):
+		return self._bag

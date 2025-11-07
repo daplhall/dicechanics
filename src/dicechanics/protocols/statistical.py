@@ -1,0 +1,23 @@
+from abc import abstractmethod
+from collections.abc import Callable
+from typing import Protocol, runtime_checkable
+
+
+@runtime_checkable
+class Statistical[T](Protocol):
+	def items(self): ...
+	def values(self): ...
+	def keys(self): ...
+	def map(self, mapping: Callable[[T], float]) -> "Statistical": ...
+
+	@property
+	@abstractmethod
+	def mean(self): ...
+
+	@property
+	@abstractmethod
+	def varians(self): ...
+
+	@property
+	@abstractmethod
+	def std(self): ...
