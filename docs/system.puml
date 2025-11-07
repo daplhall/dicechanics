@@ -13,18 +13,25 @@ class Pool
 class "Number Statistical" as numstat
 class "String Statistical" as strstat
 class "Cumstom Statistical" as customstat
-interface "Pool" as pool
+interface "Pool" as pool {
+    {method}<<Operator overloads>>
+}
 interface "Mapping" as mappping{
     + items()
     + keys()
     + values()
+    + map()
     {method}<<Operator overloads>>
     {method}<<Die manipulation functions>>
+    + mean
+    + std
+    + varians
 }
 interface Statistical{
     + items()
     + keys()
     + values()
+    + map()
     + mean
     + std
     + varians

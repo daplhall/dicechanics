@@ -1,0 +1,26 @@
+from dicechanics import protocols
+
+
+class Pool(protocols.Pool):
+	def __init__(self, data: list[protocols.Mapping] = []):
+		self.bag = data
+
+	@classmethod
+	def from_list(cls, data: list[protocols.Mapping]):
+		return cls(data)
+
+	@classmethod
+	def from_mapping(cls, data: protocols.Mapping):
+		return cls.from_list([data])
+
+	def __bool__(self):
+		return bool(self.bag)
+
+	def __len__(self):
+		return len(self.bag)
+
+	def __add__(self, rhs: protocols.Pool | protocols.Mapping) -> "Pool":
+		if issubclass(type(rhs), protocols.Mapping):
+			return type(self).from_list(self.bag + [rhs])
+		else:
+			return type(self).from_list(self.bag + rhs.bag)
