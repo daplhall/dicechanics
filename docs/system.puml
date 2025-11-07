@@ -50,8 +50,5 @@ Die --> Statistical
 numstat .up.|> Statistical
 strstat .up.|> Statistical
 customstat .up.|> Statistical
-
-
-
-
+strstat ..> SortedString
 @enduml
