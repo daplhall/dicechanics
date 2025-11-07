@@ -1,0 +1,50 @@
+@startuml System
+top to bottom direction
+class "Operator Function" as opsfunc
+{
+    +sum(Pool)
+    +sub(Pool)
+    +mult(Pool)
+    +div(Pool)
+    +perform(Pool, <<PoolOperation>>)
+}
+class Die
+class Pool
+class "Number Statistical" as numstat
+class "String Statistical" as strstat
+class "Cumstom Statistical" as customstat
+interface "Pool" as pool
+interface "Mapping" as mappping{
+    + items()
+    + keys()
+    + values()
+    {method}<<Operator overloads>>
+    {method}<<Die manipulation functions>>
+}
+interface Statistical{
+    + items()
+    + keys()
+    + values()
+    + mean
+    + std
+    + varians
+}
+interface "Pool Operation" as poolops{
+    + {static} PoolOperation(Pool)
+}
+
+opsfunc -> poolops
+opsfunc --> pool
+Pool .up.|> pool
+Pool --> mappping
+Die .up.|> mappping
+Deck .up.|> mappping
+Die --> Statistical 
+numstat .up.|> Statistical
+strstat .up.|> Statistical
+customstat .up.|> Statistical
+
+
+
+
+@enduml
