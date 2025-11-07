@@ -3,7 +3,7 @@ from collections.abc import Callable
 
 from dicechanics import operators
 from dicechanics.pool import Pool
-from dicechanics.protocols.base import Unit
+from dicechanics.protocols.base import AddUnit, MulUnit, Unit
 from dicechanics.protocols.mapping import Mapping
 from dicechanics.protocols.statistical import Statistical
 from dicechanics.statisticals.scalar import ScalarStatistical
@@ -25,15 +25,15 @@ class Die(Mapping):
 		statistical = type(self.internalData)(newInternalData)
 		return Die(statistical)
 
-	def __add__(self, rhs: Mapping | Unit) -> Mapping | Pool:
+	def __add__(self, rhs: Mapping | AddUnit) -> Mapping | Pool:
 		if isinstance(rhs, type(self)):
 			return Pool.from_list([self, rhs])
-		elif isinstance(rhs, Unit):
+		elif isinstance(rhs, AddUnit):
 			return self.binary(rhs, operators.add)
 		else:
 			raise ValueError("Unsupported Type")
 
-	def __mul__(self, rhs: Mapping) -> Mapping:
+	def __mul__(self, rhs: MulUnit) -> Mapping:
 		return self.binary(rhs, operators.mul)
 
 	@property

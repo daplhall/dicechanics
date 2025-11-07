@@ -31,4 +31,4 @@ def simpleScalarStatistical(referenceStatisticalDict):
 
 @pytest.fixture
 def simpleStringStatistical(referenceStringDict):
-	return StringStatistical(referenceStatisticalDict)
+	return StringStatistical(referenceStringDict)

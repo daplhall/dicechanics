@@ -60,3 +60,17 @@ def test_ScalarDieItems(simpleScalarDie, referenceStatisticalDict):
 	):
 		assert key == refkey
 		assert val == refval
+
+
+def test_StringDieAddingString(simpleStringDie):
+	shiftedDie = simpleStringDie + "a"
+	referenceString = {"aa": 1, "ab": 1, "ac": 1}
+	for (key, _), (ref, _) in zip(shiftedDie.items(), referenceString.items()):
+		assert key == ref
+
+
+def test_StringDieMultNum(simpleStringDie):
+	shiftedDie = simpleStringDie * 2
+	referenceString = {"aa": 1, "bb": 1, "cc": 1}
+	for (key, _), (ref, _) in zip(shiftedDie.items(), referenceString.items()):
+		assert key == ref

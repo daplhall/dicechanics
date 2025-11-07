@@ -2,10 +2,28 @@ from typing import Protocol, runtime_checkable
 
 
 @runtime_checkable
-class Unit(Protocol):
+class AddUnit(Protocol):
 	def __add__(self, lhs): ...
 
-	# def __sub__(self, lhs): ...
-	# def __mul__(self, lhs): ...
-	# def __div__(self, lhs): ...
-	# def __truediv__(self, lhs): ...
+
+@runtime_checkable
+class SubUnit(Protocol):
+	def __sub__(self, lhs): ...
+
+
+@runtime_checkable
+class MulUnit(Protocol):
+	def __mul__(self, lhs): ...
+
+
+@runtime_checkable
+class DivUnit(Protocol):
+	def __div__(self, lhs): ...
+
+
+@runtime_checkable
+class TrueDivUnit(Protocol):
+	def __truediv__(self, lhs): ...
+
+
+type Unit = AddUnit | SubUnit | MulUnit | DivUnit | TrueDivUnit
