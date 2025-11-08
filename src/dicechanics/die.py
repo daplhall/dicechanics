@@ -2,7 +2,13 @@ from collections.abc import Callable
 
 from dicechanics import operators
 from dicechanics.pool import Pool
-from dicechanics.protocols.base import AddUnit, MulUnit, Unit
+from dicechanics.protocols.base import (
+	AddUnit,
+	DivUnit,
+	MulUnit,
+	SubUnit,
+	Unit,
+)
 from dicechanics.protocols.mapping import Mapping
 from dicechanics.protocols.statistical import Statistical
 from dicechanics.statisticals.scalar import ScalarStatistical
@@ -30,6 +36,15 @@ class Die(Mapping):
 
 	def __mul__(self, rhs: MulUnit) -> Mapping:
 		return self.binaryOperation(rhs, operators.mul)
+
+	def __sub__(self, rhs: SubUnit) -> Mapping:
+		return self.binaryOperation(rhs, operators.sub)
+
+	def __truediv__(self, rhs: DivUnit) -> Mapping:
+		return self.binaryOperation(rhs, operators.div)
+
+	def __floordiv__(self, rhs: DivUnit) -> Mapping:
+		return self.binaryOperation(rhs, operators.floorDiv)
 
 	@property
 	def mean(self):

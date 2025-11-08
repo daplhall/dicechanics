@@ -18,12 +18,12 @@ class MulUnit(Protocol):
 
 @runtime_checkable
 class DivUnit(Protocol):
-	def __div__(self, lhs): ...
-
-
-@runtime_checkable
-class TrueDivUnit(Protocol):
 	def __truediv__(self, lhs): ...
 
 
-type Unit = AddUnit | SubUnit | MulUnit | DivUnit | TrueDivUnit
+@runtime_checkable
+class FloorDivUnit(Protocol):
+	def __floordiv__(self, lhs): ...
+
+
+type Unit = AddUnit | SubUnit | MulUnit | DivUnit | FloorDivUnit

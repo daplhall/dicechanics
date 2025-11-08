@@ -1,3 +1,5 @@
+import pytest
+
 from dicechanics.pool import Pool
 
 
@@ -78,3 +80,41 @@ def test_DieMappingCorrectly(simpleScalarDie, simpleScalarStatistical):
 	die = simpleScalarDie.map(mapping)
 
 	assert die.items() == reference.items()
+
+
+def test_StringDieSubFailure(simpleStringDie):
+	with pytest.raises(
+		TypeError,
+		match=r"unsupported operand type\(s\) for -: 'SortedString' and 'str'",
+	):
+		simpleStringDie - "a"
+
+
+def test_ScalarDieSubtractingScalar(simpleScalarDie, downShiftedReferenceDict):
+	helper_CompareTwoMappings(simpleScalarDie - 1, downShiftedReferenceDict)
+
+
+def test_StringDieDivideFailure(simpleStringDie):
+	with pytest.raises(
+		TypeError,
+		match=r"unsupported operand type\(s\) for /: 'SortedString' and 'str'",
+	):
+		simpleStringDie / "a"
+
+
+def test_StringDieFloorDivideFailure(simpleStringDie):
+	with pytest.raises(
+		TypeError,
+		match=r"unsupported operand type\(s\) for //: 'SortedString' and 'str'",
+	):
+		simpleStringDie // "a"
+
+
+def test_ScalarDieDivideScalar(simpleScalarDie, simpleScalarStatistical):
+	reference = simpleScalarStatistical.map(lambda x: x / 2)
+	helper_CompareTwoMappings(simpleScalarDie / 2, reference)
+
+
+def test_ScalarDieFloorDiv(simpleScalarDie, simpleScalarStatistical):
+	reference = simpleScalarStatistical.map(lambda x: x // 2)
+	helper_CompareTwoMappings(simpleScalarDie // 2, reference)
