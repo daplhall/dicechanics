@@ -1,25 +1,33 @@
 @startuml System
 top to bottom direction
-class Die
-class Pool
+class Die{
+}
+class Pool{
+    {method}<<Operator overloads>>
+}
+class Bag{
+    {method}<<Operator overloads>>
+}
 class "Number Statistical" as numstat
 class "String Statistical" as strstat
 class "Cumstom Statistical" as customstat
 class "Base Statistical" as basestat
+interface "Die" as die{
+    {method}<<Die manipulation functions>>
+    {method}<<Operator overloads>>
+    +map(callable)
+    + mean
+    + std
+    + varians
+}
 interface "Pool" as pool {
     - bags: list[bag]
-    {method}<<Operator overloads>>
 }
 interface "Mapping" as mapping{
     + items()
     + keys()
     + values()
     + map()
-    {method}<<Operator overloads>>
-    {method}<<Die manipulation functions>>
-    + mean
-    + std
-    + varians
 }
 interface Statistical{
     + items()
@@ -38,9 +46,10 @@ Pool .|> pool
 pool --> bag
 Bag .|> bag
 bag -down-> mapping
-Die .up.|> mapping
+Die .up.|> die
 Deck .up.|> mapping
 Die --> Statistical 
+die -up-|> mapping
 numstat .up.|> Statistical
 strstat .up.|> Statistical
 customstat .up.|> Statistical

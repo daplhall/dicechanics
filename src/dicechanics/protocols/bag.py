@@ -1,6 +1,6 @@
-from typing import Protocol, runtime_checkable
+from typing import Protocol, Self, runtime_checkable
 
-from dicechanics import protocols
+from dicechanics.protocols.mapping import Mapping
 
 
 @runtime_checkable
@@ -14,4 +14,4 @@ class Bag(Protocol):
 	def items(self): ...
 	def __bool__(self): ...
 
-	def __add__(self, rhs: protocols.Mapping | "Bag"): ...
+	def __add__(self, rhs: Mapping | Self): ...

@@ -1,7 +1,8 @@
 from collections.abc import Callable
 
-from dicechanics import operators
+from dicechanics import operators, protocols
 from dicechanics.pool import Pool
+from dicechanics.protocols import Mapping, Statistical
 from dicechanics.protocols.base import (
 	AddUnit,
 	DivUnit,
@@ -9,12 +10,10 @@ from dicechanics.protocols.base import (
 	SubUnit,
 	Unit,
 )
-from dicechanics.protocols.mapping import Mapping
-from dicechanics.protocols.statistical import Statistical
 from dicechanics.statisticals.scalar import ScalarStatistical
 
 
-class Die(Mapping):
+class Die(protocols.Die):
 	def __init__(self, data: Statistical[Unit] = ScalarStatistical()):
 		self.internalData: Statistical = data
 
@@ -23,27 +22,27 @@ class Die(Mapping):
 
 	def binaryOperation(
 		self, rhs: Unit, operator: Callable[[Unit, Unit], Unit]
-	) -> Mapping:
+	) -> protocols.Die:
 		return self.map(lambda x: operator(x, rhs))
 
-	def __add__(self, rhs: Mapping | AddUnit) -> Mapping | Pool:
-		if isinstance(rhs, Mapping):
+	def __add__(self, rhs: protocols.Die | AddUnit) -> protocols.Die | Pool:
+		if isinstance(rhs, protocols.Die):
 			return Pool.from_list([self, rhs])
 		elif isinstance(rhs, AddUnit):
 			return self.binaryOperation(rhs, operators.add)
 		else:
 			raise ValueError("Unsupported Type")
 
-	def __mul__(self, rhs: MulUnit) -> Mapping:
+	def __mul__(self, rhs: MulUnit) -> protocols.Die:
 		return self.binaryOperation(rhs, operators.mul)
 
-	def __sub__(self, rhs: SubUnit) -> Mapping:
+	def __sub__(self, rhs: SubUnit) -> protocols.Die:
 		return self.binaryOperation(rhs, operators.sub)
 
-	def __truediv__(self, rhs: DivUnit) -> Mapping:
+	def __truediv__(self, rhs: DivUnit) -> protocols.Die:
 		return self.binaryOperation(rhs, operators.div)
 
-	def __floordiv__(self, rhs: DivUnit) -> Mapping:
+	def __floordiv__(self, rhs: DivUnit) -> protocols.Die:
 		return self.binaryOperation(rhs, operators.floorDiv)
 
 	@property
@@ -61,5 +60,5 @@ class Die(Mapping):
 	def items(self):
 		return self.internalData.items()
 
-	def map(self, mapping: Callable[[Unit], Unit]) -> Mapping:
+	def map(self, mapping: Callable[[Unit], Unit]) -> protocols.Die:
 		return type(self)(self.internalData.map(mapping))
