@@ -9,10 +9,5 @@ def emptyPool():
 
 
 @pytest.fixture
-def poolTwoLength(emptyDie):
-	return Pool.from_list([emptyDie, emptyDie])
-
-
-@pytest.fixture
-def poolOneLength(emptyDie):
-	return Pool.from_list([emptyDie])
+def poolOneBagInside(bagWithItems):
+	return Pool([bagWithItems])

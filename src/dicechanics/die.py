@@ -1,7 +1,7 @@
 from collections.abc import Callable
 
 from dicechanics import operators, protocols
-from dicechanics.pool import Pool
+from dicechanics.bag import Bag
 from dicechanics.protocols import Mapping, Statistical
 from dicechanics.protocols.base import (
 	AddUnit,
@@ -19,31 +19,6 @@ class Die(protocols.Die):
 
 	def __bool__(self):
 		return False
-
-	def binaryOperation(
-		self, rhs: Unit, operator: Callable[[Unit, Unit], Unit]
-	) -> protocols.Die:
-		return self.map(lambda x: operator(x, rhs))
-
-	def __add__(self, rhs: protocols.Die | AddUnit) -> protocols.Die | Pool:
-		if isinstance(rhs, protocols.Die):
-			return Pool.from_list([self, rhs])
-		elif isinstance(rhs, AddUnit):
-			return self.binaryOperation(rhs, operators.add)
-		else:
-			raise ValueError("Unsupported Type")
-
-	def __mul__(self, rhs: MulUnit) -> protocols.Die:
-		return self.binaryOperation(rhs, operators.mul)
-
-	def __sub__(self, rhs: SubUnit) -> protocols.Die:
-		return self.binaryOperation(rhs, operators.sub)
-
-	def __truediv__(self, rhs: DivUnit) -> protocols.Die:
-		return self.binaryOperation(rhs, operators.div)
-
-	def __floordiv__(self, rhs: DivUnit) -> protocols.Die:
-		return self.binaryOperation(rhs, operators.floorDiv)
 
 	@property
 	def mean(self):

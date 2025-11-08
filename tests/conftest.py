@@ -4,7 +4,7 @@ from fixtures.die import (  # noqa: F401
 	simpleScalarDie,
 	simpleStringDie,
 )
-from fixtures.pool import emptyPool, poolOneLength, poolTwoLength  # noqa: F401
+from fixtures.pool import emptyPool, poolOneBagInside  # noqa: F401
 from fixtures.statistical import (  # noqa: F401
 	downShiftedReferenceDict,
 	emptyScalarStatistical,

@@ -7,30 +7,31 @@ def test_EmptyInit(emptyDie):
 	assert not emptyDie
 
 
-def test_DieMeanScalar(simpleScalarDie, simpleScalarStatistical):
+def test_MappingMeanScalar(simpleScalarDie, simpleScalarStatistical):
 	assert simpleScalarDie.mean == simpleScalarStatistical.mean
 
 
-def test_DieMeanString(simpleStringDie):
+def test_MappingMeanString(simpleStringDie):
 	assert simpleStringDie.mean is None
 
 
-def test_DieVariansScalar(simpleScalarDie, simpleScalarStatistical):
+def test_MappingVariansScalar(simpleScalarDie, simpleScalarStatistical):
 	assert simpleScalarDie.varians == simpleScalarStatistical.varians
 
 
-def test_DieVariansString(simpleStringDie):
+def test_MappingVariansString(simpleStringDie):
 	assert simpleStringDie.varians is None
 
 
-def test_DieStdScalar(simpleScalarDie, simpleScalarStatistical):
+def test_MappingStdScalar(simpleScalarDie, simpleScalarStatistical):
 	assert simpleScalarDie.std == simpleScalarStatistical.std
 
 
-def test_DieStdString(simpleStringDie):
+def test_MappingStdString(simpleStringDie):
 	assert simpleStringDie.std is None
 
 
+"""
 def test_TwoDieMakeAPool(emptyDie):
 	pool = emptyDie + emptyDie
 	assert isinstance(pool, Pool)
@@ -118,3 +119,5 @@ def test_ScalarDieDivideScalar(simpleScalarDie, simpleScalarStatistical):
 def test_ScalarDieFloorDiv(simpleScalarDie, simpleScalarStatistical):
 	reference = simpleScalarStatistical.map(lambda x: x // 2)
 	helper_CompareTwoMappings(simpleScalarDie // 2, reference)
+
+"""

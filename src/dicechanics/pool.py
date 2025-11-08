@@ -2,6 +2,17 @@ from dicechanics import protocols
 
 
 class Pool(protocols.Pool):
+	def __init__(self, data: protocols.bag = {}):
+		self._bag = data
+
+	def peekInside(self):
+		return self._bag
+
+	def __bool__(self):
+		return bool(self._bag)
+
+
+"""
 	def __init__(self, data: list[protocols.Mapping] = []):
 		self._bag = data
 
@@ -30,3 +41,4 @@ class Pool(protocols.Pool):
 	@property
 	def bag(self):
 		return self._bag
+"""
