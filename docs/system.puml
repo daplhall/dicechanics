@@ -1,22 +1,16 @@
 @startuml System
 top to bottom direction
-class "Operator Function" as opsfunc
-{
-    +sum(Pool)
-    +sub(Pool)
-    +mult(Pool)
-    +div(Pool)
-    +perform(Pool, <<PoolOperation>>)
-}
 class Die
 class Pool
 class "Number Statistical" as numstat
 class "String Statistical" as strstat
 class "Cumstom Statistical" as customstat
+class "Base Statistical" as basestat
 interface "Pool" as pool {
+    - bags: list[bag]
     {method}<<Operator overloads>>
 }
-interface "Mapping" as mappping{
+interface "Mapping" as mapping{
     + items()
     + keys()
     + values()
@@ -36,19 +30,22 @@ interface Statistical{
     + std
     + varians
 }
-interface "Pool Operation" as poolops{
-    + {static} PoolOperation(Pool)
+interface "Bag" as bag{
+    - mappings : list[Mapping]
 }
 
-opsfunc -> poolops
-opsfunc --> pool
-Pool .up.|> pool
-Pool --> mappping
-Die .up.|> mappping
-Deck .up.|> mappping
+Pool .|> pool
+pool --> bag
+Bag .|> bag
+bag -down-> mapping
+Die .up.|> mapping
+Deck .up.|> mapping
 Die --> Statistical 
 numstat .up.|> Statistical
 strstat .up.|> Statistical
 customstat .up.|> Statistical
+numstat --|> basestat: special\ncase of 
+strstat --|> basestat: special\ncase of
+customstat --|> basestat :special\ncase of
 strstat ..> SortedString
 @enduml

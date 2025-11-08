@@ -1,10 +1,10 @@
 from collections import defaultdict
 from collections.abc import Callable
 
-from dicechanics.protocols.statistical import Statistical
+from dicechanics import protocols
 
 
-class BaseStatistical[T](Statistical):
+class BaseStatistical[T](protocols.Statistical):
 	def __init__(self, data: dict[T, float] = {}):
 		self.internalData = data
 

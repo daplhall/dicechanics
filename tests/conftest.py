@@ -1,3 +1,4 @@
+from fixtures.bag import bagWithItems, emptyBag  # noqa: F401
 from fixtures.die import (  # noqa: F401
 	emptyDie,
 	simpleScalarDie,
