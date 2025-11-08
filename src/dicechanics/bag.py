@@ -27,3 +27,6 @@ class Bag(protocols.Bag):
 			for key, val in rhs.items():
 				newMappings[key] += val
 		return type(self)(newMappings)
+
+	def __len__(self):
+		return len(self.internalMappings)

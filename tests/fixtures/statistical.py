@@ -30,6 +30,11 @@ def downShiftedReferenceDict():
 
 
 @pytest.fixture
+def alternativeReferenceDict():
+	return {1: 2 / 5, 2: 2 / 5, 3: 1 / 5}
+
+
+@pytest.fixture
 def simpleScalarStatistical(referenceStatisticalDict):
 	return ScalarStatistical(referenceStatisticalDict)
 

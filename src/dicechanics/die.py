@@ -1,13 +1,8 @@
 from collections.abc import Callable
 
-from dicechanics import operators, protocols
-from dicechanics.bag import Bag
-from dicechanics.protocols import Mapping, Statistical
+from dicechanics import protocols
+from dicechanics.protocols import Statistical
 from dicechanics.protocols.base import (
-	AddUnit,
-	DivUnit,
-	MulUnit,
-	SubUnit,
 	Unit,
 )
 from dicechanics.statisticals.scalar import ScalarStatistical
