@@ -1,5 +1,7 @@
-from dicechanics.operations.macro import perform
+from dicechanics.operations.macro import Operators
 from dicechanics.operations.micro import add
+
+perform = Operators.perform
 
 
 def test_PerformOnBagWithOneItem(bagWithItems, simpleScalarDie):

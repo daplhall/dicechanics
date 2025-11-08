@@ -15,7 +15,7 @@ class ScalarStatistical(BaseStatistical):
 	@property
 	def varians(self):
 		mean = self.mean
-		return sum((key - mean) ** 2 for key in self.internalData)
+		return sum((key - mean) ** 2 for key in self.keys())
 
 	@property
 	def std(self):

@@ -1,6 +1,8 @@
 import math
 from collections import defaultdict
 
+from dicechanics.statisticals.scalar import ScalarStatistical
+
 
 def test_baseEmptyInitialziation(emptyScalarStatistical):
 	assert not emptyScalarStatistical
@@ -88,3 +90,8 @@ def test_scalarStandardDeviationIsCorrect(
 
 def test_stringStandardDeviationIsCorrect(simpleStringStatistical):
 	assert simpleStringStatistical.std is None
+
+
+def test_scalarStatisticalNormalize(referenceStatisticalDict):
+	q = ScalarStatistical({1: 1, 2: 2, 3: 1}).normalize()
+	assert q.items() == referenceStatisticalDict.items()

@@ -1,8 +1,9 @@
 from dicechanics import protocols
+from dicechanics.bag import Bag
 
 
 class Pool(protocols.Pool):
-	def __init__(self, data: protocols.bag = {}):
+	def __init__(self, data: protocols.Bag = Bag()):
 		self._bag = data
 
 	def peekInside(self):
