@@ -1,4 +1,5 @@
 from collections import defaultdict
+from collections.abc import Callable
 
 from dicechanics.protocols.statistical import Statistical
 
@@ -19,7 +20,7 @@ class BaseStatistical[T](Statistical):
 	def values(self):
 		return self.internalData.values()
 
-	def map(self, mapping):
+	def map(self, mapping: Callable[[T], T]):
 		newInternalData = defaultdict(float)
 		for key, value in self.items():
 			newInternalData[mapping(key)] += value

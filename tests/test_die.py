@@ -34,43 +34,47 @@ def test_TwoDieMakeAPool(emptyDie):
 	assert isinstance(pool, Pool)
 
 
+def helper_CompareTwoMappings(toTestMapping, referenceMapping):
+	for (key, value), (ref, refvalue) in zip(
+		toTestMapping.items(), referenceMapping.items()
+	):
+		assert key == ref
+		assert value == refvalue
+
+
 def test_ScalarDieAddingScalar(
 	simpleScalarDie, shiftedReferenceStatisticalDict
 ):
-	shiftedDie = simpleScalarDie + 1
-	for (key, value), (ref, refvalue) in zip(
-		shiftedDie.items(), shiftedReferenceStatisticalDict.items()
-	):
-		assert key == ref
-		assert value == refvalue
+	helper_CompareTwoMappings(
+		simpleScalarDie + 1, shiftedReferenceStatisticalDict
+	)
 
 
 def test_ScalarDieMultScalar(simpleScalarDie, referenceStatisticalDict):
-	shiftedDie = simpleScalarDie * 1
-	for (key, value), (ref, refvalue) in zip(
-		shiftedDie.items(), referenceStatisticalDict.items()
-	):
-		assert key == ref
-		assert value == refvalue
+	helper_CompareTwoMappings(simpleScalarDie * 1, referenceStatisticalDict)
 
 
 def test_ScalarDieItems(simpleScalarDie, referenceStatisticalDict):
-	for (key, val), (refkey, refval) in zip(
-		simpleScalarDie.items(), referenceStatisticalDict.items()
-	):
-		assert key == refkey
-		assert val == refval
+	helper_CompareTwoMappings(simpleScalarDie, referenceStatisticalDict)
 
 
 def test_StringDieAddingString(simpleStringDie):
-	shiftedDie = simpleStringDie + "a"
-	referenceString = {"aa": 1, "ab": 1, "ac": 1}
-	for (key, _), (ref, _) in zip(shiftedDie.items(), referenceString.items()):
-		assert key == ref
+	helper_CompareTwoMappings(
+		simpleStringDie + "a", {"aa": 1 / 4, "ab": 2 / 4, "ac": 1 / 4}
+	)
 
 
 def test_StringDieMultNum(simpleStringDie):
-	shiftedDie = simpleStringDie * 2
-	referenceString = {"aa": 1, "bb": 1, "cc": 1}
-	for (key, _), (ref, _) in zip(shiftedDie.items(), referenceString.items()):
-		assert key == ref
+	helper_CompareTwoMappings(
+		simpleStringDie * 2, {"aa": 1 / 4, "bb": 2 / 4, "cc": 1 / 4}
+	)
+
+
+def test_DieMappingCorrectly(simpleScalarDie, simpleScalarStatistical):
+	def mapping(x):
+		return x // 2
+
+	reference = simpleScalarStatistical.map(mapping)
+	die = simpleScalarDie.map(mapping)
+
+	assert die.items() == reference.items()

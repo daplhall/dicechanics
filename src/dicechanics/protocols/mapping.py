@@ -1,18 +1,18 @@
+from collections.abc import Callable
 from typing import Protocol, runtime_checkable
 
 
 @runtime_checkable
-class Mapping(Protocol):
+class Mapping[T](Protocol):
 	def __add__(self, rhs): ...
 
-	@property
-	def mean(self):
-		return self.internalData.mean
+	def map(self, mapping: Callable[[T], T]): ...
 
 	@property
-	def varians(self):
-		return self.internalData.varians
+	def mean(self): ...
 
 	@property
-	def std(self):
-		return self.internalData.std
+	def varians(self): ...
+
+	@property
+	def std(self): ...
