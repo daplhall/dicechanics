@@ -26,7 +26,7 @@ class Die(Mapping):
 		return Die(statistical)
 
 	def __add__(self, rhs: Mapping | AddUnit) -> Mapping | Pool:
-		if isinstance(rhs, type(self)):
+		if isinstance(rhs, Mapping):
 			return Pool.from_list([self, rhs])
 		elif isinstance(rhs, AddUnit):
 			return self.binary(rhs, operators.add)
