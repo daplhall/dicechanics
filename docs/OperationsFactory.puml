@@ -1,0 +1,12 @@
+@startuml
+[Operations]
+[Operations] -left-> Interface : Request
+Interface -up-> [Service]
+[Service] -> [Factory]
+[Factory] --> [Operations] : return\nStatisticalMapping
+
+note left of [Service]
+    Figures out which factory unit we need to add.
+
+end note
+@enduml

@@ -1,61 +1,92 @@
 @startuml System
 top to bottom direction
-class Die{
-}
-class Pool{
-    {method}<<Operator overloads>>
-}
-class Bag{
-    {method}<<Operator overloads>>
-}
-class "Number Statistical" as numstat
-class "String Statistical" as strstat
-class "Cumstom Statistical" as customstat
-class "Base Statistical" as basestat
-interface "Die" as die{
-    {method}<<Die manipulation functions>>
-    {method}<<Operator overloads>>
-    +map(callable)
-    + mean
-    + std
-    + varians
-}
-interface "Pool" as pool {
-    - bags: list[bag]
-}
-interface "Mapping" as mapping{
-    + items()
-    + keys()
-    + values()
-    + map()
-}
-interface Statistical{
-    + items()
-    + keys()
-    + values()
-    + map()
-    + normalize()
-    + mean
-    + std
-    + varians
-}
-interface "Bag" as bag{
-    - mappings : list[Mapping]
+package "Low Level Mechanicsm"{
+    class Pool{
+        {method}<<Operator overloads>>
+    }
+    interface "Pool" as pool {
+        - bags: list[bag]
+    }
+    class Bag{
+        {method}<<Operator overloads>>
+    }
+    interface "Bag" as bag{
+        - mappings : list[Mapping]
+    }
+    interface "Statistical Mapping" as mapping{
+        + items()
+        + keys()
+        + values()
+    }
+    Interface Combinatorics{
+        {static} combinations()
+        {static} selectiveCombinations()
+    }
+    class "Combinatorics" as combclass{
+    }
+    class Operations{
+        perform(bag | pool, \n\tmappingType) 
+
+    }
 }
 
-Pool .|> pool
-pool --> bag
-Bag .|> bag
-bag -down-> mapping
-Die .up.|> die
+
+
+package "dicechancis" {
+    class Die{
+    }
+    class "Number Statistical" as numstat
+    class "String Statistical" as strstat
+    class "Cumstom Statistical" as customstat
+    class "Base Statistical" as basestat
+    interface Statistical{
+        + items()
+        + keys()
+        + values()
+        + map()
+        + normalize()
+        + mean
+        + std
+        + varians
+    }
+    interface "Die" as die{
+        {method}<<Die manipulation functions>>
+        {method}<<Operator overloads>>
+        +map(callable)
+        + mean
+        + std
+        + varians
+    }
+}
+package "Primitives"{
+    class SortedString
+}
+
+package "Deckchanics"{
+    class Deck
+}
+
+
+Operations -down-> Combinatorics
+Operations -down-> pool
+Operations -down-> bag
+combclass ..|> Combinatorics
+Pool ..|> pool
+pool -> bag
+Bag ..|> bag
+bag --> mapping
+
 Deck .up.|> mapping
+'diechanics
+Die ..|> die
 Die --> Statistical 
-die -up-|> mapping
+die --|> mapping
 numstat .up.|> Statistical
 strstat .up.|> Statistical
 customstat .up.|> Statistical
-numstat --|> basestat: special\ncase of 
-strstat --|> basestat: special\ncase of
-customstat --|> basestat :special\ncase of
+numstat -down-|> basestat: special\ncase of 
+strstat -down-|> basestat: special\ncase of
+customstat -down-|> basestat :special\ncase of
 strstat ..> SortedString
+
 @enduml

@@ -7,44 +7,52 @@ from dicechanics.utils.reference import Reference
 type BagItems = list[tuple[Unit, int]]
 
 
-class Combinatorics:
-	@staticmethod
-	def combinations(
-		items: BagItems,
-		operation: Callable[[Unit, Unit], Unit],
-		layer: int,
-		mem: Reference,
-	):
-		if mem:
-			return mem.get()
-		if Combinatorics.isEndOfItems(items, layer):
-			return {}
-		res = defaultdict(int)
-		mapping, count = Combinatorics.countDownAmount(items, layer)
-		for key, value in mapping.items():
-			if sub := Combinatorics.combinations(
-				items,
-				operation,
-				Combinatorics.whichLayerNext(layer, count),
-				mem,
-			):
-				for skey, svalue in sub.items():
-					res[operation(key, skey)] += svalue * value
-			else:
-				res[key] = value
-		mem.set(res)
-		return res
+def updateWithOperations(current, subproblem, operation, res):
+	key, value = current
+	for skey, svalue in subproblem.items():
+		res[operation(key, skey)] += svalue * value
 
-	@staticmethod
-	def countDownAmount(items: BagItems, layer: int):
-		mapping, count = items[layer]
-		items[layer] = mapping, count - 1
-		return mapping, count
 
-	@staticmethod
-	def whichLayerNext(layer: int, count: int):
-		return layer + 1 if count <= 1 else layer
+def updateNoSubproblem(current, res):
+	key, value = current
+	res[key] = value
 
-	@staticmethod
-	def isEndOfItems(items: BagItems, layer: int):
-		return layer >= len(items)
+
+def countDownAmount(items: BagItems, layer: int):
+	mapping, count = items[layer]
+	items[layer] = mapping, count - 1
+	return mapping, count
+
+
+def whoIsNext(layer: int, count: int):
+	return layer + 1 if count <= 1 else layer
+
+
+def isEndOfBranch(items: BagItems, layer: int):
+	return layer >= len(items)
+
+
+def combinations(
+	items: BagItems,
+	operation: Callable[[Unit, Unit], Unit],
+	layer: int,
+	mem: Reference,
+):
+	if mem:
+		return mem.get()
+	if isEndOfBranch(items, layer):
+		return {}
+	res = defaultdict(int)
+	mapping, count = countDownAmount(items, layer)
+	for curr in mapping.items():
+		if sub := combinations(
+			items,
+			operation,
+			whoIsNext(layer, count),
+			mem,
+		):
+			updateWithOperations(curr, sub, operation, res)
+		else:
+			updateNoSubproblem(curr, res)
+	mem.set(res)
+	return res

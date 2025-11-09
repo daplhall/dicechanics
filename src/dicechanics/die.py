@@ -10,25 +10,25 @@ from dicechanics.statisticals.scalar import ScalarStatistical
 
 class Die(protocols.Die):
 	def __init__(self, data: Statistical[Unit] = ScalarStatistical()):
-		self.internalData: Statistical = data
+		self.statisticalData: Statistical = data
 
 	def __bool__(self):
 		return False
 
 	@property
 	def mean(self):
-		return self.internalData.mean
+		return self.statisticalData.mean
 
 	@property
 	def varians(self):
-		return self.internalData.varians
+		return self.statisticalData.varians
 
 	@property
 	def std(self):
-		return self.internalData.std
+		return self.statisticalData.std
 
 	def items(self):
-		return self.internalData.items()
+		return self.statisticalData.items()
 
 	def map(self, mapping: Callable[[Unit], Unit]) -> protocols.Die:
-		return type(self)(self.internalData.map(mapping))
+		return type(self)(self.statisticalData.map(mapping))
