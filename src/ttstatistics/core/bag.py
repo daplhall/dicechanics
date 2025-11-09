@@ -21,11 +21,11 @@ class Bag(protocols.Bag):
 
 	def __add__(self, rhs: protocols.Mapping | protocols.Bag):
 		newMappings = defaultdict(int, self.items())
-		if isinstance(rhs, protocols.Mapping):
-			newMappings[rhs] += 1
-		else:
+		if isinstance(rhs, protocols.Bag):
 			for key, val in rhs.items():
 				newMappings[key] += val
+		else:
+			newMappings[rhs] += 1
 		return type(self)(newMappings)
 
 	def __len__(self):

@@ -19,14 +19,10 @@ package "Low Level Mechanicsm"{
         + values()
     }
     Interface Combinatorics{
-        {static} combinations()
-        {static} selectiveCombinations()
+        combinations()
+        selectiveCombinations()
     }
     class "Combinatorics" as combclass{
-    }
-    class Operations{
-        perform(bag | pool, \n\tmappingType) 
-
     }
 }
 
@@ -66,10 +62,8 @@ package "Deckchanics"{
     class Deck
 }
 
-
-Operations -down-> Combinatorics
-Operations -down-> pool
-Operations -down-> bag
+Combinatorics --> pool
+Combinatorics --> bag
 combclass ..|> Combinatorics
 Pool ..|> pool
 pool -> bag
