@@ -1,7 +1,7 @@
 import pytest
 
+from fixtures.mapping import MappingMock
 from ttstatistics.core.bag import Bag
-from ttstatistics.dicechanics.die import Die
 
 
 @pytest.fixture
@@ -10,22 +10,22 @@ def emptyBag():
 
 
 @pytest.fixture
-def bagWithItems(simpleScalarDie):
-	return Bag({simpleScalarDie: 2})
+def bagWithItems(simpleScalarMock):
+	return Bag({simpleScalarMock: 2})
 
 
 @pytest.fixture
-def bagWithTwoItems(simpleScalarDie, alternativeReferenceDict):
-	secondSimpleScalarDie = Die(alternativeReferenceDict)
+def bagWithTwoItems(simpleScalarMock, alternativeReferenceDict):
+	secondSimpleScalarMock = MappingMock(alternativeReferenceDict)
 
-	return Bag({simpleScalarDie: 1, secondSimpleScalarDie: 1})
+	return Bag({simpleScalarMock: 1, secondSimpleScalarMock: 1})
 
 
 @pytest.fixture
-def bagWithFourItems(simpleScalarDie, alternativeReferenceDict):
-	firstSimpleScalarDie = Die(alternativeReferenceDict)
-	secondSimpleScalarDie = Die(alternativeReferenceDict)
-	thridSimpleScalarDie = Die(alternativeReferenceDict)
+def bagWithFourItems(alternativeReferenceDict):
+	firstSimpleScalarDie = MappingMock(alternativeReferenceDict)
+	secondSimpleScalarDie = MappingMock(alternativeReferenceDict)
+	thridSimpleScalarDie = MappingMock(alternativeReferenceDict)
 
 	return Bag(
 		{

@@ -1,8 +1,3 @@
-import pytest
-
-from ttstatistics.core.pool import Pool
-
-
 def test_EmptyInit(emptyDie):
 	assert not emptyDie
 

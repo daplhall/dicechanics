@@ -10,6 +10,4 @@ def test_PoolWithBagInside(poolOneBagInside):
 
 
 def test_PeakingInsideThePool(poolOneBagInside):
-	assert all(
-		isinstance(i, protocols.Bag) for i in poolOneBagInside.peekInside()
-	)
+	assert all(isinstance(i, protocols.Bag) for i in poolOneBagInside.keys())
