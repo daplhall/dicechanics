@@ -1,11 +1,18 @@
+from ttstatistics.core import protocols
+from ttstatistics.core.genericmapping import GenericMapping
 from ttstatistics.core.operations.combinatorics import combinations
 from ttstatistics.utils.reference import Reference
 
 
+def normalize(statisticalDict):
+	norm = sum(statisticalDict.values())
+	return {
+		key: round(value / norm, 15) for key, value in statisticalDict.items()
+	}
+
+
 class Operators:
 	@staticmethod
-	def perform(bag, operation):
+	def performOnBag(bag: protocols.Bag, operation):
 		res = combinations(list(bag.items()), operation, 0, Reference(None))
-		norm = sum(res.values())
-		q = {key: round(value / norm, 15) for key, value in res.items()}
-		return type(bag)(q)
+		return GenericMapping(normalize(res))

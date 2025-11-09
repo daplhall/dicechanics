@@ -1,11 +1,11 @@
 from ttstatistics.core.operations.macro import Operators
 from ttstatistics.core.operations.micro import add
 
-perform = Operators.perform
+performOnBag = Operators.performOnBag
 
 
 def test_PerformOnBagWithOneItem(bagWithItems, simpleScalarDie):
-	toTest = perform(bagWithItems, add)
+	toTest = performOnBag(bagWithItems, add)
 	assert {
 		2: 0.0625,
 		3: 0.25,
@@ -16,12 +16,12 @@ def test_PerformOnBagWithOneItem(bagWithItems, simpleScalarDie):
 
 
 def test_PerformOnBagWithTwoItem(bagWithTwoItems):
-	toTest = perform(bagWithTwoItems, add)
+	toTest = performOnBag(bagWithTwoItems, add)
 	assert {2: 0.1, 3: 0.3, 4: 0.35, 5: 0.2, 6: 0.05}.items() == toTest.items()
 
 
 def test_PerformOnBagWithFourItem(bagWithFourItems):
-	toTest = perform(bagWithFourItems, add)
+	toTest = performOnBag(bagWithFourItems, add)
 	assert (
 		toTest.items()
 		== {
