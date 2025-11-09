@@ -1,5 +1,5 @@
-from dicechanics.primitives import SortedString
-from dicechanics.statisticals.base import BaseStatistical
+from ttstatistics.dicechanics.statisticals.base import BaseStatistical
+from ttstatistics.utils.primitives import SortedString
 
 
 class StringStatistical(BaseStatistical):

@@ -1,5 +1,5 @@
-from dicechanics import protocols
-from dicechanics.bag import Bag
+from ttstatistics.core import protocols
+from ttstatistics.core.bag import Bag
 
 
 class Pool(protocols.Pool):

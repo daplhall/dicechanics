@@ -1,6 +1,6 @@
 import pytest
 
-from dicechanics.pool import Pool
+from ttstatistics.core.pool import Pool
 
 
 def test_EmptyInit(emptyDie):

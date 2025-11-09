@@ -1,4 +1,4 @@
-from dicechanics.primitives import SortedString
+from ttstatistics.utils.primitives import SortedString
 
 
 def test_sortedStringIsSorted():

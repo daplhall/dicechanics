@@ -1,7 +1,7 @@
 import pytest
 
-from dicechanics.statisticals.scalar import ScalarStatistical
-from dicechanics.statisticals.string import StringStatistical
+from ttstatistics.dicechanics.statisticals.scalar import ScalarStatistical
+from ttstatistics.dicechanics.statisticals.string import StringStatistical
 
 
 @pytest.fixture

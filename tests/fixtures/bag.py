@@ -1,7 +1,7 @@
 import pytest
 
-from dicechanics.bag import Bag
-from dicechanics.die import Die
+from ttstatistics.core.bag import Bag
+from ttstatistics.dicechanics.die import Die
 
 
 @pytest.fixture

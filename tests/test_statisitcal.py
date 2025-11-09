@@ -1,7 +1,7 @@
 import math
 from collections import defaultdict
 
-from dicechanics.statisticals.scalar import ScalarStatistical
+from ttstatistics.dicechanics.statisticals.scalar import ScalarStatistical
 
 
 def test_baseEmptyInitialziation(emptyScalarStatistical):

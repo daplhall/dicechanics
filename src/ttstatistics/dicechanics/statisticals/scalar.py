@@ -1,7 +1,7 @@
 import math
 from numbers import Number
 
-from dicechanics.statisticals.base import BaseStatistical
+from ttstatistics.dicechanics.statisticals.base import BaseStatistical
 
 
 class ScalarStatistical(BaseStatistical):

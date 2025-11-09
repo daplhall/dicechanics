@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from dicechanics import protocols
+from ttstatistics.core import protocols
 
 
 class Bag(protocols.Bag):

@@ -1,6 +1,6 @@
 from typing import Protocol, runtime_checkable
 
-from dicechanics.protocols import Mapping
+from ttstatistics.core.protocols import Mapping
 
 
 @runtime_checkable

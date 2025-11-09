@@ -1,8 +1,8 @@
 from collections import defaultdict
 from collections.abc import Callable
 
-from dicechanics.protocols.base import Unit
-from dicechanics.utils.reference import Reference
+from ttstatistics.core.protocols.base import Unit
+from ttstatistics.utils.reference import Reference
 
 type BagItems = list[tuple[Unit, int]]
 

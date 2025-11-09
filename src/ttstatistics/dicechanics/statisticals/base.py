@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections import defaultdict
 from collections.abc import Callable
 
-from dicechanics import protocols
+from ttstatistics.dicechanics import protocols
 
 
 class BaseStatistical[T](protocols.Statistical):

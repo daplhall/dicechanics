@@ -1,6 +1,6 @@
 from collections.abc import Callable
 
-from dicechanics.protocols.mapping import Mapping
+from ttstatistics.core.protocols import Mapping
 
 
 class Die[T](Mapping):

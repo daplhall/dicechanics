@@ -1,5 +1,5 @@
-from dicechanics.operations.combinatorics import combinations
-from dicechanics.utils.reference import Reference
+from ttstatistics.core.operations.combinatorics import combinations
+from ttstatistics.utils.reference import Reference
 
 
 class Operators:

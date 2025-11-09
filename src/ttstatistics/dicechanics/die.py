@@ -1,11 +1,11 @@
 from collections.abc import Callable
 
-from dicechanics import protocols
-from dicechanics.protocols import Statistical
-from dicechanics.protocols.base import (
+from ttstatistics.core.protocols.base import (
 	Unit,
 )
-from dicechanics.statisticals.scalar import ScalarStatistical
+from ttstatistics.dicechanics import protocols
+from ttstatistics.dicechanics.protocols import Statistical
+from ttstatistics.dicechanics.statisticals.scalar import ScalarStatistical
 
 
 class Die(protocols.Die):

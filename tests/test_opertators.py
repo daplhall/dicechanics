@@ -1,5 +1,5 @@
-from dicechanics.operations.macro import Operators
-from dicechanics.operations.micro import add
+from ttstatistics.core.operations.macro import Operators
+from ttstatistics.core.operations.micro import add
 
 perform = Operators.perform
 

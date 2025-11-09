@@ -1,6 +1,6 @@
 import pytest
 
-from dicechanics.die import Die
+from ttstatistics.dicechanics.die import Die
 
 
 @pytest.fixture

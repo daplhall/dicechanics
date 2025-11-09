@@ -1,4 +1,4 @@
-from dicechanics import protocols
+from ttstatistics.core import protocols
 
 
 def test_emptyBagIsEmpty(emptyBag):
