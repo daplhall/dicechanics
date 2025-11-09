@@ -1,5 +1,5 @@
 # Dicechanics: Library for modelling dice mechanics
-![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) This project is currently WIP, APIs are very much subject to change.
+![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) This project is currently under renovation, APIs are very much subject to change.  
 An library for python which provides an interface for modelling dice mechanics. The library have no external dependencies.
 
 ## API Documentation
