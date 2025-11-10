@@ -1,0 +1,99 @@
+@startuml System
+top to bottom direction
+package "core"{
+    class Pool{
+    }
+    interface "Pool" as pool {
+        container of bags, used for combinatorial calulations\nrelated to Bag-Bag interaction
+        bags are created seperately
+        + prepare() -> Iterable[(Bag, count)]
+    }
+    class Bag{
+    }
+    interface "Bag" as bag{
+        container of mappings, used for\nspecific combinatorial calulations
+        mappings are created seperatly
+        + prepare() -> Iterable[(Mapping, int)]
+        + Slice(Sequence[Bool] | python slice) -> Bag
+        + prepareSlice() -> Slice
+        + __getitem__(python slice)
+
+    }
+    interface "CombinationsMapping" as mapping{
+        Basic backend type for combinatorial calculations,\nif the methods are defined then its good for use.
+        + items()
+        + keys()
+        + values()
+    }
+    Class "Slice" as sliceClass
+    interface "Slice" as slice{
+        +Slice(mask: Sequence[int])
+        +Slice(mask: python slice)
+        +next()
+        +prev()
+    }
+}
+
+note left of slice
+   Note takes in a sequence ofbools which indicate from left to right
+   the highest to lowest 
+end note
+
+
+
+package "dicechancis" {
+    class Die{
+    }
+    class "Number Statistical" as numstat
+    class "String Statistical" as strstat
+    class "Cumstom Statistical" as customstat
+    class "Base Statistical" as basestat
+    interface Statistical{
+        + items()
+        + keys()
+        + values()
+        + map()
+        + normalize()
+        + mean
+        + std
+        + varians
+    }
+    interface "Die" as die{
+        {method}<<Die manipulation functions>>
+        {method}<<Operator overloads>>
+        +map(callable)
+        + mean
+        + std
+        + varians
+    }
+}
+package "Primitives"{
+    class SortedString
+}
+
+package "Deckchanics"{
+    class Deck
+}
+
+'core
+Pool .left.|> pool
+pool --> bag
+Bag .left.|> bag
+bag --> mapping
+bag --> slice: for selective
+sliceClass .left.|> slice
+'deck
+Deck .up.|> mapping
+'diechanics
+Die ..|> die
+Die --> Statistical 
+die --|> mapping
+numstat .up.|> Statistical
+strstat .up.|> Statistical
+customstat .up.|> Statistical
+numstat -down-|> basestat: special\ncase of 
+strstat -down-|> basestat: special\ncase of
+customstat -down-|> basestat :special\ncase of
+strstat ..> SortedString
+
+@enduml
