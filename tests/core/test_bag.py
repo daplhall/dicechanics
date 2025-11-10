@@ -1,3 +1,5 @@
+import pytest
+
 from ttstatistics.core import protocols
 
 
@@ -9,31 +11,32 @@ def test_bagNotEmpty(bagWithItems):
 	assert bagWithItems
 
 
-def test_addMappingToBag(emptyBag, emptyDict):
-	assert emptyBag + emptyDict
+def test_prepareIsCorrectFormat(bagWithFourItems):
+	for element, count in bagWithFourItems.prepare():
+		assert isinstance(element, protocols.Mapping)
+		assert isinstance(count, int)
 
 
-def test_addBagToBag(emptyBag, emptyDict):
-	base = emptyBag + emptyDict
-	toCheck = base + base
-	assert all(
-		isinstance(mapping, protocols.Mapping) for mapping in toCheck.keys()
-	)
+def test_bagGetItemReturnsACopyWithSlicingStart(bagWithFourItems):
+	q = bagWithFourItems[3:]
+	refslice = q.prepareSlice()
+	assert bagWithFourItems.items() == q.items()
+	assert not refslice.next()
+	assert not refslice.next()
+	assert not refslice.next()
+	assert refslice.next()
 
 
-def test_bagHasItemsCheckedWithItems(emptyBag, emptyDict):
-	base = emptyBag + emptyDict
-	for key, value in base.items():
-		assert key == emptyDict
+def test_bagGetItemReturnsACopySlicingInt(bagWithFourItems):
+	with pytest.raises(TypeError):
+		bagWithFourItems[2]
 
 
-def test_bagHasItemCheckedWithKeys(emptyBag, emptyDict):
-	base = emptyBag + emptyDict
-	for key in base.keys():
-		assert key == emptyDict
-
-
-def test_bagHasItemCheckedWithValues(emptyBag, emptyDict):
-	base = emptyBag + emptyDict
-	for key in base.values():
-		assert key == 1
+def test_bagGetItemReturnsACopySlicingArray(bagWithFourItems):
+	q = bagWithFourItems[True, True, False, True]
+	refslice = q.prepareSlice()
+	assert bagWithFourItems.items() == q.items()
+	assert refslice.next()
+	assert refslice.next()
+	assert not refslice.next()
+	assert refslice.next()

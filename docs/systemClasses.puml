@@ -1,30 +1,43 @@
 @startuml System
 top to bottom direction
-package "Low Level Mechanicsm"{
+package "core"{
     class Pool{
-        {method}<<Operator overloads>>
     }
     interface "Pool" as pool {
-        - bags: list[bag]
+        container of bags, used for combinatorial calulations\nrelated to Bag-Bag interaction
+        bags are created seperately
+        + prepare() -> Iterable[(Bag, count)]
     }
     class Bag{
-        {method}<<Operator overloads>>
     }
     interface "Bag" as bag{
-        - mappings : list[Mapping]
+        container of mappings, used for\nspecific combinatorial calulations
+        mappings are created seperatly
+        + prepare() -> Iterable[(Mapping, int)]
+        + Slice(Sequence[Bool] | python slice) -> Bag
+        + prepareSlice() -> Slice
+        + __getitem__(python slice)
+
     }
-    interface "Statistical Mapping" as mapping{
+    interface "CombinationsMapping" as mapping{
+        Basic backend type for combinatorial calculations,\nif the methods are defined then its good for use.
         + items()
         + keys()
         + values()
     }
-    Interface Combinatorics{
-        combinations()
-        selectiveCombinations()
-    }
-    class "Combinatorics" as combclass{
+    Class "Slice" as sliceClass
+    interface "Slice" as slice{
+        +Slice(mask: Sequence[int])
+        +Slice(mask: python slice)
+        +next()
+        +prev()
     }
 }
+
+note left of slice
+   Note takes in a sequence ofbools which indicate from left to right
+   the highest to lowest 
+end note
 
 
 
@@ -62,14 +75,14 @@ package "Deckchanics"{
     class Deck
 }
 
-Combinatorics --> pool
-Combinatorics --> bag
-combclass ..|> Combinatorics
-Pool ..|> pool
-pool -> bag
-Bag ..|> bag
+'core
+Pool .left.|> pool
+pool --> bag
+Bag .left.|> bag
 bag --> mapping
-
+bag --> slice: for selective
+sliceClass .left.|> slice
+'deck
 Deck .up.|> mapping
 'diechanics
 Die ..|> die

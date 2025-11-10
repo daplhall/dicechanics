@@ -14,5 +14,5 @@ def normalize(statisticalDict):
 class Operators:
 	@staticmethod
 	def performOnBag(bag: protocols.Bag, operation):
-		res = combinations(list(bag.items()), operation, 0, Reference(None))
+		res = combinations(list(bag.prepare()), operation, 0, Reference(None))
 		return GenericMapping(normalize(res))
