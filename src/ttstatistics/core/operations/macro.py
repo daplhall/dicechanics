@@ -2,8 +2,8 @@ from ttstatistics.core import protocols
 from ttstatistics.core.genericmapping import GenericMapping
 from ttstatistics.core.operations.combinatorics import (
 	combinations,
-	selective,
 	getOutcomes,
+	selective,
 )
 from ttstatistics.utils.reference import Reference
 

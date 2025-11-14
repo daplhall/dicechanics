@@ -60,7 +60,20 @@ def test_SelectiveOnBagWithFourItemMax(bagWithTwoItems):
 	assert toTest.items() == reference.items()
 
 
-def test_SelectiveFourItemsActuallySliced(bagWithTwoItems):
+def test_SelectiveTwoItemsMaximum(bagWithTwoItems):
 	reference = performOnBag(bagWithTwoItems, max)
 	toTest = performOnBag(bagWithTwoItems[:1], add)
 	assert toTest.items() == reference.items()
+
+
+def test_SelectiveTwoItemsMinumum(bagWithTwoItems):
+	reference = performOnBag(bagWithTwoItems, min)
+	toTest = performOnBag(bagWithTwoItems[1:], add)
+	assert toTest.items() == reference.items()
+
+
+"""
+def test_SelectiveFourItemsMinumum(bagWithFourItems):
+	toTest = performOnBag(bagWithFourItems[::2], add)
+	assert toTest.items() == reference.items()
+"""

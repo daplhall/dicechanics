@@ -73,7 +73,7 @@ def getOutcomes(bag):
 	), amountTuple
 
 
-def BaseChosenValue(operation, face, nChosen, sliceMask):
+def combinedOutcome(operation, face, nChosen, sliceMask):
 	assert nChosen > 0
 	base = None  # shouldnt be done if nchosen is zero
 	for i, truth in zip(range(nChosen), sliceMask):
@@ -91,19 +91,21 @@ def writeSubToRes(res, sub):
 		res[face] += amount
 
 
-def writeOutcomeToRes(res, operation, base, sub, combinations):
+def writeOutcomeToRes(res, operation, baseValue, sub, combinations):
 	for face, amount in sub.items():
 		if face is None:
-			res[base] += amount * combinations
+			res[baseValue] += amount * combinations
+		elif baseValue is None:
+			res[face] += amount * combinations
 		else:
-			res[operation(face, base)] += amount * combinations
+			res[operation(face, baseValue)] += amount * combinations
 
 
 def anyLeft(outcomes):
 	return not outcomes
 
 
-def bottomReturnValue(leftToChose):
+def bottomOutcome(leftToChose):
 	return None if leftToChose else {None: 1}
 
 
@@ -113,35 +115,39 @@ def createSubMeta(meta, idx, nChosen):
 	return tuple(submeta)
 
 
-def weightedBinaryCoeficients(leftToChose, nChosen, probability):
+def weightedBinaryCoeficients(leftToChose, nChosen, weight):
 	BinaryCoeficients = comb(leftToChose, nChosen)
-	return BinaryCoeficients * probability**nChosen
+	return BinaryCoeficients * weight**nChosen
+
+
+def windSliceBack(slicing, nTimes):
+	for i in range(nTimes):
+		slicing.previous()
+
+
+def windSliceForward(slicing, nTimes) -> list[bool]:
+	return [slicing.next() for i in range(nTimes)]
 
 
 # if left to choose is higher than n chosen then we can just return None if we are at the bottom
 @cache
 def selective(outcomes, operation, leftToChose, meta, slicing):
 	if anyLeft(outcomes):
-		return bottomReturnValue(leftToChose)
+		return bottomOutcome(leftToChose)
 	res = defaultdict(int)
-	(face, idx, probability), amount = outcomes[0]
+	(outcome, idx, weight), amount = outcomes[0]
 	for nChosen in range(0, min(amount, leftToChose, meta[idx]) + 1):
-		submeta = createSubMeta(meta, idx, nChosen)
-		sliceMask = [slicing.next() for i in range(nChosen)]
-		sub = selective(
-			outcomes[1:], operation, leftToChose - nChosen, submeta, slicing
-		)
+		sliceMask = windSliceForward(slicing, nChosen)
+		subMeta = createSubMeta(meta, idx, nChosen)
+		subAmount = leftToChose - nChosen
+		sub = selective(outcomes[1:], operation, subAmount, subMeta, slicing)
 		if sub is None:
-			for i in range(nChosen):
-				slicing.previous()
-			continue
-		if nChosen == 0:
+			pass
+		elif nChosen == 0:
 			writeSubToRes(res, sub)
 		else:
-			base = BaseChosenValue(operation, face, nChosen, sliceMask)
-			print(base)
-			coef = weightedBinaryCoeficients(leftToChose, nChosen, probability)
-			writeOutcomeToRes(res, operation, base, sub, coef)
-			for i in range(nChosen):
-				slicing.previous()
+			baseValue = combinedOutcome(operation, outcome, nChosen, sliceMask)
+			coef = weightedBinaryCoeficients(leftToChose, nChosen, weight)
+			writeOutcomeToRes(res, operation, baseValue, sub, coef)
+		windSliceBack(slicing, nChosen)
 	return res if res else None
