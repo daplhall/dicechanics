@@ -4,7 +4,7 @@ from ttstatistics.core import protocols
 from ttstatistics.core.slice import Slice
 
 
-class Bag(protocols.Bag):
+class Group(protocols.Group):
 	def __init__(self, data: dict[protocols.Mapping, int] = {}):
 		self.internalMappings = data
 		self.slice = None
@@ -24,9 +24,9 @@ class Bag(protocols.Bag):
 	def __bool__(self):
 		return bool(self.internalMappings)
 
-	def __add__(self, rhs: protocols.Mapping | protocols.Bag):
+	def __add__(self, rhs: protocols.Mapping | protocols.Group):
 		newMappings = defaultdict(int, self.items())
-		if isinstance(rhs, protocols.Bag):
+		if isinstance(rhs, protocols.Group):
 			for key, val in rhs.items():
 				newMappings[key] += val
 		else:
@@ -44,4 +44,4 @@ class Bag(protocols.Bag):
 		else:
 			raise TypeError("Wrong Type for getitem")
 
-		return Bag.withSlice(self.internalMappings, newSlice)
+		return type(self).withSlice(self.internalMappings, newSlice)

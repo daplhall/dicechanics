@@ -4,7 +4,7 @@ from ttstatistics.core.protocols.mapping import Mapping
 
 
 @runtime_checkable
-class Bag(Protocol):
+class Group(Protocol):
 	def inside(self): ...
 
 	def keys(self): ...

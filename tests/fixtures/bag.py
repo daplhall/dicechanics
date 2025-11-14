@@ -1,24 +1,24 @@
 import pytest
 
 from fixtures.mapping import MappingMock
-from ttstatistics.core.bag import Bag
+from ttstatistics.core.group import Group
 
 
 @pytest.fixture
 def emptyBag():
-	return Bag()
+	return Group()
 
 
 @pytest.fixture
 def bagWithItems(simpleScalarMock):
-	return Bag({simpleScalarMock: 2})
+	return Group({simpleScalarMock: 2})
 
 
 @pytest.fixture
 def bagWithTwoItems(simpleScalarMock, alternativeReferenceDict):
 	secondSimpleScalarMock = MappingMock(alternativeReferenceDict)
 
-	return Bag({simpleScalarMock: 1, secondSimpleScalarMock: 1})
+	return Group({simpleScalarMock: 1, secondSimpleScalarMock: 1})
 
 
 @pytest.fixture
@@ -27,7 +27,7 @@ def bagWithFourItems(alternativeReferenceDict):
 	secondSimpleScalarDie = MappingMock(alternativeReferenceDict)
 	thridSimpleScalarDie = MappingMock(alternativeReferenceDict)
 
-	return Bag(
+	return Group(
 		{
 			firstSimpleScalarDie: 2,
 			secondSimpleScalarDie: 1,

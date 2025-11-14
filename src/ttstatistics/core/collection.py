@@ -1,8 +1,7 @@
 from ttstatistics.core import protocols
-from ttstatistics.core.bag import Bag
 
 
-class Pool(protocols.Pool):
+class Collection(protocols.Collection):
 	pass
 
 
