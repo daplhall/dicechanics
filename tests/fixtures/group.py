@@ -5,24 +5,24 @@ from ttstatistics.core.group import Group
 
 
 @pytest.fixture
-def emptyBag():
+def emptyGroup():
 	return Group()
 
 
 @pytest.fixture
-def bagWithItems(simpleScalarMock):
+def groupWithItems(simpleScalarMock):
 	return Group({simpleScalarMock: 2})
 
 
 @pytest.fixture
-def bagWithTwoItems(simpleScalarMock, alternativeReferenceDict):
+def groupWithTwoItems(simpleScalarMock, alternativeReferenceDict):
 	secondSimpleScalarMock = MappingMock(alternativeReferenceDict)
 
 	return Group({simpleScalarMock: 1, secondSimpleScalarMock: 1})
 
 
 @pytest.fixture
-def bagWithFourItems(alternativeReferenceDict):
+def groupWithFourItems(alternativeReferenceDict):
 	firstSimpleScalarDie = MappingMock(alternativeReferenceDict)
 	secondSimpleScalarDie = MappingMock(alternativeReferenceDict)
 	thridSimpleScalarDie = MappingMock(alternativeReferenceDict)

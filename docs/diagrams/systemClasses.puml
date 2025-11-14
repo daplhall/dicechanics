@@ -4,17 +4,17 @@ package "core"{
     class Pool{
     }
     interface "Pool" as pool {
-        container of bags, used for combinatorial calulations\nrelated to Bag-Bag interaction
+        container of bags, used for combinatorial calulations\nrelated to Group-Group interaction
         bags are created seperately
-        + prepare() -> Iterable[(Bag, count)]
+        + prepare() -> Iterable[(Group, count)]
     }
-    class Bag{
+    class Group{
     }
-    interface "Bag" as bag{
+    interface "Group" as group{
         container of mappings, used for\nspecific combinatorial calulations
         mappings are created seperatly
         + prepare() -> Iterable[(Mapping, int)]
-        + Slice(Sequence[Bool] | python slice) -> Bag
+        + Slice(Sequence[Bool] | python slice) -> Group
         + prepareSlice() -> Slice
         + __getitem__(python slice)
 
@@ -77,10 +77,10 @@ package "Deckchanics"{
 
 'core
 Pool .left.|> pool
-pool --> bag
-Bag .left.|> bag
-bag --> mapping
-bag --> slice: for selective
+pool --> group
+Group .left.|> group
+group --> mapping
+group --> slice: for selective
 sliceClass .left.|> slice
 'deck
 Deck .up.|> mapping
