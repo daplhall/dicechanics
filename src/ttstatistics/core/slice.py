@@ -2,16 +2,18 @@ class Slice:
 	def __init__(self):
 		self.data = []
 		self.cursor = -1
-		self.nextFrom = None
+		self.shiftFunction = None
 
 	def __bool__(self):
 		return bool(self.data)
 
+	def __hash__(self):
+		return hash((self.data, self.cursor))
+
 	def setData(self, data):
 		self.data = data
 
-	def nextFromSlice(self):
-		self.cursor += 1
+	def _shiftSliceBased(self):
 		start = 0 if self.data.start is None else self.data.start
 		stop = self.data.stop
 		step = 1 if self.data.step is None else self.data.step
@@ -24,24 +26,35 @@ class Slice:
 		else:
 			return True
 
+	def _shiftListBased(self):
+		return self.data[self.cursor] if self.cursor < len(self.data) else False
+
+	def nextFromSlice(self):
+		self.cursor += 1
+		return self._shiftSliceBased()
+
 	def nextFromList(self):
 		self.cursor += 1
-		out = self.data[self.cursor] if self.cursor < len(self.data) else False
-		return out
+		return self._shiftListBased()
 
 	@classmethod
 	def fromSlice(cls, slicing):
 		self = cls()
 		self.setData(slicing)
-		self.nextFrom = self.nextFromSlice
+		self.shiftFunction = self._shiftSliceBased
 		return self
 
 	@classmethod
 	def fromList(cls, listing):
 		self = cls()
 		self.setData(listing)
-		self.nextFrom = self.nextFromList
+		self.shiftFunction = self._shiftListBased
 		return self
 
 	def next(self):
-		return self.nextFrom()
+		self.cursor += 1
+		return self.shiftFunction()
+
+	def previous(self):
+		self.cursor -= 1
+		return self.shiftFunction()

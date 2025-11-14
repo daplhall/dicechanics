@@ -16,6 +16,7 @@ from fixtures.statistical import (  # noqa: F401
 	alternativeReferenceDict,
 	downShiftedReferenceDict,
 	emptyScalarStatistical,
+	flatReferenceStatisticalDict,
 	referenceStatisticalDict,
 	referenceStringDict,
 	shiftedReferenceStatisticalDict,

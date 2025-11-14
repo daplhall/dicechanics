@@ -10,6 +10,11 @@ def emptyScalarStatistical():
 
 
 @pytest.fixture
+def flatReferenceStatisticalDict():
+	return {1: 1, 2: 1, 3: 1}
+
+
+@pytest.fixture
 def referenceStatisticalDict():
 	return {1: 1 / 4, 2: 2 / 4, 3: 1 / 4}
 

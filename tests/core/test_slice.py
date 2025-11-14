@@ -112,6 +112,25 @@ def test_SliceShiftToNextFromSliceNegativeStart():
 	assert not notEmptySlice.next()
 
 
+def test_SliceShiftPrevious():
+	notEmptySlice = Slice.fromSlice(slice(-1, 3, 2))
+	a = notEmptySlice.next()
+	notEmptySlice.next()
+	assert a == notEmptySlice.previous()
+
+
+def test_SliceShiftReturnToOrigin():
+	notEmptySlice = Slice.fromSlice(slice(None, 10, 2))
+	ref = None
+	for _ in range(10):
+		q = notEmptySlice.next()
+		if ref is None:
+			ref = q
+	for _ in range(10):
+		notEmptySlice.previous()
+	assert notEmptySlice.next() == ref
+
+
 """
 Currently undefined behavor
 def test_SliceShiftToNextFromSliceNegativeStep():

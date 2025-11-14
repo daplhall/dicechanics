@@ -1,5 +1,7 @@
+from ttstatistics.core.bag import Bag
+from ttstatistics.core.genericmapping import GenericMapping
 from ttstatistics.core.operations.macro import Operators
-from ttstatistics.core.operations.micro import add
+from ttstatistics.core.operations.micro import add, max
 
 performOnBag = Operators.performOnBag
 
@@ -36,3 +38,23 @@ def test_PerformOnBagWithFourItem(bagWithFourItems):
 			12: 0.0016,
 		}.items()
 	)
+
+
+def test_SelectiveAllFlat():
+	d = GenericMapping(dict.fromkeys(range(1, 7), 1 / 6))
+	bag = Bag({d: 2})
+	reference = performOnBag(bag, add)
+	toTest = performOnBag(bag[:], add)
+	assert toTest.items() == reference.items()
+
+
+def test_SelectiveOnBagWithFourItem(bagWithTwoItems):
+	reference = performOnBag(bagWithTwoItems, add)
+	toTest = performOnBag(bagWithTwoItems[:], add)
+	assert toTest.items() == reference.items()
+
+
+def test_SelectiveFourItemsActuallySliced(bagWithTwoItems):
+	reference = performOnBag(bagWithTwoItems, max)
+	toTest = performOnBag(bagWithTwoItems[1:], add)
+	assert toTest.items() == reference.items()

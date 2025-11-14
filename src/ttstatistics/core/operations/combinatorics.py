@@ -1,5 +1,7 @@
 from collections import defaultdict
 from collections.abc import Callable
+from functools import cache
+from math import comb
 
 from ttstatistics.core.protocols.base import Unit
 from ttstatistics.utils.reference import Reference
@@ -35,24 +37,99 @@ def isEndOfBranch(items: BagItems, layer: int):
 def combinations(
 	items: BagItems,
 	operation: Callable[[Unit, Unit], Unit],
-	layer: int,
+	whom: int,
 	mem: Reference,
 ):
 	if mem:
 		return mem.get()
-	if isEndOfBranch(items, layer):
+	if isEndOfBranch(items, whom):
 		return {}
 	res = defaultdict(int)
-	mapping, count = countDownAmount(items, layer)
+	mapping, count = countDownAmount(items, whom)
 	for curr in mapping.items():
 		if sub := combinations(
 			items,
 			operation,
-			whoIsNext(layer, count),
+			whoIsNext(whom, count),
 			mem,
 		):
 			updateWithOperations(curr, sub, operation, res)
 		else:
 			updateNoSubproblem(curr, res)
 	mem.set(res)
+	return res
+
+
+def getOutcomes(bag):
+	res = defaultdict(int)
+	amountTuple = ()
+	for idx, (mapping, amount) in enumerate(bag.prepare()):
+		for key, probability in mapping.items():
+			res[(key, idx, probability)] += amount
+		amountTuple += (amount,)
+
+	return tuple(
+		sorted(res.items(), key=lambda x: x[0], reverse=True)
+	), amountTuple
+
+
+def BaseChosenValue(operation, face, nChosen):
+	assert nChosen > 0
+	base = face  # shouldnt be done if nchosen is zero
+	for i in range(nChosen - 1):
+		base = operation(base, face)
+	return base
+
+
+def writeSubToRes(res, sub):
+	for face, amount in sub.items():
+		res[face] += amount
+
+
+def writeOutcomeToRes(res, operation, base, sub, combinations):
+	if sub == {None: 1}:
+		res[base] += combinations
+		return
+	for face, amount in sub.items():
+		res[operation(face, base)] += amount * combinations
+
+
+def anyLeft(outcomes):
+	return not outcomes
+
+
+def bottomReturnValue(leftToChose):
+	return None if leftToChose else {None: 1}
+
+
+def createSubMeta(meta, idx, nChosen):
+	submeta = list(meta)
+	submeta[idx] -= nChosen
+	return tuple(submeta)
+
+
+def weightedBinaryCoeficients(leftToChose, nChosen, probability):
+	BinaryCoeficients = comb(leftToChose, nChosen)
+	return BinaryCoeficients * probability**nChosen
+
+
+@cache
+def selective(outcomes, operation, leftToChose, meta, slicing):
+	if anyLeft(outcomes):
+		return bottomReturnValue(leftToChose)
+	res = defaultdict(int)
+	(face, idx, probability), amount = outcomes[0]
+	for nChosen in range(0, min(amount, leftToChose, meta[idx]) + 1):
+		submeta = createSubMeta(meta, idx, nChosen)
+		sub = selective(
+			outcomes[1:], operation, leftToChose - nChosen, submeta, slicing
+		)
+		if sub is None:
+			continue
+		if nChosen == 0:
+			writeSubToRes(res, sub)
+		else:
+			base = BaseChosenValue(operation, face, nChosen)
+			coef = weightedBinaryCoeficients(leftToChose, nChosen, probability)
+			writeOutcomeToRes(res, operation, base, sub, coef)
 	return res

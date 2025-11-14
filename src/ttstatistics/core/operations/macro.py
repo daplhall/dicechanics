@@ -1,6 +1,10 @@
 from ttstatistics.core import protocols
 from ttstatistics.core.genericmapping import GenericMapping
-from ttstatistics.core.operations.combinatorics import combinations
+from ttstatistics.core.operations.combinatorics import (
+	combinations,
+	selective,
+	getOutcomes,
+)
 from ttstatistics.utils.reference import Reference
 
 
@@ -14,5 +18,11 @@ def normalize(statisticalDict):
 class Operators:
 	@staticmethod
 	def performOnBag(bag: protocols.Bag, operation):
-		res = combinations(list(bag.prepare()), operation, 0, Reference(None))
+		if bagSlice := bag.prepareSlice():
+			outcomes, meta = getOutcomes(bag)
+			res = selective(outcomes, operation, sum(meta), meta, bagSlice)
+		else:
+			res = combinations(
+				list(bag.prepare()), operation, 0, Reference(None)
+			)
 		return GenericMapping(normalize(res))
