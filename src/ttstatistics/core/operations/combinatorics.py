@@ -73,11 +73,16 @@ def getOutcomes(bag):
 	), amountTuple
 
 
-def BaseChosenValue(operation, face, nChosen):
+def BaseChosenValue(operation, face, nChosen, sliceMask):
 	assert nChosen > 0
-	base = face  # shouldnt be done if nchosen is zero
-	for i in range(nChosen - 1):
-		base = operation(base, face)
+	base = None  # shouldnt be done if nchosen is zero
+	for i, truth in zip(range(nChosen), sliceMask):
+		if not truth:
+			continue
+		if base is None:
+			base = face
+		else:
+			base = operation(base, face)
 	return base
 
 
@@ -87,11 +92,11 @@ def writeSubToRes(res, sub):
 
 
 def writeOutcomeToRes(res, operation, base, sub, combinations):
-	if sub == {None: 1}:
-		res[base] += combinations
-		return
 	for face, amount in sub.items():
-		res[operation(face, base)] += amount * combinations
+		if face is None:
+			res[base] += amount * combinations
+		else:
+			res[operation(face, base)] += amount * combinations
 
 
 def anyLeft(outcomes):
@@ -113,6 +118,7 @@ def weightedBinaryCoeficients(leftToChose, nChosen, probability):
 	return BinaryCoeficients * probability**nChosen
 
 
+# if left to choose is higher than n chosen then we can just return None if we are at the bottom
 @cache
 def selective(outcomes, operation, leftToChose, meta, slicing):
 	if anyLeft(outcomes):
@@ -121,15 +127,21 @@ def selective(outcomes, operation, leftToChose, meta, slicing):
 	(face, idx, probability), amount = outcomes[0]
 	for nChosen in range(0, min(amount, leftToChose, meta[idx]) + 1):
 		submeta = createSubMeta(meta, idx, nChosen)
+		sliceMask = [slicing.next() for i in range(nChosen)]
 		sub = selective(
 			outcomes[1:], operation, leftToChose - nChosen, submeta, slicing
 		)
 		if sub is None:
+			for i in range(nChosen):
+				slicing.previous()
 			continue
 		if nChosen == 0:
 			writeSubToRes(res, sub)
 		else:
-			base = BaseChosenValue(operation, face, nChosen)
+			base = BaseChosenValue(operation, face, nChosen, sliceMask)
+			print(base)
 			coef = weightedBinaryCoeficients(leftToChose, nChosen, probability)
 			writeOutcomeToRes(res, operation, base, sub, coef)
-	return res
+			for i in range(nChosen):
+				slicing.previous()
+	return res if res else None

@@ -54,7 +54,13 @@ def test_SelectiveOnBagWithFourItem(bagWithTwoItems):
 	assert toTest.items() == reference.items()
 
 
+def test_SelectiveOnBagWithFourItemMax(bagWithTwoItems):
+	reference = performOnBag(bagWithTwoItems, max)
+	toTest = performOnBag(bagWithTwoItems[:], max)
+	assert toTest.items() == reference.items()
+
+
 def test_SelectiveFourItemsActuallySliced(bagWithTwoItems):
 	reference = performOnBag(bagWithTwoItems, max)
-	toTest = performOnBag(bagWithTwoItems[1:], add)
+	toTest = performOnBag(bagWithTwoItems[:1], add)
 	assert toTest.items() == reference.items()
