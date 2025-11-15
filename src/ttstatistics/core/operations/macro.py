@@ -21,7 +21,7 @@ class Operators:
 		if bagSlice := bag.prepareSlice():
 			outcomes, meta = getOutcomes(bag)
 			comb = Selective()
-			slice_ = tuple(bagSlice.next() for _ in range(sum(meta)))
+			slice_ = tuple(bagSlice.next() for _ in range(sum(meta)))[::-1]
 			res = comb.calculate(outcomes, operation, sum(meta), meta, slice_)
 		else:
 			comb = RegularCombination()

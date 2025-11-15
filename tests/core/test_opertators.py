@@ -62,13 +62,13 @@ def test_SelectiveOnBagWithFourItemMax(groupWithTwoItems):
 
 def test_SelectiveTwoItemsMaximum(groupWithTwoItems):
 	reference = performOnBag(groupWithTwoItems, max)
-	toTest = performOnBag(groupWithTwoItems[:1], add)
+	toTest = performOnBag(groupWithTwoItems[1:], add)
 	assert toTest.items() == reference.items()
 
 
 def test_SelectiveTwoItemsMinumum(groupWithTwoItems):
 	reference = performOnBag(groupWithTwoItems, min)
-	toTest = performOnBag(groupWithTwoItems[1:], add)
+	toTest = performOnBag(groupWithTwoItems[:1], add)
 	assert toTest.items() == reference.items()
 
 
@@ -79,6 +79,20 @@ def test_SelectiveMixedMapping():
 	reference = performOnBag(group, add)
 	toTest = performOnBag(group[:], add)
 	assert toTest.items() == reference.items()
+
+
+def test_Selective2Lowest():
+	d = GenericMapping({1: 1 / 3, 3: 1 / 3, 5: 1 / 3})
+	group = Group({d: 3})
+	toTest = performOnBag(group[:2], add)
+	assert list(toTest.keys()) == [2, 4, 6, 8, 10]
+	assert list(toTest.values()) == [
+		0.259259259259259,
+		0.333333333333333,
+		0.259259259259259,
+		0.111111111111111,
+		0.037037037037037,
+	]
 
 
 """

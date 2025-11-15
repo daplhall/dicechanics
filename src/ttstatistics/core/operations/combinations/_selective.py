@@ -65,12 +65,14 @@ def writeSubToRes(res, sub):
 
 
 def writeOutcomeToRes(res, operation, baseValue, sub, combinations):
-	for face, amount in sub.items():
-		if face is None:
-			res[baseValue] += amount * combinations
-		elif baseValue is None:
+	if None in sub:
+		assert len(sub) == 1
+		res[baseValue] += sub[None] * combinations
+	elif baseValue is None:
+		for face, amount in sub.items():
 			res[face] += amount * combinations
-		else:
+	else:
+		for face, amount in sub.items():
 			res[operation(face, baseValue)] += amount * combinations
 
 

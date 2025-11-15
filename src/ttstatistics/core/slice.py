@@ -1,7 +1,5 @@
 __all__ = ["Slice"]
 
-from line_profiler import profile
-
 
 class Slice:
 	def __init__(self):
@@ -15,7 +13,6 @@ class Slice:
 	def __hash__(self):
 		return hash((self.data, self.cursor))
 
-	@profile
 	def _shiftSliceBased(self):
 		start = self.data.start
 		if start is None:
