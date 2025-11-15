@@ -1,3 +1,5 @@
+__all__ = ["Collection"]
+
 from typing import Protocol, runtime_checkable
 
 from ttstatistics.core import protocols

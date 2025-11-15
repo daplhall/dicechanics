@@ -1,3 +1,5 @@
+__all__ = ["Mapping"]
+
 from typing import Protocol, runtime_checkable
 
 

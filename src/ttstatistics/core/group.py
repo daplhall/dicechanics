@@ -1,3 +1,5 @@
+__all__ = ["Group"]
+
 from collections import defaultdict
 
 from ttstatistics.core import protocols
@@ -39,8 +41,8 @@ class Group(protocols.Group):
 	def __getitem__(self, item):
 		if isinstance(item, slice):
 			newSlice = Slice.fromSlice(item)
-		elif isinstance(item, tuple):
-			newSlice = Slice.fromList(list(item))
+		elif isinstance(item, (tuple, list)):
+			newSlice = Slice.fromList(tuple(item))
 		else:
 			raise TypeError("Wrong Type for getitem")
 

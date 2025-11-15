@@ -1,3 +1,5 @@
+__all__ = ["Group"]
+
 from typing import Protocol, Self, runtime_checkable
 
 from ttstatistics.core.protocols.mapping import Mapping

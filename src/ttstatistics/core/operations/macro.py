@@ -1,7 +1,7 @@
 from ttstatistics.core import protocols
 from ttstatistics.core.genericmapping import GenericMapping
-from ttstatistics.core.operations.combinations.regular import RegularCombination
-from ttstatistics.core.operations.combinations.selective import (
+from ttstatistics.core.operations.combinations import (
+	RegularCombination,
 	Selective,
 	getOutcomes,
 )
@@ -21,7 +21,8 @@ class Operators:
 		if bagSlice := bag.prepareSlice():
 			outcomes, meta = getOutcomes(bag)
 			comb = Selective()
-			res = comb.calculate(outcomes, operation, sum(meta), meta, bagSlice)
+			slice_ = tuple(bagSlice.next() for _ in range(sum(meta)))
+			res = comb.calculate(outcomes, operation, sum(meta), meta, slice_)
 		else:
 			comb = RegularCombination()
 			res = comb.calculate(

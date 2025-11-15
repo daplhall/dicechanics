@@ -1,3 +1,4 @@
+__all__ = ["RegularCombination"]
 from collections import defaultdict
 from collections.abc import Callable
 

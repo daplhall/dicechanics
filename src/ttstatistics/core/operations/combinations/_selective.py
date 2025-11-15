@@ -1,3 +1,5 @@
+__all__ = ["Selective", "getOutcomes"]
+
 from collections import defaultdict
 from functools import cache
 from math import comb
@@ -14,6 +16,34 @@ def getOutcomes(bag):
 	return tuple(
 		sorted(res.items(), key=lambda x: x[0], reverse=True)
 	), amountTuple
+
+
+class Selective:
+	# if left to choose is higher than n chosen then we can just return None if we are at the bottom
+	@cache
+	def calculate(self, outcomes, operation, leftToChose, meta, slicing):
+		if anyOutcomesLeft(outcomes):
+			return bottomOutcome(leftToChose)
+		res = defaultdict(int)
+		(outcome, idx, weight), amount = outcomes[0]
+		for nChosen in range(0, min(amount, leftToChose, meta[idx]) + 1):
+			# loop unroling?
+			subMeta = createSubMeta(meta, idx, nChosen)
+			subAmount = leftToChose - nChosen
+			sub = self.calculate(
+				outcomes[1:], operation, subAmount, subMeta, slicing[nChosen:]
+			)
+			if sub is None:
+				pass
+			elif nChosen == 0:
+				writeSubToRes(res, sub)
+			else:
+				baseValue = combinedOutcome(
+					operation, outcome, nChosen, slicing[:nChosen]
+				)
+				coef = weightedBinaryCoeficients(leftToChose, nChosen, weight)
+				writeOutcomeToRes(res, operation, baseValue, sub, coef)
+		return res
 
 
 def combinedOutcome(operation, face, nChosen, sliceMask):
@@ -44,7 +74,7 @@ def writeOutcomeToRes(res, operation, baseValue, sub, combinations):
 			res[operation(face, baseValue)] += amount * combinations
 
 
-def anyLeft(outcomes):
+def anyOutcomesLeft(outcomes):
 	return not outcomes
 
 
@@ -63,39 +93,10 @@ def weightedBinaryCoeficients(leftToChose, nChosen, weight):
 	return BinaryCoeficients * weight**nChosen
 
 
-def windSliceBack(slicing, nTimes):
+def crankSliceBack(slicing, nTimes):
 	for i in range(nTimes):
 		slicing.previous()
 
 
-def windSliceForward(slicing, nTimes) -> list[bool]:
+def crankSliceForward(slicing, nTimes) -> list[bool]:
 	return [slicing.next() for i in range(nTimes)]
-
-
-class Selective:
-	# if left to choose is higher than n chosen then we can just return None if we are at the bottom
-	@cache
-	def calculate(self, outcomes, operation, leftToChose, meta, slicing):
-		if anyLeft(outcomes):
-			return bottomOutcome(leftToChose)
-		res = defaultdict(int)
-		(outcome, idx, weight), amount = outcomes[0]
-		for nChosen in range(0, min(amount, leftToChose, meta[idx]) + 1):
-			sliceMask = windSliceForward(slicing, nChosen)
-			subMeta = createSubMeta(meta, idx, nChosen)
-			subAmount = leftToChose - nChosen
-			sub = self.calculate(
-				outcomes[1:], operation, subAmount, subMeta, slicing
-			)
-			if sub is None:
-				pass
-			elif nChosen == 0:
-				writeSubToRes(res, sub)
-			else:
-				baseValue = combinedOutcome(
-					operation, outcome, nChosen, sliceMask
-				)
-				coef = weightedBinaryCoeficients(leftToChose, nChosen, weight)
-				writeOutcomeToRes(res, operation, baseValue, sub, coef)
-			windSliceBack(slicing, nChosen)
-		return res if res else None
