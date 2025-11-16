@@ -3,5 +3,4 @@ from ttstatistics.core.operations.combinations._regular import (  # noqa: F401
 )
 from ttstatistics.core.operations.combinations._selective import (  # noqa: F401
 	Selective,
-	getOutcomes,
 )

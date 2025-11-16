@@ -18,11 +18,24 @@ def getOutcomes(bag):
 	), amountTuple
 
 
+def normalize(statisticalDict):
+	norm = sum(statisticalDict.values())
+	return {key: value / norm for key, value in statisticalDict.items()}
+
+
 class Selective:
-	# if left to choose is higher than n chosen then we can just return None if we are at the bottom
+	def calculate(self, group, operation):
+		bagSlice = group.prepareSlice()
+		outcomes, meta = getOutcomes(group)
+		comb = Selective()
+		slice_ = tuple(bagSlice.next() for _ in range(sum(meta)))[::-1]
+		return normalize(
+			comb._evaluate(outcomes, operation, sum(meta), meta, slice_)
+		)
+
 	@cache
-	def calculate(self, outcomes, operation, leftToChose, meta, slicing):
-		if anyOutcomesLeft(outcomes):
+	def _evaluate(self, outcomes, operation, leftToChose, meta, slicing):
+		if anyOutcomesLeft(outcomes) or leftToChose == 0:
 			return bottomOutcome(leftToChose)
 		res = defaultdict(int)
 		(outcome, idx, weight), amount = outcomes[0]
@@ -30,7 +43,7 @@ class Selective:
 			# loop unroling?
 			subMeta = createSubMeta(meta, idx, nChosen)
 			subAmount = leftToChose - nChosen
-			sub = self.calculate(
+			sub = self._evaluate(
 				outcomes[1:], operation, subAmount, subMeta, slicing[nChosen:]
 			)
 			if sub is None:

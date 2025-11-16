@@ -1,24 +1,33 @@
 __all__ = ["Slice"]
 
+from collections.abc import Sized
+
 
 class Slice:
 	def __init__(self):
-		self.data = []
+		self.sliceData: slice = None
+		self.listData = []
 		self.cursor = -1
-		self.shiftFunction = None
+		self.shiftFunction = lambda: None
 
 	def __bool__(self):
-		return bool(self.data)
+		if self.sliceData:
+			return bool(self.sliceData)
+		else:
+			return bool(self.listData)
 
 	def __hash__(self):
-		return hash((self.data, self.cursor))
+		if self.sliceData:
+			return hash((self.sliceData, self.cursor))
+		else:
+			return hash((tuple(self.listData), self.cursor))
 
-	def _shiftSliceBased(self):
-		start = self.data.start
+	def _shiftSliceBased(self) -> bool:
+		start = self.sliceData.start
 		if start is None:
 			start = 0
-		stop = self.data.stop
-		step = 1 if self.data.step is None else self.data.step
+		stop: int | None = self.sliceData.stop
+		step = 1 if self.sliceData.step is None else self.sliceData.step
 		if self.cursor < start:
 			return False
 		elif stop is not None and self.cursor >= stop:
@@ -28,27 +37,31 @@ class Slice:
 		else:
 			return True
 
-	def _shiftListBased(self):
-		return self.data[self.cursor] if self.cursor < len(self.data) else False
+	def _shiftListBased(self) -> bool:
+		return (
+			self.listData[self.cursor]
+			if self.cursor < len(self.listData)
+			else False
+		)
 
 	@classmethod
-	def fromSlice(cls, slicing):
+	def fromSlice(cls, slicing: slice):
 		self = cls()
-		self.data = slicing
+		self.sliceData = slicing
 		self.shiftFunction = self._shiftSliceBased
 		return self
 
 	@classmethod
 	def fromList(cls, listing):
 		self = cls()
-		self.data = listing
+		self.listData = listing
 		self.shiftFunction = self._shiftListBased
 		return self
 
-	def next(self):
+	def next(self) -> bool:
 		self.cursor += 1
 		return self.shiftFunction()
 
-	def previous(self):
+	def previous(self) -> bool:
 		self.cursor -= 1
 		return self.shiftFunction()

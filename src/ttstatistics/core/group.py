@@ -26,18 +26,6 @@ class Group(protocols.Group):
 	def __bool__(self):
 		return bool(self.internalMappings)
 
-	def __add__(self, rhs: protocols.Mapping | protocols.Group):
-		newMappings = defaultdict(int, self.items())
-		if isinstance(rhs, protocols.Group):
-			for key, val in rhs.items():
-				newMappings[key] += val
-		else:
-			newMappings[rhs] += 1
-		return type(self)(newMappings)
-
-	def __len__(self):
-		return len(self.internalMappings)
-
 	def __getitem__(self, item):
 		if isinstance(item, slice):
 			newSlice = Slice.fromSlice(item)

@@ -93,5 +93,6 @@ def test_stringStandardDeviationIsCorrect(simpleStringStatistical):
 
 
 def test_scalarStatisticalNormalize(referenceStatisticalDict):
-	q = ScalarStatistical({1: 1, 2: 2, 3: 1}).normalize()
+	data: dict[int, int] = {1: 1, 2: 2, 3: 1}
+	q = ScalarStatistical(data).normalize()
 	assert q.items() == referenceStatisticalDict.items()

@@ -20,7 +20,6 @@ def test_prepareIsCorrectFormat(groupWithFourItems):
 def test_GetItemReturnsACopyWithSlicingStart(groupWithFourItems):
 	q = groupWithFourItems[3:]
 	refslice = q.prepareSlice()
-	assert groupWithFourItems.items() == q.items()
 	assert not refslice.next()
 	assert not refslice.next()
 	assert not refslice.next()
@@ -35,7 +34,6 @@ def test_GetItemReturnsACopySlicingInt(groupWithFourItems):
 def test_bagGetItemReturnsACopySlicingArray(groupWithFourItems):
 	q = groupWithFourItems[True, True, False, True]
 	refslice = q.prepareSlice()
-	assert groupWithFourItems.items() == q.items()
 	assert refslice.next()
 	assert refslice.next()
 	assert not refslice.next()

@@ -1,11 +1,8 @@
 __all__ = ["RegularCombination"]
 from collections import defaultdict
-from collections.abc import Callable
 
-from ttstatistics.core.protocols.base import Unit
+from ttstatistics.core import protocols
 from ttstatistics.utils.reference import Reference
-
-type BagItems = list[tuple[Unit, int]]
 
 
 def updateWithOperations(current, subproblem, operation, res):
@@ -19,7 +16,7 @@ def updateNoSubproblem(current, res):
 	res[key] = value
 
 
-def countDownAmount(items: BagItems, layer: int):
+def countDownAmount(items: protocols.GroupItems, layer: int):
 	mapping, count = items[layer]
 	items[layer] = mapping, count - 1
 	return mapping, count
@@ -29,15 +26,22 @@ def whoIsNext(layer: int, count: int):
 	return layer + 1 if count <= 1 else layer
 
 
-def isEndOfBranch(items: BagItems, layer: int):
+def isEndOfBranch(items: protocols.GroupItems, layer: int):
 	return layer >= len(items)
 
 
 class RegularCombination:
 	def calculate(
+		self, group: protocols.Group, operation: protocols.InputFunction
+	):
+		return self._evaluate(
+			list(group.prepare()), operation, 0, Reference(None)
+		)
+
+	def _evaluate(
 		self,
-		items: BagItems,
-		operation: Callable[[Unit, Unit], Unit],
+		items: protocols.GroupItems,
+		operation: protocols.InputFunction,
 		whom: int,
 		mem: Reference,
 	):
@@ -48,7 +52,7 @@ class RegularCombination:
 		res = defaultdict(int)
 		mapping, count = countDownAmount(items, whom)
 		for curr in mapping.items():
-			if sub := self.calculate(
+			if sub := self._evaluate(
 				items,
 				operation,
 				whoIsNext(whom, count),
