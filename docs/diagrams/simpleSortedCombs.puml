@@ -1,0 +1,14 @@
+
+@startuml SimpleDiceCombsSorted
+
+start
+:outcomes, amount; <<input>>
+repeat
+    repeat 
+    :Recurively\nsolve subproblem; <<task>>
+    :Combine subproblem\nwith outcome; <<task>>
+    repeat while (i < outcome count) is (true) not (false)
+repeat while(Outcomes is empty) is (no) not (yes)
+:Combinations; <<output>>
+end
+@enduml

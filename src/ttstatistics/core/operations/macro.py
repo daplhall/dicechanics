@@ -1,18 +1,20 @@
 from ttstatistics.core import protocols
-from ttstatistics.core.genericmapping import GenericMapping
-from ttstatistics.core.operations.combinatorics import combinations
-from ttstatistics.utils.reference import Reference
-
-
-def normalize(statisticalDict):
-	norm = sum(statisticalDict.values())
-	return {
-		key: round(value / norm, 15) for key, value in statisticalDict.items()
-	}
+from ttstatistics.core.operations.combinations import (
+	RegularCombination,
+	Selective,
+)
 
 
 class Operators:
 	@staticmethod
-	def performOnBag(bag: protocols.Bag, operation):
-		res = combinations(list(bag.prepare()), operation, 0, Reference(None))
-		return GenericMapping(normalize(res))
+	def basePerformOnGroup(
+		bag: protocols.Group, operation, combineor
+	) -> protocols.Mapping:
+		combineMachine = combineor()
+		return combineMachine.calculate(bag, operation)
+
+	def selectiveOnGroup(bag: protocols.Group, operation) -> protocols.Mapping:
+		return Operators.basePerformOnGroup(bag, operation, Selective)
+
+	def regularOnGroup(bag: protocols.Group, operation) -> protocols.Mapping:
+		return Operators.basePerformOnGroup(bag, operation, RegularCombination)

@@ -1,0 +1,35 @@
+@startuml
+skinparam linestyle ortho
+rectangle "Start" as start
+rectangle "2A" as a2
+rectangle "2B" as b2
+rectangle "2C" as c2
+rectangle "1A" as a1
+rectangle "1B" as b1
+rectangle "1C" as c1
+
+start -> a2
+start -> b2
+start -> c2
+start -> a1
+'start --> b1
+'start --> c1
+
+a2 -> b2
+a2 -> b1
+a2 -> c2
+'a2 --> c1
+
+b2 -> c2
+b2 -> a1: d0
+b2 -> c1: d1
+
+c2 -> a1 :d0,d1b
+c2 -> b1 :d0,d1a
+
+a1->b1
+a1->c1:d1b
+
+b1->c1:d1a
+
+@enduml

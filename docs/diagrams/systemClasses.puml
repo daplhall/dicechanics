@@ -1,23 +1,21 @@
 @startuml System
 top to bottom direction
 package "core"{
-    class Pool{
+    class DefaultCollection{
     }
-    interface "Pool" as pool {
-        container of bags, used for combinatorial calulations\nrelated to Bag-Bag interaction
+    interface "Collection" as collection {
+        container of bags, used for combinatorial calulations\nrelated to Group-Group interaction
         bags are created seperately
-        + prepare() -> Iterable[(Bag, count)]
+        + prepare() -> Iterable[(Group, count)]
     }
-    class Bag{
+    class DefaultGroup{
     }
-    interface "Bag" as bag{
+    interface "Group" as group{
         container of mappings, used for\nspecific combinatorial calulations
         mappings are created seperatly
-        + prepare() -> Iterable[(Mapping, int)]
-        + Slice(Sequence[Bool] | python slice) -> Bag
+        + prepare() -> Iterable[(Mapping, bool)]
         + prepareSlice() -> Slice
-        + __getitem__(python slice)
-
+        + __getitem__(Python.slice):
     }
     interface "CombinationsMapping" as mapping{
         Basic backend type for combinatorial calculations,\nif the methods are defined then its good for use.
@@ -32,14 +30,16 @@ package "core"{
         +next()
         +prev()
     }
+    interface GroupCombinations {
+        calculate(Group, operation) 
+    }
+    class RegularCombinations{
+        
+    }
+    class SelectiveCombinations{
+        
+    }
 }
-
-note left of slice
-   Note takes in a sequence ofbools which indicate from left to right
-   the highest to lowest 
-end note
-
-
 
 package "dicechancis" {
     class Die{
@@ -48,6 +48,8 @@ package "dicechancis" {
     class "String Statistical" as strstat
     class "Cumstom Statistical" as customstat
     class "Base Statistical" as basestat
+    class PoolImpl
+    class BagImpl
     interface Statistical{
         + items()
         + keys()
@@ -66,24 +68,27 @@ package "dicechancis" {
         + std
         + varians
     }
+    interface Pool
+    interface Bag
+    interface string{
+        Everything that subtypes\na python.string
+    }
 }
 package "Primitives"{
     class SortedString
 }
 
-package "Deckchanics"{
-    class Deck
-}
-
 'core
-Pool .left.|> pool
-pool --> bag
-Bag .left.|> bag
-bag --> mapping
-bag --> slice: for selective
-sliceClass .left.|> slice
+DefaultCollection ..|> collection
+collection --> group
+DefaultGroup ..|> group
+group --> mapping
+group --> slice: for selective
+sliceClass ..|> slice
+GroupCombinations --> group
+RegularCombinations ..|> GroupCombinations
+SelectiveCombinations ..|> GroupCombinations
 'deck
-Deck .up.|> mapping
 'diechanics
 Die ..|> die
 Die --> Statistical 
@@ -94,6 +99,12 @@ customstat .up.|> Statistical
 numstat -down-|> basestat: special\ncase of 
 strstat -down-|> basestat: special\ncase of
 customstat -down-|> basestat :special\ncase of
-strstat ..> SortedString
-
+strstat --> string
+SortedString ..|> string
+Pool --|> collection
+PoolImpl ..|> Pool
+PoolImpl --|> DefaultCollection
+Bag --|> group
+BagImpl ..|> Bag
+BagImpl --|> DefaultGroup
 @enduml

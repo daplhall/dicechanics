@@ -1,3 +1,5 @@
+__all__ = ["GenericMapping"]
+
 from ttstatistics.core import protocols
 
 

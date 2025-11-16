@@ -1,20 +1,33 @@
+__all__ = ["Slice"]
+
+from collections.abc import Sized
+
+
 class Slice:
 	def __init__(self):
-		self.data = []
+		self.sliceData: slice = None
+		self.listData = []
 		self.cursor = -1
-		self.nextFrom = None
+		self.shiftFunction = lambda: None
 
 	def __bool__(self):
-		return bool(self.data)
+		if self.sliceData:
+			return bool(self.sliceData)
+		else:
+			return bool(self.listData)
 
-	def setData(self, data):
-		self.data = data
+	def __hash__(self):
+		if self.sliceData:
+			return hash((self.sliceData, self.cursor))
+		else:
+			return hash((tuple(self.listData), self.cursor))
 
-	def nextFromSlice(self):
-		self.cursor += 1
-		start = 0 if self.data.start is None else self.data.start
-		stop = self.data.stop
-		step = 1 if self.data.step is None else self.data.step
+	def _shiftSliceBased(self) -> bool:
+		start = self.sliceData.start
+		if start is None:
+			start = 0
+		stop: int | None = self.sliceData.stop
+		step = 1 if self.sliceData.step is None else self.sliceData.step
 		if self.cursor < start:
 			return False
 		elif stop is not None and self.cursor >= stop:
@@ -24,24 +37,31 @@ class Slice:
 		else:
 			return True
 
-	def nextFromList(self):
-		self.cursor += 1
-		out = self.data[self.cursor] if self.cursor < len(self.data) else False
-		return out
+	def _shiftListBased(self) -> bool:
+		return (
+			self.listData[self.cursor]
+			if self.cursor < len(self.listData)
+			else False
+		)
 
 	@classmethod
-	def fromSlice(cls, slicing):
+	def fromSlice(cls, slicing: slice):
 		self = cls()
-		self.setData(slicing)
-		self.nextFrom = self.nextFromSlice
+		self.sliceData = slicing
+		self.shiftFunction = self._shiftSliceBased
 		return self
 
 	@classmethod
 	def fromList(cls, listing):
 		self = cls()
-		self.setData(listing)
-		self.nextFrom = self.nextFromList
+		self.listData = listing
+		self.shiftFunction = self._shiftListBased
 		return self
 
-	def next(self):
-		return self.nextFrom()
+	def next(self) -> bool:
+		self.cursor += 1
+		return self.shiftFunction()
+
+	def previous(self) -> bool:
+		self.cursor -= 1
+		return self.shiftFunction()
