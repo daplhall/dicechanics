@@ -175,3 +175,11 @@ def test_MapRerollMutlipleTimes(d4):
 	mapReroll = mapReroll.map(f)
 	ref = {1: 21 / 64, 2: 21 / 64, 3: 21 / 64, 4: 1 / 64}
 	assert mapReroll.items() == ref.items()
+
+
+def test_StringReprentation(d4):
+	assert str(d4) == (
+		"Die with mu - 2.50, sigma - 2.24\n--------------------------------\n"
+		"1|#################### 25.00%\n2|#################### 25.00%\n"
+		"3|#################### 25.00%\n4|#################### 25.00%\n"
+	)

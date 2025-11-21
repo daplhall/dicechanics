@@ -52,3 +52,11 @@ def test_InterfaceParserMultiple():
 	d = ds.d("1:3,4:2,5..8")
 	ref = {1: 3 / 9, 4: 2 / 9, 5: 1 / 9, 6: 1 / 9, 7: 1 / 9, 8: 1 / 9}
 	assert d.items() == ref.items()
+
+
+"""
+def test_InterfaceStrInParserSingle():
+	d = ds.d("a")
+	ref = {"a": 1}
+	assert d.items() == ref.items()
+"""

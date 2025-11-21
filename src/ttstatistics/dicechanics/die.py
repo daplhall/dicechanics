@@ -10,10 +10,10 @@ from ttstatistics.core.operations.micro import add, div, floorDiv, mul, sub
 from ttstatistics.core.protocols.base import InputFunction, Unit
 from ttstatistics.core.protocols.mapping import Mapping
 from ttstatistics.dicechanics import protocols
-from ttstatistics.dicechanics._plot import StringPlotter
 from ttstatistics.dicechanics.protocols import Statistical
 from ttstatistics.dicechanics.statisticals.scalar import ScalarStatistical
 from ttstatistics.dicechanics.symbolics import RerollSymbol
+from ttstatistics.utils._plot import StringPlot
 
 type MapFunction = Callable[[Unit], Unit]
 
@@ -115,3 +115,12 @@ class Die(GenericMapping, protocols.Die):
 	def reroll(self, *faceToReroll, depth=1):
 		rerolledMapping = self._rerollInternal(self, *faceToReroll, depth=depth)
 		return type(self)(type(self.internals)(rerolledMapping))
+
+	def __str__(self):
+		res = f"Die with mu - {self.mean:.2f}, sigma - {self.std:.2f}\n"
+		res += "-" * (len(res) - 1) + "\n"
+		return res + StringPlot.bars(
+			self.keys(),
+			self.values(),
+			topText=[f"{i * 100:.2f}%" for i in self.values()],
+		)

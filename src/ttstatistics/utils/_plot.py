@@ -1,9 +1,10 @@
-class StringPlotter:
+class StringPlot:
 	@staticmethod
 	def plot(x, y, lineHeight, style, topText):
 		assert len(x) == len(y)
 		if topText is None:
 			topText = [""] * len(x)
+		assert len(topText) == len(x)
 		res = ""
 		pad = max(len(str(i)) for i in x)
 		mx = max(y)
@@ -13,7 +14,7 @@ class StringPlotter:
 		return res
 
 	@staticmethod
-	def bars(x, y, topText=""):
-		return StringPlotter.plot(
-			x, y, lineHeight=20, style="#", topText=topText
-		)
+	def bars(x, y, topText=None):
+		if topText is None:
+			topText = y
+		return StringPlot.plot(x, y, lineHeight=20, style="#", topText=topText)
