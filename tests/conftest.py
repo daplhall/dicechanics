@@ -8,6 +8,7 @@ from fixtures.dicts import (  # noqa: F401
 	shiftedReferenceStatisticalDict,
 )
 from fixtures.die import (  # noqa: F401
+	d4,
 	emptyDie,
 	simpleScalarDie,
 	simpleStringDie,

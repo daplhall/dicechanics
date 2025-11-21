@@ -4,7 +4,7 @@ from ttstatistics.core import protocols
 
 
 class GenericMapping(protocols.Mapping):
-	def __init__(self, data: dict = {}):
+	def __init__(self, data: protocols.Mapping = {}):
 		self.internals = data
 
 	def __bool__(self):

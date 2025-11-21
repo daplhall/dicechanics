@@ -1,3 +1,8 @@
+from ttstatistics.dicechanics.die import Die
+from ttstatistics.dicechanics.statisticals.scalar import ScalarStatistical
+from ttstatistics.dicechanics.symbolics import reroll
+
+
 def test_EmptyInit(emptyDie):
 	assert not emptyDie
 
@@ -26,93 +31,147 @@ def test_MappingStdString(simpleStringDie):
 	assert simpleStringDie.std is None
 
 
-"""
-def test_TwoDieMakeAPool(emptyDie):
-	pool = emptyDie + emptyDie
-	assert isinstance(pool, Pool)
+def test_DieAddScalarInt(simpleScalarDie):
+	d = simpleScalarDie + 1
+	ref = {2: 1 / 4, 3: 2 / 4, 4: 1 / 4}
+	assert d.items() == ref.items()
 
 
-def helper_CompareTwoMappings(toTestMapping, referenceMapping):
-	for (key, value), (ref, refvalue) in zip(
-		toTestMapping.items(), referenceMapping.items()
-	):
-		assert key == ref
-		assert value == refvalue
+def test_DieAddScalarDie(simpleScalarDie):
+	d = simpleScalarDie + simpleScalarDie
+	ref = {2: 1 / 16, 3: 4 / 16, 4: 6 / 16, 5: 4 / 16, 6: 1 / 16}
+	assert d.items() == ref.items()
 
 
-def test_ScalarDieAddingScalar(
-	simpleScalarDie, shiftedReferenceStatisticalDict
-):
-	helper_CompareTwoMappings(
-		simpleScalarDie + 1, shiftedReferenceStatisticalDict
-	)
+def test_DieSubScalarInt(simpleScalarDie):
+	d = simpleScalarDie - 1
+	ref = {0: 1 / 4, 1: 2 / 4, 2: 1 / 4}
+	assert d.items() == ref.items()
 
 
-def test_ScalarDieMultScalar(simpleScalarDie, referenceStatisticalDict):
-	helper_CompareTwoMappings(simpleScalarDie * 1, referenceStatisticalDict)
+def test_DieSubScalarDie(simpleScalarDie):
+	d = simpleScalarDie - simpleScalarDie
+	ref = {-2: 1 / 16, -1: 4 / 16, 0: 6 / 16, 1: 4 / 16, 2: 1 / 16}
+	q = dict(sorted(d.items(), key=lambda x: x[0]))
+	assert ref.items() == q.items()
 
 
-def test_ScalarDieItems(simpleScalarDie, referenceStatisticalDict):
-	helper_CompareTwoMappings(simpleScalarDie, referenceStatisticalDict)
+def test_DieMulScalarInt(simpleScalarDie):
+	d = simpleScalarDie * 1
+	ref = {1: 1 / 4, 2: 2 / 4, 3: 1 / 4}
+	assert d.items() == ref.items()
 
 
-def test_StringDieAddingString(simpleStringDie):
-	helper_CompareTwoMappings(
-		simpleStringDie + "a", {"aa": 1 / 4, "ab": 2 / 4, "ac": 1 / 4}
-	)
+def test_DieMulScalarDie(simpleScalarDie):
+	d = simpleScalarDie * simpleScalarDie
+	ref = {1: 1 / 16, 2: 4 / 16, 3: 2 / 16, 4: 4 / 16, 6: 4 / 16, 9: 1 / 16}
+	q = dict(sorted(d.items(), key=lambda x: x[0]))
+	assert ref.items() == q.items()
 
 
-def test_StringDieMultNum(simpleStringDie):
-	helper_CompareTwoMappings(
-		simpleStringDie * 2, {"aa": 1 / 4, "bb": 2 / 4, "cc": 1 / 4}
-	)
+def test_DieDivScalarInt(simpleScalarDie):
+	d = simpleScalarDie // 2
+	ref = {0: 1 / 4, 1: 3 / 4}
+	assert d.items() == ref.items()
 
 
-def test_DieMappingCorrectly(simpleScalarDie, simpleScalarStatistical):
-	def mapping(x):
-		return x // 2
-
-	reference = simpleScalarStatistical.map(mapping)
-	die = simpleScalarDie.map(mapping)
-
-	assert die.items() == reference.items()
+def test_DieDivScalarDie(simpleScalarDie):
+	d = simpleScalarDie // simpleScalarDie
+	ref = {0: 5 / 16, 1: 8 / 16, 2: 2 / 16, 3: 1 / 16}
+	q = dict(sorted(d.items(), key=lambda x: x[0]))
+	assert ref.items() == q.items()
 
 
-def test_StringDieSubFailure(simpleStringDie):
-	with pytest.raises(
-		TypeError,
-		match=r"unsupported operand type\(s\) for -: 'SortedString' and 'str'",
-	):
-		simpleStringDie - "a"
+def test_DieTrueDivScalarInt(simpleScalarDie):
+	d = simpleScalarDie / 2
+	ref = {0.5: 1 / 4, 1: 2 / 4, 1.5: 1 / 4}
+	assert d.items() == ref.items()
 
 
-def test_ScalarDieSubtractingScalar(simpleScalarDie, downShiftedReferenceDict):
-	helper_CompareTwoMappings(simpleScalarDie - 1, downShiftedReferenceDict)
+def test_DieTrueDivScalarDie(simpleScalarDie):
+	d = simpleScalarDie / simpleScalarDie
+	ref = {
+		1 / 3: 1 / 16,
+		0.5: 2 / 16,
+		2 / 3: 2 / 16,
+		1: 6 / 16,
+		1.5: 2 / 16,
+		2.0: 2 / 16,
+		3.0: 1 / 16,
+	}
+	q = dict(sorted(d.items(), key=lambda x: x[0]))
+	assert ref.items() == q.items()
 
 
-def test_StringDieDivideFailure(simpleStringDie):
-	with pytest.raises(
-		TypeError,
-		match=r"unsupported operand type\(s\) for /: 'SortedString' and 'str'",
-	):
-		simpleStringDie / "a"
+def test_DieInDie(d4):
+	g = Die(ScalarStatistical({1: 1 / 4, 2: 1 / 4, 3: 1 / 4, d4: 1 / 4}))
+	ref = {1: 5 / 16, 2: 5 / 16, 3: 5 / 16, 4: 1 / 16}
+	assert ref.items() == g.items()
 
 
-def test_StringDieFloorDivideFailure(simpleStringDie):
-	with pytest.raises(
-		TypeError,
-		match=r"unsupported operand type\(s\) for //: 'SortedString' and 'str'",
-	):
-		simpleStringDie // "a"
+def test_2DieInDie(d4):
+	g = Die(ScalarStatistical({1: 1 / 4, 2: 1 / 4, 3: 1 / 4, 5: 1 / 4}))
+	g = Die(ScalarStatistical({1: 1 / 4, 2: 1 / 4, g: 1 / 4, d4: 1 / 4}))
+	ref = {1: 6 / 16, 2: 6 / 16, 3: 2 / 16, 4: 1 / 16, 5: 1 / 16}
+	assert ref.items() == g.items()
 
 
-def test_ScalarDieDivideScalar(simpleScalarDie, simpleScalarStatistical):
-	reference = simpleScalarStatistical.map(lambda x: x / 2)
-	helper_CompareTwoMappings(simpleScalarDie / 2, reference)
+def test_DieInDieScewed(d4):
+	g = Die(ScalarStatistical({1: 1 / 4, 2: 1 / 4, d4: 2 / 4}))
+	ref = {1: 6 / 16, 2: 6 / 16, 3: 2 / 16, 4: 2 / 16}
+	assert ref.items() == g.items()
 
 
-def test_ScalarDieFloorDiv(simpleScalarDie, simpleScalarStatistical):
-	reference = simpleScalarStatistical.map(lambda x: x // 2)
-	helper_CompareTwoMappings(simpleScalarDie // 2, reference)
+def test_DieCountFaces(d4):
+	count = d4.count(4)
+	ref = {0: 3 / 4, 1: 1 / 4}
+	assert ref.items() == count.items()
 
-"""
+
+def test_DieCountMultipleFaces(d4):
+	count = d4.count(2, 3, 4)
+	ref = {0: 1 / 4, 1: 3 / 4}
+	assert ref.items() == count.items()
+
+
+def test_DieRerollOne(d4):
+	reroll = d4.reroll(4)
+	ref = {1: 5 / 16, 2: 5 / 16, 3: 5 / 16, 4: 1 / 16}
+	assert ref.items() == reroll.items()
+
+
+def test_DieRerollMultiple(d4):
+	reroll = d4.reroll(3, 4)
+	ref = {1: 6 / 16, 2: 6 / 16, 3: 2 / 16, 4: 2 / 16}
+	assert ref.items() == reroll.items()
+
+
+def test_MapRerollIsTheSame(d4):
+	def f(outcome):
+		if outcome == 4:
+			return d4
+		else:
+			return outcome
+
+	mapReroll = d4.map(f)
+	reroll = d4.reroll(4)
+	assert mapReroll.items() == reroll.items()
+
+
+def test_RerollDepth2(d4):
+	rerolled = d4.reroll(4, depth=2)
+	ref = {1: 21 / 64, 2: 21 / 64, 3: 21 / 64, 4: 1 / 64}
+	assert rerolled.items() == ref.items()
+
+
+def test_MapRerollMutlipleTimes(d4):
+	def f(outcome):
+		if outcome == 4:
+			return d4
+		else:
+			return outcome
+
+	mapReroll = d4.map(f)
+	mapReroll = mapReroll.map(f)
+	ref = {1: 21 / 64, 2: 21 / 64, 3: 21 / 64, 4: 1 / 64}
+	assert mapReroll.items() == ref.items()
