@@ -1,0 +1,21 @@
+@startuml parser
+top to bottom direction
+hide empty description
+[*] --> new_group : comma
+[*] --> first_char : Legal char
+first_char --> first_char : legal char
+first_char --> expand : '..'
+first_char --> new_group : comma
+expand --> repeat: ':'
+expand --> store: comma
+expand --> expand : legal char
+first_char --> repeat : ':'
+repeat -->repeat : legal char
+repeat --> store : comma
+store --> new_group
+new_group --> first_char : not eof
+new_group --> clean : eof
+clean --> [*]
+
+
+@enduml

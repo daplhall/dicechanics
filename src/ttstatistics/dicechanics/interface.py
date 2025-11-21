@@ -1,13 +1,15 @@
+from collections import defaultdict
 from collections.abc import Iterable
 from numbers import Number
 
 from ttstatistics.core.protocols.mapping import Mapping
 from ttstatistics.dicechanics.die import Die
+from ttstatistics.dicechanics.parser import ParserMetaData, parser
 from ttstatistics.dicechanics.statisticals import (
 	ScalarStatistical,
 	StringStatistical,
 )
-from ttstatistics.utils.utils import unique
+from ttstatistics.utils.utils import normalize, unique
 
 
 def _convertToCorrectStatistical(obj):
@@ -27,7 +29,14 @@ def d(obj: int | Iterable | Mapping):
 	elif isinstance(obj, Mapping):
 		return _convertToCorrectStatistical(obj)
 	elif isinstance(obj, str):
-		return None
+		res = defaultdict(lambda: 0)
+		for segment in obj.split(","):
+			meta = ParserMetaData(segment)
+			occurences = parser.run(meta)
+			for key, count in occurences.output.items():
+				res[key] += count
+		normalizedOutput = normalize(res)
+		return _convertToCorrectStatistical(normalizedOutput)
 	elif isinstance(obj, Iterable):
 		uniques = unique(obj)
 		norm = sum(uniques.values())

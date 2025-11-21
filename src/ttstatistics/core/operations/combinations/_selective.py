@@ -4,6 +4,8 @@ from collections import defaultdict
 from functools import cache
 from math import comb
 
+from ttstatistics.utils.utils import normalize
+
 
 def getOutcomes(bag):
 	res = defaultdict(int)
@@ -16,11 +18,6 @@ def getOutcomes(bag):
 	return tuple(
 		sorted(res.items(), key=lambda x: x[0], reverse=True)
 	), amountTuple
-
-
-def normalize(statisticalDict):
-	norm = sum(statisticalDict.values())
-	return {key: value / norm for key, value in statisticalDict.items()}
 
 
 class Selective:

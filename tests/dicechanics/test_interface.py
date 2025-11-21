@@ -26,8 +26,9 @@ def test_InterfaceListInput():
 
 
 def test_InterfaceParserSimple(d4):
-	d = ds.d("1,2,3,4")
-	assert d.items() == d4.items()
+	d = ds.d("1")
+	ref = {1: 1}
+	assert d.items() == ref.items()
 
 
 def test_InterfaceParserExpand(d4):
@@ -37,11 +38,17 @@ def test_InterfaceParserExpand(d4):
 
 def test_InterfaceParserRepeat():
 	d = ds.d("1:4")
-	ref = {1: 4}
+	ref = {1: 1}
 	assert d.items() == ref.items()
 
 
-def test_InterfaceParser():
+def test_InterfaceParserExpandRepeat():
+	d = ds.d("1..3:4")
+	ref = {1: 1 / 3, 2: 1 / 3, 3: 1 / 3}
+	assert d.items() == ref.items()
+
+
+def test_InterfaceParserMultiple():
 	d = ds.d("1:3,4:2,5..8")
 	ref = {1: 3 / 9, 4: 2 / 9, 5: 1 / 9, 6: 1 / 9, 7: 1 / 9, 8: 1 / 9}
 	assert d.items() == ref.items()
