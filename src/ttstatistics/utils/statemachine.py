@@ -11,7 +11,7 @@ class StateMachine:
 		self.endStates = []
 
 	def run(self, cargo):
-		assert self.endStates is not None
+		assert self.endStates
 		assert self.start is not None
 
 		state = self.start

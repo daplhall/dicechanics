@@ -16,12 +16,6 @@ class Slice:
 		else:
 			return bool(self.listData)
 
-	def __hash__(self):
-		if self.sliceData:
-			return hash((self.sliceData, self.cursor))
-		else:
-			return hash((tuple(self.listData), self.cursor))
-
 	def _shiftSliceBased(self) -> bool:
 		start = self.sliceData.start
 		if start is None:

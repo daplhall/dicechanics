@@ -6,5 +6,4 @@ from ttstatistics.core.protocols.mapping import Mapping
 
 
 class Combinations(Protocol):
-	def calculate(self, group: Group, operations: InputFunction) -> Mapping:
-		raise NotImplementedError
+	def calculate(self, group: Group, operations: InputFunction) -> Mapping: ...

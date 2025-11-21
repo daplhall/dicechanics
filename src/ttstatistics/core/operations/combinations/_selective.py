@@ -103,12 +103,3 @@ def createSubMeta(meta, idx, nChosen):
 def weightedBinaryCoeficients(leftToChose, nChosen, weight):
 	BinaryCoeficients = comb(leftToChose, nChosen)
 	return BinaryCoeficients * weight**nChosen
-
-
-def crankSliceBack(slicing, nTimes):
-	for i in range(nTimes):
-		slicing.previous()
-
-
-def crankSliceForward(slicing, nTimes) -> list[bool]:
-	return [slicing.next() for i in range(nTimes)]
