@@ -96,9 +96,15 @@ d6.implode(1,2,3, depth = 12)
 ## Pool
 ![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) Not fully reimplemented yet.
 Pools are collections of dice, which you want to group together and perform special or custom operations on. The pool is created through the `pool` function, and takes a dict of `Die`.
-```
+```python
 myPool = ds.pool({d6:3,d42:1})
 ```
+a shortcut way to create a pool is through the `matmul` operator on a die.
+```python
+myPool = 3@d6 + 1@d42
+```
+
+
 To perform an operation on the pool, meaning roll your dice and do something with them, there are multiple procedures to choose from.  
 1. `sum(pool)`: sums the outcomes in the pool together, and creates a die representation of it.
 2. `mult(pool)`: Same as `sum` just multiplies them  
