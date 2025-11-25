@@ -12,15 +12,15 @@ class RerollSymbol:
 
 	def _binary(self, rhs, operation):
 		if self.internals is None:
-			return RerollSymbol(rhs)
+			return type(self)(rhs)
 		else:
-			return RerollSymbol(operation(self.internals, rhs))
+			return type(self)(operation(self.internals, rhs))
 
 	def __add__(self, rhs):
 		return self._binary(rhs, micro.add)
 
 	def __sub__(self, rhs):
-		return self._binary(rhs, micro.sub)
+		return self._binary(-rhs, micro.add)
 
 	def __mul__(self, rhs):
 		return self._binary(rhs, micro.mul)

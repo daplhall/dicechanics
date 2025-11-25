@@ -52,10 +52,6 @@ def meanCalulationHelper(reference):
 	return mean
 
 
-def assertMean(statistical, referenceMean):
-	return statistical.mean == referenceMean
-
-
 def test_scalarMeanIsCorrect(simpleScalarStatistical, referenceStatisticalDict):
 	mean = meanCalulationHelper(referenceStatisticalDict)
 	return simpleScalarStatistical.mean == mean

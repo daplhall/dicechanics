@@ -20,31 +20,31 @@ def test_rerollCreateWithNumber():
 
 
 def test_rerollCreateWithString():
-	assert RerollSymbol("a")
+	assert RerollSymbolSpy("a").inside() == "a"
 
 
 def test_rerollAddAffectsTheObject():
-	assert RerollSymbol() + 4 + 2
+	assert (RerollSymbolSpy() + 4 + 2).inside() == 6
 
 
 def test_rerollSubAffectsTheObject():
-	assert RerollSymbol() - 4 - 3
+	assert (RerollSymbolSpy() - 4 - 3).inside() == -7
 
 
 def test_rerollMultAffectsTheObject():
-	assert RerollSymbol() * 3
+	assert (RerollSymbolSpy() * 3).inside() == 3
 
 
 def test_rerollDivAffectsTheObject():
-	assert RerollSymbol() / 3
+	assert (RerollSymbolSpy() / 3).inside() == 3
 
 
 def test_rerollFloorDivAffectsTheObject():
-	assert RerollSymbol() // 3
+	assert (RerollSymbolSpy() // 3).inside() == 3
 
 
 def test_rerollAddStrAffectsTheObject():
-	assert RerollSymbol() + "a" + "b"
+	assert (RerollSymbolSpy() + "a" + "b").inside() == "ab"
 
 
 def test_rerollMixedSymbolsThrowError():
