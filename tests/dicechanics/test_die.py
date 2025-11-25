@@ -37,6 +37,12 @@ def test_DieAddScalarInt(simpleScalarDie):
 	assert d.items() == ref.items()
 
 
+def test_DieRAddScalarInt(simpleScalarDie):
+	d = 1 + simpleScalarDie
+	ref = {2: 1 / 4, 3: 2 / 4, 4: 1 / 4}
+	assert d.items() == ref.items()
+
+
 def test_DieAddScalarDie(simpleScalarDie):
 	d = simpleScalarDie + simpleScalarDie
 	ref = {2: 1 / 16, 3: 4 / 16, 4: 6 / 16, 5: 4 / 16, 6: 1 / 16}
@@ -49,6 +55,12 @@ def test_DieSubScalarInt(simpleScalarDie):
 	assert d.items() == ref.items()
 
 
+def test_DieRSubScalarInt(simpleScalarDie):
+	d = 1 - simpleScalarDie
+	ref = {-2: 1 / 4, -1: 2 / 4, 0: 1 / 4}
+	assert d.items() == ref.items()
+
+
 def test_DieSubScalarDie(simpleScalarDie):
 	d = simpleScalarDie - simpleScalarDie
 	ref = {-2: 1 / 16, -1: 4 / 16, 0: 6 / 16, 1: 4 / 16, 2: 1 / 16}
@@ -58,6 +70,12 @@ def test_DieSubScalarDie(simpleScalarDie):
 
 def test_DieMulScalarInt(simpleScalarDie):
 	d = simpleScalarDie * 1
+	ref = {1: 1 / 4, 2: 2 / 4, 3: 1 / 4}
+	assert d.items() == ref.items()
+
+
+def test_DieRMulScalarInt(simpleScalarDie):
+	d = 1 * simpleScalarDie
 	ref = {1: 1 / 4, 2: 2 / 4, 3: 1 / 4}
 	assert d.items() == ref.items()
 
@@ -177,9 +195,57 @@ def test_MapRerollMutlipleTimes(d4):
 	assert mapReroll.items() == ref.items()
 
 
+def test_explode(d4):
+	exploded = d4.explode(4)
+	ref = {
+		1: 1 / 4,
+		2: 1 / 4,
+		3: 1 / 4,
+		5: 1 / 16,
+		6: 1 / 16,
+		7: 1 / 16,
+		8: 1 / 16,
+	}
+	assert exploded.items() == ref.items()
+
+
+def test_explodeDouble(d4):
+	exploded = d4.explode(3, 4)
+	ref = {
+		1: 1 / 4,
+		2: 1 / 4,
+		4: 1 / 16,
+		5: 2 / 16,
+		6: 2 / 16,
+		7: 2 / 16,
+		8: 1 / 16,
+	}
+	assert exploded.items() == ref.items()
+
+
+def test_implode(d4):
+	exploded = d4.implode(1)
+	ref = {
+		-3: 1 / 16,
+		-2: 1 / 16,
+		-1: 1 / 16,
+		0: 1 / 16,
+		2: 1 / 4,
+		3: 1 / 4,
+		4: 1 / 4,
+	}
+	assert exploded.items() == ref.items()
+
+
 def test_StringReprentation(d4):
 	assert str(d4) == (
 		"Die with mu - 2.50, sigma - 2.24\n--------------------------------\n"
 		"1|#################### 25.00%\n2|#################### 25.00%\n"
 		"3|#################### 25.00%\n4|#################### 25.00%\n"
 	)
+
+
+def test_unary(d4):
+	d = -d4
+	ref = {-4: 1 / 4, -3: 1 / 4, -2: 1 / 4, -1: 1 / 4}
+	assert d.items() == ref.items()

@@ -60,10 +60,19 @@ class Die(GenericMapping, protocols.Die):
 	def __add__(self, rhs):
 		return self._binaryOperaiton(rhs, add)
 
+	def __radd__(self, rhs):
+		return self.__add__(rhs)
+
 	def __sub__(self, rhs):
 		return self._binaryOperaiton(rhs, sub)
 
+	def __rsub__(self, rhs):
+		return (-self).__add__(rhs)
+
 	def __mul__(self, rhs):
+		return self._binaryOperaiton(rhs, mul)
+
+	def __rmul__(self, rhs):
 		return self._binaryOperaiton(rhs, mul)
 
 	def __floordiv__(self, rhs):
@@ -97,23 +106,42 @@ class Die(GenericMapping, protocols.Die):
 	def count(self, *facesToCount):
 		return self.map(lambda key: key in facesToCount)
 
-	def _rerollInternal(self, rerollMapping: Mapping, *faceToReroll, depth):
+	def _rerollBaseline(
+		self, rerollMapping: Mapping, *faceToReroll, depth, ops
+	):
 		newMap = self
 		for _ in range(depth):
-			rerollSum = sum(
-				dict(
-					filter(lambda x: x[0] in faceToReroll, self.items())
-				).values()
-			)
 			tokeep = dict(
 				filter(lambda x: x[0] not in faceToReroll, self.items())
 			)
-			tokeep.update({newMap: rerollSum})
+			for face in faceToReroll:
+				rerollSum = sum(
+					dict(filter(lambda x: x[0] == face, self.items())).values()
+				)
+				map_ = ops(face, newMap)
+				if map_ in tokeep:
+					tokeep[map_] += rerollSum
+				else:
+					tokeep.update({ops(face, newMap): rerollSum})
 			newMap = type(self.internals)(self._expand(tokeep))
 		return newMap
 
 	def reroll(self, *faceToReroll, depth=1):
-		rerolledMapping = self._rerollInternal(self, *faceToReroll, depth=depth)
+		rerolledMapping = self._rerollBaseline(
+			self, *faceToReroll, depth=depth, ops=lambda x, y: y
+		)
+		return type(self)(type(self.internals)(rerolledMapping))
+
+	def explode(self, *faceToReroll, depth=1):
+		rerolledMapping = self._rerollBaseline(
+			self, *faceToReroll, depth=depth, ops=add
+		)
+		return type(self)(type(self.internals)(rerolledMapping))
+
+	def implode(self, *faceToReroll, depth=1):
+		rerolledMapping = self._rerollBaseline(
+			self, *faceToReroll, depth=depth, ops=sub
+		)
 		return type(self)(type(self.internals)(rerolledMapping))
 
 	def __str__(self):
@@ -124,3 +152,6 @@ class Die(GenericMapping, protocols.Die):
 			self.values(),
 			topText=[f"{i * 100:.2f}%" for i in self.values()],
 		)
+
+	def __neg__(self):
+		return self.map(lambda x: -x)
