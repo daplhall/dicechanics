@@ -10,11 +10,19 @@ git clone <TTstatistics>
 cd TTstatistics
 pip install .
 ```
-## Dicechanics: A statistical module for dice operations
+## Dicechanics: A module for dice operations and probability
 This submodule exposes 3 classes
 1. `Die` The base unit of statistics; Dice are immutable.
 2. `Pool` Contains multiple dice which can be operated on together. (Currently not fully reimplemented)
 3. `Bag` Contains multiple pools which can be operated on together (Currently not implemented)
+### Sample usage
+Consider you are playing your favorite tabletop roleplay in which you roll a 5 six sided dice (called a d6) and add the two highest, you simply write the following
+```
+import ttstatistics.dicechanics as dc
+pool = 5@ds.d6
+curve = dc.sum(pool[4:])
+```
+
 ### Die
 To create a die you simply invoke the `d` interface function.
 ```python
