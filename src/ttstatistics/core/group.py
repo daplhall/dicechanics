@@ -1,7 +1,5 @@
 __all__ = ["Group"]
 
-from collections import defaultdict
-
 from ttstatistics.core import protocols
 from ttstatistics.core.slice import Slice
 

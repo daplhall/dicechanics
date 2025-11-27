@@ -9,6 +9,7 @@ from fixtures.dicts import (  # noqa: F401
 )
 from fixtures.die import (  # noqa: F401
 	d4,
+	d6,
 	emptyDie,
 	simpleScalarDie,
 	simpleStringDie,

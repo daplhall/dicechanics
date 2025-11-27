@@ -22,3 +22,8 @@ def simpleStringDie(simpleStringStatistical):
 @pytest.fixture
 def d4():
 	return Die(ScalarStatistical({1: 1 / 4, 2: 1 / 4, 3: 1 / 4, 4: 1 / 4}))
+
+
+@pytest.fixture
+def d6():
+	return Die(ScalarStatistical(dict.fromkeys(range(1, 7), 1 / 6)))
