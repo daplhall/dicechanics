@@ -17,3 +17,11 @@ def test_addingPools(d4, d6):
 	d6Pool = PoolSpy({d6: 3})
 	pool = d6Pool + d4Pool
 	assert pool.inside() == {d6: 3, d4: 5}
+
+
+def test_MatmultOne(d6):
+	assert 1 @ d6 == PoolSpy({d6: 1})
+
+
+def test_MatmultTwo(d6):
+	assert 2 @ d6 == PoolSpy({d6: 2})

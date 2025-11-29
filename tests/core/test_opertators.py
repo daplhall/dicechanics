@@ -1,10 +1,14 @@
 from ttstatistics.core.genericmapping import GenericMapping
 from ttstatistics.core.group import Group
-from ttstatistics.core.operations.macro import Operators
-from ttstatistics.core.operations.micro import add, max
+from ttstatistics.core.operations import (
+	add,
+	max,
+	regularOnGroup,
+	selectiveOnGroup,
+)
 
-selective = Operators.selectiveOnGroup
-regular = Operators.regularOnGroup
+selective = selectiveOnGroup
+regular = regularOnGroup
 
 
 def helperCompareTwoMappings(a, b):

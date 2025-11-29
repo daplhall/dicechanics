@@ -1,1 +1,1 @@
-from ttstatistics.dicechanics.interface import d  # noqa: F401
+from ttstatistics.dicechanics.interface import d, pool  # noqa: F401

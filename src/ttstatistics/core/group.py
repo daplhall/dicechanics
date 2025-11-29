@@ -9,6 +9,9 @@ class Group(protocols.Group):
 		self.internalMappings = data
 		self.slice = None
 
+	def __hash__(self):
+		return hash(tuple(self.internalMappings.items()) + (self.slice,))
+
 	@classmethod
 	def withSlice(cls, data, slicing):
 		self = cls(data)
@@ -23,6 +26,9 @@ class Group(protocols.Group):
 
 	def __bool__(self):
 		return bool(self.internalMappings)
+
+	def __eq__(self, rhs):
+		return hash(self) == hash(rhs)
 
 	def __getitem__(self, item):
 		if isinstance(item, slice):

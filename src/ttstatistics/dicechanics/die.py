@@ -5,11 +5,20 @@ from numbers import Number
 
 from ttstatistics.core.genericmapping import GenericMapping
 from ttstatistics.core.group import Group
-from ttstatistics.core.operations.macro import Operators
-from ttstatistics.core.operations.micro import add, div, floorDiv, mul, sub
+
+# from ttstatistics.core.operations.macro import Operators
+from ttstatistics.core.operations import (
+	add,
+	div,
+	floorDiv,
+	mul,
+	regularOnGroup,
+	sub,
+)
 from ttstatistics.core.protocols.base import InputFunction, Unit
 from ttstatistics.core.protocols.mapping import Mapping
 from ttstatistics.dicechanics import protocols
+from ttstatistics.dicechanics.pool import Pool
 from ttstatistics.dicechanics.protocols import Statistical
 from ttstatistics.dicechanics.statisticals.scalar import ScalarStatistical
 from ttstatistics.dicechanics.symbolics import RerollSymbol
@@ -52,9 +61,7 @@ class Die(GenericMapping, protocols.Die):
 				group = Group({self: 2})
 			else:
 				group = Group({self: 1, rhs: 1})
-			newMapping = type(self.internals)(
-				Operators.regularOnGroup(group, operation)
-			)
+			newMapping = type(self.internals)(regularOnGroup(group, operation))
 			return type(self)(newMapping)
 
 	def __add__(self, rhs):
@@ -159,3 +166,11 @@ class Die(GenericMapping, protocols.Die):
 	@property
 	def dtype(self) -> Statistical:
 		return type(self.internals)
+
+	def __matmul__(self, rhs: int) -> protocols.Pool:
+		if not isinstance(rhs, int):
+			raise TypeError
+		return Pool({self: rhs})
+
+	def __rmatmul__(self, rhs: int) -> protocols.Pool:
+		return self @ rhs
