@@ -3,9 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Dicechanics documentation
-=========================
-Dicechanics is a python library for modeling dice mechanics.
+Tabletop Statistics documentation
+=================================
+Tabletop statistics is a statistical library which allows with few lines to get exact
+probabillities for tabletop or video games that emulate a tabletop system.
+
+The package currently only have a submodule, called dicechanics, which is a general purpose probabillity calculator for dice.
 
 The project page can be found `here <https://github.com/daplhall/dicechanics>`_.
 
@@ -13,3 +16,17 @@ The project page can be found `here <https://github.com/daplhall/dicechanics>`_.
 .. toctree::
    :maxdepth: 2
    :titlesonly:
+   
+   usage/DicechanicsPrimer
+   usage/DicechanicsExamples
+   API/dicechanics
+
+Development documentation
+=========================
+.. toctree::
+   :maxdepth: 2
+   :titlesonly:
+   
+   development/ClassHeiracy
+   development/PoolAlgorithms
+   

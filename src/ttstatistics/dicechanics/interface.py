@@ -49,5 +49,5 @@ def d(obj: int | Iterable | Mapping) -> protocols.Die:
 		raise TypeError("Unsupported type")
 
 
-def pool(input: dict[protocols.Die, int]):
+def pool(input: dict[protocols.Die]):
 	return Pool(input)
