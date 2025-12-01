@@ -26,7 +26,7 @@ def _convertToCorrectStatistical(obj):
 
 def d(obj: int | Iterable | Mapping) -> protocols.Die:
 	if isinstance(obj, int):
-		backend = ScalarStatistical(dict.fromkeys(range(1, obj + 1), 1 / 6))
+		backend = ScalarStatistical(dict.fromkeys(range(1, obj + 1), 1 / obj))
 		return Die(backend)
 	elif isinstance(obj, Mapping):
 		return _convertToCorrectStatistical(obj)
@@ -49,5 +49,5 @@ def d(obj: int | Iterable | Mapping) -> protocols.Die:
 		raise TypeError("Unsupported type")
 
 
-def pool(input: dict[protocols.Die, int]):
+def pool(input: dict[protocols.Die]):
 	return Pool(input)

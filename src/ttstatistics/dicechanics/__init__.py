@@ -4,5 +4,6 @@ from ttstatistics.dicechanics.operations import (  # noqa: F401
 	max,
 	min,
 	mult,
+	perform,
 	sum,
 )
