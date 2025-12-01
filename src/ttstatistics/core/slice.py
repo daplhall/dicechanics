@@ -1,7 +1,5 @@
 __all__ = ["Slice"]
 
-from collections.abc import Sized
-
 
 class Slice:
 	def __init__(self):
@@ -16,25 +14,35 @@ class Slice:
 		else:
 			return bool(self.listData)
 
-	def _shiftSliceBased(self) -> bool:
-		start = self.sliceData.start
+	def copy(self):
+		out = type(self)()
+		out.sliceData = self.sliceData
+		out.listData = self.listData
+		out.cursor = self.cursor
+		out.shiftFunction = self.shiftFunction
+		return out
+
+	@staticmethod
+	def _shiftSliceBased(slice_) -> bool:
+		start = slice_.sliceData.start
 		if start is None:
 			start = 0
-		stop: int | None = self.sliceData.stop
-		step = 1 if self.sliceData.step is None else self.sliceData.step
-		if self.cursor < start:
+		stop: int | None = slice_.sliceData.stop
+		step = 1 if slice_.sliceData.step is None else slice_.sliceData.step
+		if slice_.cursor < start:
 			return False
-		elif stop is not None and self.cursor >= stop:
+		elif stop is not None and slice_.cursor >= stop:
 			return False
-		elif (self.cursor - max(start, 0)) % step != 0:
+		elif (slice_.cursor - max(start, 0)) % step != 0:
 			return False
 		else:
 			return True
 
-	def _shiftListBased(self) -> bool:
+	@staticmethod
+	def _shiftListBased(slice_) -> bool:
 		return (
-			self.listData[self.cursor]
-			if self.cursor < len(self.listData)
+			slice_.listData[slice_.cursor]
+			if slice_.cursor < len(slice_.listData)
 			else False
 		)
 
@@ -54,8 +62,8 @@ class Slice:
 
 	def next(self) -> bool:
 		self.cursor += 1
-		return self.shiftFunction()
+		return self.shiftFunction(self)
 
 	def previous(self) -> bool:
 		self.cursor -= 1
-		return self.shiftFunction()
+		return self.shiftFunction(self)

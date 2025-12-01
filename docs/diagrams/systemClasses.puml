@@ -61,14 +61,17 @@ package "dicechancis" {
         + varians
     }
     interface "Die" as die{
-        {method}<<Die manipulation functions>>
-        {method}<<Operator overloads>>
-        +map(callable)
+        + {method}<<Die manipulation functions>>
+        + {method}<<Operator overloads>>
+        + map(callable)
         + mean
         + std
         + varians
     }
-    interface Pool
+    interface Pool{
+        + extend(Die)
+        + {method} <<Operator Overloads>>
+    }
     interface Bag
     interface string{
         Everything that subtypes\na python.string

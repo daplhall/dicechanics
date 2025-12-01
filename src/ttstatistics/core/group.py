@@ -1,7 +1,5 @@
 __all__ = ["Group"]
 
-from collections import defaultdict
-
 from ttstatistics.core import protocols
 from ttstatistics.core.slice import Slice
 
@@ -11,27 +9,61 @@ class Group(protocols.Group):
 		self.internalMappings = data
 		self.slice = None
 
+	def __hash__(self):
+		return hash(tuple(self.internalMappings.items()) + (self.slice,))
+
 	@classmethod
 	def withSlice(cls, data, slicing):
 		self = cls(data)
-		self.slice = slicing
+		if isinstance(slicing, slice):
+			# self.slice = Slice.fromSlice(slicing)
+			keep = [0] * sum(self.internalMappings.values())
+			keep[slicing] = [1] * len(keep[slicing])
+			slicing = keep
+		self.slice = Slice.fromList(slicing)
 		return self
 
 	def prepare(self):
 		return self.internalMappings.items()
 
 	def prepareSlice(self):
-		return self.slice
+		return self.slice.copy() if self.slice is not None else self.slice
 
 	def __bool__(self):
 		return bool(self.internalMappings)
 
-	def __getitem__(self, item):
-		if isinstance(item, slice):
-			newSlice = Slice.fromSlice(item)
-		elif isinstance(item, (tuple, list)):
-			newSlice = Slice.fromList(tuple(item))
-		else:
-			raise TypeError("Wrong Type for getitem")
+	def __eq__(self, rhs):
+		return hash(self) == hash(rhs)
 
-		return type(self).withSlice(self.internalMappings, newSlice)
+	def __getitem__(self, item):
+		if isinstance(item, (tuple, list)):
+			return self & item
+		elif isinstance(item, int):
+			return self & (item,)
+		elif isinstance(item, slice):
+			return type(self).withSlice(self.internalMappings, item)
+		else:
+			raise TypeError
+
+	def _select(self, indexes, *, default):
+		mask = [default] * sum(self.internalMappings.values())
+		for i in indexes:
+			if i < len(mask) and i >= -len(mask):
+				mask[i] = not default
+		return mask
+
+	def __and__(self, rhs):
+		return type(self).withSlice(
+			self.internalMappings, self._select(rhs, default=False)
+		)
+
+	def __rand__(self, rhs):
+		return self & rhs
+
+	def __xor__(self, rhs):
+		return type(self).withSlice(
+			self.internalMappings, self._select(rhs, default=True)
+		)
+
+	def __rxor__(self, rhs):
+		return self ^ rhs

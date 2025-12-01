@@ -17,10 +17,26 @@ This submodule exposes 3 classes
 3. `Bag` Contains multiple pools which can be operated on together (Currently not implemented)
 ### Sample usage
 Consider you are playing your favorite tabletop roleplay in which you roll a 5 six sided dice (called a d6) and add the two highest, you simply write the following
-```
+```python
 import ttstatistics.dicechanics as dc
-pool = 5@ds.d6
-curve = dc.sum(pool[4:])
+pool = 5@dc.d6
+print(dc.sum(pool[3:]))
+```
+Which produces
+```cmd
+Die with mu - 9.93, sigma - 14.30
+---------------------------------
+ 2| 0.01%
+ 3| 0.06%
+ 4| 0.40%
+ 5|# 1.03%
+ 6|## 2.71%
+ 7|#### 5.21%
+ 8|######## 9.98%
+ 9|############# 15.43%
+10|################## 21.81%
+11|#################### 23.73%
+12|################# 19.62%
 ```
 
 ### Die

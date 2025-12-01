@@ -27,14 +27,67 @@ def test_GetItemReturnsACopyWithSlicingStart(groupWithFourItems):
 
 
 def test_GetItemReturnsACopySlicingInt(groupWithFourItems):
-	with pytest.raises(TypeError):
-		groupWithFourItems[2]
+	slice_ = groupWithFourItems[2].prepareSlice()
+	assert not slice_.next()
+	assert not slice_.next()
+	assert slice_.next()
+	assert not slice_.next()
 
 
 def test_bagGetItemReturnsACopySlicingArray(groupWithFourItems):
-	q = groupWithFourItems[True, True, False, True]
+	q = groupWithFourItems[0, 1, -1]
 	refslice = q.prepareSlice()
 	assert refslice.next()
 	assert refslice.next()
 	assert not refslice.next()
 	assert refslice.next()
+
+
+def test_GroupSliceBitwiseAnd(groupWithFourItems):
+	q = (0, 1, 3) & groupWithFourItems
+	refslice = q.prepareSlice()
+	assert refslice.next()
+	assert refslice.next()
+	assert not refslice.next()
+	assert refslice.next()
+
+
+def test_GroupSliceBitwiseAndList(groupWithFourItems):
+	q = [0, 1, 3] & groupWithFourItems
+	refslice = q.prepareSlice()
+	assert refslice.next()
+	assert refslice.next()
+	assert not refslice.next()
+	assert refslice.next()
+
+
+def test_GroupSliceBitwiseXOR(groupWithFourItems):
+	q = (0, 1, 3) ^ groupWithFourItems
+	refslice = q.prepareSlice()
+	assert not refslice.next()
+	assert not refslice.next()
+	assert refslice.next()
+	assert not refslice.next()
+
+
+def test_GroupSliceBitwiseXORList(groupWithFourItems):
+	q = [0, 1, 3] ^ groupWithFourItems
+	refslice = q.prepareSlice()
+	assert not refslice.next()
+	assert not refslice.next()
+	assert refslice.next()
+	assert not refslice.next()
+
+
+def test_SlicePoolOutOfBounds(groupWithFourItems):
+	try:
+		groupWithFourItems[0, 40]
+	except Exception:
+		pytest.fail("An exception was raised when it shouldn't")
+
+
+def test_SlicePoolOutOfBoundsNeg(groupWithFourItems):
+	try:
+		groupWithFourItems[0, -40]
+	except Exception as e:
+		pytest.fail(f"An exception was raised when it shouldn't: {e}")

@@ -1,6 +1,5 @@
 from ttstatistics.dicechanics.die import Die
 from ttstatistics.dicechanics.statisticals.scalar import ScalarStatistical
-from ttstatistics.dicechanics.symbolics import reroll
 
 
 def test_EmptyInit(emptyDie):
@@ -249,3 +248,8 @@ def test_unary(d4):
 	d = -d4
 	ref = {-4: 1 / 4, -3: 1 / 4, -2: 1 / 4, -1: 1 / 4}
 	assert d.items() == ref.items()
+
+
+def test_dtype():
+	d = Die(ScalarStatistical({1: 1}))
+	assert d.dtype == ScalarStatistical

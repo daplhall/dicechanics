@@ -54,9 +54,7 @@ def test_InterfaceParserMultiple():
 	assert d.items() == ref.items()
 
 
-"""
-def test_InterfaceStrInParserSingle():
-	d = ds.d("a")
-	ref = {"a": 1}
-	assert d.items() == ref.items()
-"""
+def test_InterfacePool(d4, d6):
+	ref = {d4: 3, d6: 5}
+	pool = ds.pool(ref)
+	assert pool.prepare() == ref.items()

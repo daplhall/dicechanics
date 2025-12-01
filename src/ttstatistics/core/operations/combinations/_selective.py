@@ -4,10 +4,11 @@ from collections import defaultdict
 from functools import cache
 from math import comb
 
+from ttstatistics.core import protocols
 from ttstatistics.utils.utils import normalize
 
 
-def getOutcomes(bag):
+def getOutcomes(bag: protocols.Group):
 	res = defaultdict(int)
 	amountTuple = ()
 	for idx, (mapping, amount) in enumerate(bag.prepare()):
@@ -21,13 +22,14 @@ def getOutcomes(bag):
 
 
 class Selective:
-	def calculate(self, group, operation):
+	def calculate(
+		self, group: protocols.Group, operation: protocols.InputFunction
+	):
 		bagSlice = group.prepareSlice()
 		outcomes, meta = getOutcomes(group)
-		comb = Selective()
 		slice_ = tuple(bagSlice.next() for _ in range(sum(meta)))[::-1]
 		return normalize(
-			comb._evaluate(outcomes, operation, sum(meta), meta, slice_)
+			self._evaluate(outcomes, operation, sum(meta), meta, slice_)
 		)
 
 	@cache

@@ -3,8 +3,10 @@ from collections.abc import Iterable
 from numbers import Number
 
 from ttstatistics.core.protocols.mapping import Mapping
+from ttstatistics.dicechanics import protocols
 from ttstatistics.dicechanics.die import Die
 from ttstatistics.dicechanics.parser import ParserMetaData, parser
+from ttstatistics.dicechanics.pool import Pool
 from ttstatistics.dicechanics.statisticals import (
 	ScalarStatistical,
 	StringStatistical,
@@ -22,7 +24,7 @@ def _convertToCorrectStatistical(obj):
 	return Die(backend)
 
 
-def d(obj: int | Iterable | Mapping):
+def d(obj: int | Iterable | Mapping) -> protocols.Die:
 	if isinstance(obj, int):
 		backend = ScalarStatistical(dict.fromkeys(range(1, obj + 1), 1 / 6))
 		return Die(backend)
@@ -45,3 +47,7 @@ def d(obj: int | Iterable | Mapping):
 		)
 	else:
 		raise TypeError("Unsupported type")
+
+
+def pool(input: dict[protocols.Die, int]):
+	return Pool(input)

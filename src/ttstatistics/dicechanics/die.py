@@ -5,11 +5,20 @@ from numbers import Number
 
 from ttstatistics.core.genericmapping import GenericMapping
 from ttstatistics.core.group import Group
-from ttstatistics.core.operations.macro import Operators
-from ttstatistics.core.operations.micro import add, div, floorDiv, mul, sub
+
+# from ttstatistics.core.operations.macro import Operators
+from ttstatistics.core.operations import (
+	add,
+	div,
+	floorDiv,
+	mul,
+	regularOnGroup,
+	sub,
+)
 from ttstatistics.core.protocols.base import InputFunction, Unit
 from ttstatistics.core.protocols.mapping import Mapping
 from ttstatistics.dicechanics import protocols
+from ttstatistics.dicechanics.pool import Pool
 from ttstatistics.dicechanics.protocols import Statistical
 from ttstatistics.dicechanics.statisticals.scalar import ScalarStatistical
 from ttstatistics.dicechanics.symbolics import RerollSymbol
@@ -52,9 +61,7 @@ class Die(GenericMapping, protocols.Die):
 				group = Group({self: 2})
 			else:
 				group = Group({self: 1, rhs: 1})
-			newMapping = type(self.internals)(
-				Operators.regularOnGroup(group, operation)
-			)
+			newMapping = type(self.internals)(regularOnGroup(group, operation))
 			return type(self)(newMapping)
 
 	def __add__(self, rhs):
@@ -123,26 +130,26 @@ class Die(GenericMapping, protocols.Die):
 					tokeep[map_] += rerollSum
 				else:
 					tokeep.update({ops(face, newMap): rerollSum})
-			newMap = type(self.internals)(self._expand(tokeep))
+			newMap = self.dtype(self._expand(tokeep))
 		return newMap
 
-	def reroll(self, *faceToReroll, depth=1):
+	def reroll(self, *faceToReroll, depth=1) -> protocols.Die:
 		rerolledMapping = self._rerollBaseline(
-			self, *faceToReroll, depth=depth, ops=lambda x, y: y
+			self, *faceToReroll, depth=depth, ops=lambda _, y: y
 		)
-		return type(self)(type(self.internals)(rerolledMapping))
+		return type(self)(self.dtype(rerolledMapping))
 
-	def explode(self, *faceToReroll, depth=1):
+	def explode(self, *faceToReroll, depth=1) -> protocols.Die:
 		rerolledMapping = self._rerollBaseline(
 			self, *faceToReroll, depth=depth, ops=add
 		)
-		return type(self)(type(self.internals)(rerolledMapping))
+		return type(self)(self.dtype(rerolledMapping))
 
-	def implode(self, *faceToReroll, depth=1):
+	def implode(self, *faceToReroll, depth=1) -> protocols.Die:
 		rerolledMapping = self._rerollBaseline(
 			self, *faceToReroll, depth=depth, ops=sub
 		)
-		return type(self)(type(self.internals)(rerolledMapping))
+		return type(self)(self.dtype(rerolledMapping))
 
 	def __str__(self):
 		res = f"Die with mu - {self.mean:.2f}, sigma - {self.std:.2f}\n"
@@ -155,3 +162,15 @@ class Die(GenericMapping, protocols.Die):
 
 	def __neg__(self):
 		return self.map(lambda x: -x)
+
+	@property
+	def dtype(self) -> Statistical:
+		return type(self.internals)
+
+	def __matmul__(self, rhs: int) -> protocols.Pool:
+		if not isinstance(rhs, int):
+			raise TypeError
+		return Pool({self: rhs})
+
+	def __rmatmul__(self, rhs: int) -> protocols.Pool:
+		return self @ rhs

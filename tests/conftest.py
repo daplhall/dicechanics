@@ -9,6 +9,7 @@ from fixtures.dicts import (  # noqa: F401
 )
 from fixtures.die import (  # noqa: F401
 	d4,
+	d6,
 	emptyDie,
 	simpleScalarDie,
 	simpleStringDie,
@@ -20,6 +21,7 @@ from fixtures.group import (  # noqa: F401
 	groupWithTwoItems,
 )
 from fixtures.mapping import emptyDict, simpleScalarMock  # noqa: F401
+from fixtures.pool import pool3d6  # noqa: F401
 from fixtures.slice import emptySlice  # noqa: F401
 from fixtures.statistical import (  # noqa: F401
 	emptyScalarStatistical,
