@@ -131,13 +131,10 @@ def test_SliceShiftReturnToOrigin():
 	assert notEmptySlice.next() == ref
 
 
-"""
-Currently undefined behavor
 def test_SliceShiftToNextFromSliceNegativeStep():
 	notEmptySlice = Slice.fromSlice(slice(3, None, -1))
+	assert not notEmptySlice.next()
+	assert not notEmptySlice.next()
+	assert not notEmptySlice.next()
 	assert notEmptySlice.next()
 	assert notEmptySlice.next()
-	assert not notEmptySlice.next()
-	assert not notEmptySlice.next()
-	assert not notEmptySlice.next()
-"""

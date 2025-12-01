@@ -16,23 +16,17 @@ class Group(protocols.Group):
 	def withSlice(cls, data, slicing):
 		self = cls(data)
 		if isinstance(slicing, slice):
-			self.slice = Slice.fromSlice(slicing)
-		else:
-			self.slice = Slice.fromList(slicing)
+			# self.slice = Slice.fromSlice(slicing)
+			keep = [0] * sum(self.internalMappings.values())
+			keep[slicing] = [1] * len(keep[slicing])
+			slicing = keep
+		self.slice = Slice.fromList(slicing)
 		return self
 
 	def prepare(self):
 		return self.internalMappings.items()
 
 	def prepareSlice(self):
-		"""
-		if isinstance(self.slice, slice):
-			newSlice = Slice.fromSlice(self.slice)
-		elif isinstance(self.slice, (tuple, list)):
-			newSlice = Slice.fromList(tuple(self.slice))
-		else:
-			newSlice = self.slice
-		"""
 		return self.slice.copy() if self.slice is not None else self.slice
 
 	def __bool__(self):
@@ -54,7 +48,8 @@ class Group(protocols.Group):
 	def _select(self, indexes, *, default):
 		mask = [default] * sum(self.internalMappings.values())
 		for i in indexes:
-			mask[i] = not default
+			if i < len(mask) and i >= -len(mask):
+				mask[i] = not default
 		return mask
 
 	def __and__(self, rhs):

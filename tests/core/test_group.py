@@ -1,3 +1,5 @@
+import pytest
+
 from ttstatistics.core import protocols
 
 
@@ -75,3 +77,17 @@ def test_GroupSliceBitwiseXORList(groupWithFourItems):
 	assert not refslice.next()
 	assert refslice.next()
 	assert not refslice.next()
+
+
+def test_SlicePoolOutOfBounds(groupWithFourItems):
+	try:
+		groupWithFourItems[0, 40]
+	except Exception:
+		pytest.fail("An exception was raised when it shouldn't")
+
+
+def test_SlicePoolOutOfBoundsNeg(groupWithFourItems):
+	try:
+		groupWithFourItems[0, -40]
+	except Exception as e:
+		pytest.fail(f"An exception was raised when it shouldn't: {e}")

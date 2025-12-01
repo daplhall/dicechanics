@@ -1,3 +1,5 @@
+import pytest
+
 from ttstatistics.dicechanics.pool import Pool
 
 
