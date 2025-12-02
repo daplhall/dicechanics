@@ -13,3 +13,7 @@ ceil = math.ceil
 floor = math.floor
 max = max
 min = min
+lt = op.lt
+le = op.le
+gt = op.gt
+ge = op.ge
