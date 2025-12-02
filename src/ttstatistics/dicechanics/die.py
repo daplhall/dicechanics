@@ -11,6 +11,10 @@ from ttstatistics.core.operations import (
 	add,
 	div,
 	floorDiv,
+	ge,
+	gt,
+	le,
+	lt,
 	mul,
 	regularOnGroup,
 	sub,
@@ -87,6 +91,18 @@ class Die(GenericMapping, protocols.Die):
 
 	def __truediv__(self, rhs):
 		return self._binaryOperaiton(rhs, div)
+
+	def __gt__(self, rhs):
+		return self._binaryOperaiton(rhs, gt)
+
+	def __ge__(self, rhs):
+		return self._binaryOperaiton(rhs, ge)
+
+	def __lt__(self, rhs):
+		return self._binaryOperaiton(rhs, lt)
+
+	def __le__(self, rhs):
+		return self._binaryOperaiton(rhs, le)
 
 	def _expand(self, statistical: Statistical):
 		dice = list(

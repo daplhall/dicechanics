@@ -253,3 +253,39 @@ def test_unary(d4):
 def test_dtype():
 	d = Die(ScalarStatistical({1: 1}))
 	assert d.dtype == ScalarStatistical
+
+
+def test_GreaterThanNumber(d4):
+	res = d4 > 2
+	ref = {0: 1 / 2, 1: 1 / 2}
+	assert res.items() == ref.items()
+
+
+def test_GreaterEqualNumber(d4):
+	res = d4 >= 3
+	ref = {0: 1 / 2, 1: 1 / 2}
+	assert res.items() == ref.items()
+
+
+def test_LessThanNumber(d4):
+	res = d4 < 3
+	ref = {0: 1 / 2, 1: 1 / 2}
+	assert res.items() == ref.items()
+
+
+def test_LessEqualNumber(d4):
+	res = d4 <= 2
+	ref = {0: 1 / 2, 1: 1 / 2}
+	assert res.items() == ref.items()
+
+
+def test_GreaterThanDie(d4):
+	res = d4 > d4
+	ref = {0: 5 / 8, 1: 3 / 8}
+	assert res.items() == ref.items()
+
+
+def test_GreaterEqualDie(d4):
+	res = d4 >= d4
+	ref = {0: 3 / 8, 1: 5 / 8}
+	assert res.items() == ref.items()
