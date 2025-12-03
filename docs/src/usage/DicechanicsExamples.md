@@ -1,9 +1,9 @@
 # Dicechancis examples
-Here are a few example of how to model some known tabletop rpg systems.
+Here are a few examples of how to model some known tabletop RPG systems.
 ## Blades in the Dark
-In BitD, you create a pool of d6s through various means. It ranges from 0 to 6 dice. Then taking the highest. On a 3 you fail, 4 and 5 you succeed with a consequence on a 6 you succeeds
+In BitD, you create a pool of d6s and take the highest. On a hit less than 3, you get a consequence; on a 4 or 5, you succeed with a consequence; on a 6, you succeed.
 
-Lets say we amassed 4 dice
+Let's say we amassed 4 dice
 ```python
 import ttstatistics.dicechanics as ds
 
@@ -22,14 +22,14 @@ Die with mu - 5.24, sigma - 5.98
 5|########### 28.47%
 6|#################### 51.77%
 ```
-As previously mention the values have a meaning, so we can map them to new one.
+As previously mentioned, the values rolled are mapped to a meaning.
 ```python
 def BitD(outcomes):
     if outcomes < 4:
         return 0
     elif outcomes > 5:
         return 2
-    else:
+    Else:
         return 1
 print(ds.max(pool).map(BitD))
 ```
@@ -41,16 +41,14 @@ Die with mu - 1.46, sigma - 1.62
 1|################ 41.98%
 2|#################### 51.77%
 ```
-So with 4 dice we have a 6.25% chance of just failing, which are pretty good odds.
+So with 4 dice, we have a 6.25% chance of just failing, which is pretty good odds.
 
 ## Free Leagues Alien RPG
-In the Alien RPG you again have a 6ds dice pool, however you are look for Dice 
-which rolled a 6, and counting them.
+In the Alien RPG, you again have a d6 dice pool; however, you are looking for Dice which rolled a 6, and count the number of these hits.
 
-To model this you can consider the individual dice, to be a two sided dice with
-either a hit (1) or miss (0).
+To model this, we can consider the individual d6 as a weighted two-sided die (a coin).
 
-So if we have a pool 5 dice we simply do.
+Let's say our pool has 5 dice, then we write:
 ```python
 import ttstatistics.dicechanics as ds
 
@@ -69,8 +67,7 @@ Die with mu - 0.83, sigma - 5.85
 5| 0.01%
 ```
 ## Call of Cthulhu 7th Edition
-In Call of Cthulhu you roll a d100 and then depending on your skill you have various 
-thresholds which dictate which kind of success level you have.
+In Call of Cthulhu, you roll a d100 against your skill. Here, there are 6 success levels to which the result can be mapped.
 
 ```python
 import ttstatistics.dicechanics as ds
@@ -78,10 +75,8 @@ import ttstatistics.dicechanics as ds
 
 def CoC(outcome):
 	global skill
-	if skill >= 50:
-		fumble = 100
-	else:
-		fumble = 96
+	fumble = 100 if skill >= 50 else 96
+
 	if outcome >= fumble:
 		return -1
 	elif outcome == 1:

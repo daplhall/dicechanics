@@ -1,28 +1,21 @@
 # Tabletop statistics
-![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) This project is currently under renovation, APIs are very much subject to change.  
-An library for python which provides an interface for modelling dice mechanics. The library have no external dependencies.
+![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) This project is currently under renovation, APIs are subject to change.  
 
-## API Documentation
-[Documentation on github pages](https://daplhall.github.io/dicechanics)
-## Build and install
-```bash
-git clone <TTstatistics>
-cd TTstatistics
-pip install .
-```
-## Dicechanics: A module for dice operations and probability
-This submodule exposes 3 classes
-1. `Die` The base unit of statistics; Dice are immutable.
-2. `Pool` Contains multiple dice which can be operated on together. (Currently not fully reimplemented)
-3. `Bag` Contains multiple pools which can be operated on together (Currently not implemented)
-### Sample usage
-Consider you are playing your favorite tabletop roleplay in which you roll a 5 six sided dice (called a d6) and add the two highest, you simply write the following
+Tabletop Statistics is a small library to help one explore or develop new tabletop games which involve some random element.
+
+Currently, it only contains dicechanics, which allows for statistical exploration of dice. In the future it will also contain deckchanics for exploring the statistics of card games.
+
+## Documentation
+[Documentation on GitHub pages](https://daplhall.github.io/dicechanics)
+
+## Sample usage
+Consider you are playing your favorite tabletop roleplaying system in which you roll five six-sided dice and add the two highest, you write the following
 ```python
 import ttstatistics.dicechanics as dc
 pool = 5@dc.d6
 print(dc.sum(pool[3:]))
 ```
-Which produces
+Output:
 ```cmd
 Die with mu - 9.93, sigma - 14.30
 ---------------------------------
@@ -39,12 +32,25 @@ Die with mu - 9.93, sigma - 14.30
 12|################# 19.62%
 ```
 
+# Build and install
+```bash
+git clone <TTstatistics>
+cd TTstatistics
+pip install.
+```
+# Building documentation
+```bash
+cd docs && mkdir build
+sphinx-build -M html src build
+```
+Remember to install its `requirements.txt` when code updates
+
 # Running benchmarks
-To run the benchmarks and saving them.
+To run the benchmarks and save them.
 ```bash
 pytest benchmarks --benchmark-autosave
 ```
-to run specific tests in a file.
+To run specific tests in a file.
 ```bash
 pytest benchmarks\test_bm_dice.py::<Benchmark>
 ```
@@ -54,14 +60,7 @@ pytest-benchmark compare [ids,...]
 ```
 
 # Running tests
-The tests are executed by the following command.
+Tests are executed by the following:
 ```
 pytest tests
 ```
-
-# Building documentation
-```bash
-cd docs && mkdir build
-sphinx-build -M html src build
-```
-remember to install its `requirements.txt` when code updates

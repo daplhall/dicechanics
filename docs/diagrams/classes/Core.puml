@@ -1,4 +1,4 @@
-@startuml System
+@startuml core
 top to bottom direction
 package "core"{
     class DefaultCollection{
@@ -41,47 +41,6 @@ package "core"{
     }
 }
 
-package "dicechancis" {
-    class Die{
-    }
-    class "Number Statistical" as numstat
-    class "String Statistical" as strstat
-    class "Cumstom Statistical" as customstat
-    class "Base Statistical" as basestat
-    class PoolImpl
-    class BagImpl
-    interface Statistical{
-        + items()
-        + keys()
-        + values()
-        + map()
-        + normalize()
-        + mean
-        + std
-        + varians
-    }
-    interface "Die" as die{
-        + {method}<<Die manipulation functions>>
-        + {method}<<Operator overloads>>
-        + map(callable)
-        + mean
-        + std
-        + varians
-    }
-    interface Pool{
-        + extend(Die)
-        + {method} <<Operator Overloads>>
-    }
-    interface Bag
-    interface string{
-        Everything that subtypes\na python.string
-    }
-}
-package "Primitives"{
-    class SortedString
-}
-
-'core
 DefaultCollection ..|> collection
 collection --> group
 DefaultGroup ..|> group
@@ -91,23 +50,4 @@ sliceClass ..|> slice
 GroupCombinations --> group
 RegularCombinations ..|> GroupCombinations
 SelectiveCombinations ..|> GroupCombinations
-'deck
-'diechanics
-Die ..|> die
-Die --> Statistical 
-die --|> mapping
-numstat .up.|> Statistical
-strstat .up.|> Statistical
-customstat .up.|> Statistical
-numstat -down-|> basestat: special\ncase of 
-strstat -down-|> basestat: special\ncase of
-customstat -down-|> basestat :special\ncase of
-strstat --> string
-SortedString ..|> string
-Pool --|> collection
-PoolImpl ..|> Pool
-PoolImpl --|> DefaultCollection
-Bag --|> group
-BagImpl ..|> Bag
-BagImpl --|> DefaultGroup
 @enduml
