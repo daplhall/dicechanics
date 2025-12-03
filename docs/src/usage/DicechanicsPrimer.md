@@ -1,86 +1,84 @@
 # Dicechanics getting started
-Dicechanics is a general purpose probability calculator. The goal is that you can model any dice mechanics from an existing game or a game you develop, such that you can have a feel for how chances to the die rolling system affects the probability.  
+Dicechanics is a general-purpose dice probability calculator that provides an easy-to-use interface.
 
-Three classes are exposed:
-1. Die 
-2. Pool
-3. Bag (Currently not implemented)
-
-The Die is the lowest element, and represents a real life Die. A Pool is a group of dice,
-allowing you to mix multiple dice and select subsets of their outcomes. Lastly the Bag which is a Pool of Pools, allowing you to compare different pools. They are all immutable. 
+A three-tier system of classes is exposed
+1. Die, the base primitive of dicechanics
+2. Pool, a group of mixed dice
+3. Bag, a pool of pools(Currently not implemented)
+All classes are immutable.
 ## Creating a die
-Creating a Die is easy you simple invoke the `d` function.
-```
+Creating a Die is easy; you invoke the d function.
+```python
 import ttstatistics.dicechanics as ds
 d6 = ds.d(6)
 ```
-The above creates a six sided die with faces `1,2,3,4,5,6` all resent once.  
+The above creates a six-sided die with faces `1,2,3,4,5,6` all represented once.  
 
-Another way is giving a list of faces you want.
-```
+Another way is to give a list of faces you want.
+```python
 ds.d([1,1,2,3,4,5,6])
 ```
 Repeated faces are counted and taken into consideration, so this die is a 7-sided Die
 with two faces with a ´1´.   
 
-Instead of the above you can use a string following a specific format.
-```
-ds.d("<start>..<end>:<repeat>")
-```
-The previous example could be written as
-```
+Instead of the above, you can use a string which can be expanded
+```python
 ds.d("1:2,2..6")
 ```
+It follows this syntax:
+```python
+ds.d("<start>..<end>:<repeat>, <new statement>")
+```
 ## Creating a pool
-There are two way of creating a pool. The one is applying the `@` operator on a die
+The most common way to create a pool is to use the `@` operator on a primitive.
 ```python
 pool = 3 @ d6
 ```
-This creates a pool of 3 six-sided dice. The other is with a dict and the `pool` function.
+Which creates a pool of 3 six-sided dice, another way is with a dict and the `pool` function.
 ```python
 ds.pool({d6:3})
 ```
-The dice are the keys and the amount is the values of the dictionary.
+The dice are the keys, and the amount is the value of said die.
+## Extending pools
+To extend pools, you add another pool to it.
+```python
+p = 3@d6 + 1@d8
+```
+Or you can extend it one die at a time.
+```python
+p.extend(d10)
+```
 ## Operating on a pool
-A pool in it self is worthless, you need to define what operations you do between the outcomes of the dice. This is done in a procedural way with the following functions
-1. `sum(pool)`: sums the outcomes in the pool together, and creates a die representation of it.
-2. `mult(pool)`: Same as `sum` just multiplies them  
-3. `max(pool)`: Finds the max face of the outcomes
-4. `min(pool)`: Finds the min face of the outcomes  
-
-There is an additional function which allows custom operations called `perform`. It allows one to apply linear operations to the pool
+A pool by itself does nothing; through the context of an operation, it gains meaning. The following operations are predefined:
+1. `sum(pool)`: Sums the outcomes.
+2. `mult(pool)`: Multiplies the outcomes.
+3. `max(pool)`: Finds the maximum outcome.
+4. `min(pool)`: Finds the minimum outcomes.
+There is a fifth function named `perform` that allows one to write custom operations:
 ```python
 def addDoubleY(x, y):
     return x+y*2
 
 perform(myPool, addDoubleY)
 ```
+All of these operations collapse the pool into a primitive.
 ## Choosing a subset of pool outcomes
-Before we get to the syntax, lets first look at what a subset means. Consider that you roll 3 d6, here a possible set of outcomes are `[1, 3, 6]`, the outcomes are sorted the dice are thrown at the same time. Then if we want to add the largest and the lowest here we simply index the sorted outcome list as following `sum([1,3,6][::2])`.  
-
-This is the logic behind the syntax to follow. To select a subset we simply index our pool in the same way.
-```
+Let's start by understanding what a pool subset is. Consider that you roll 3d6. A possible set of sorted outcomes is `[1, 3, 6]`. If we then want to sum the lowest outcome and highest outcome, we choose those indices: sum([1,3,6][::2]). This is also how you select subsets with the pool class. 
+```python
 pool = 3@d6
 ds.sum(pool[::2])
 ```
-The logic is the same, we index into a sorted list of outcomes, where the largest is the highest index and the smallest value the lowest.  
-
-You can also choose specific indexes
+or
+```python
+ds.sum(pool[0,-1])
 ```
-pool[1]
+## Using binary die operators to create new primitives
+You can create new primitives through binary and unary operations; Meaning, instead of using a pool to find the probability of 2d6, you can add the two primitives together.
 ```
-Because we have 3 dice, we choose the middle of them.
-
-## Binary die operator as a shortcut
-Dice also have binary and unary operations for interacting with other die or numbers.  
-Example instead of using a pool to find the probability of 2d6, you can simply add the two primitives together.
+_2d6 = d6 + d6
 ```
-sum2d6 = d6 + d6
-```
-This can be done also be done with numbers, and every binary operation. This is a shortcut for defining a dice with the same probability as rolling multiple.
-
-## Visualizing results
-You can simply print a Die to shows its probability.
+## Visualising results
+Printing a primitive shows a probability graph. 
 ```
 >>> print(sum(2@d6))
 Die with mu - 7.00, sigma - 2.42
@@ -97,3 +95,4 @@ Die with mu - 7.00, sigma - 2.42
 11|####### 5.56%
 12|### 2.78%
 ```
+Here, `mu` is the mean and `sigma` is the standard deviation.
