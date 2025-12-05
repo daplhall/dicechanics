@@ -1,7 +1,13 @@
 import math
 from collections import defaultdict
 
-from ttstatistics.dicechanics.statisticals.scalar import ScalarStatistical
+from ttstatistics.dicechanics.statisticals import (
+	BaseStatistical,
+	ScalarStatistical,
+	StringStatistical,
+	factory,
+)
+from ttstatistics.utils.primitives import SortedString
 
 
 def test_baseEmptyInitialziation(emptyScalarStatistical):
@@ -92,3 +98,30 @@ def test_scalarStatisticalNormalize(referenceStatisticalDict):
 	data: dict[int, int] = {1: 1, 2: 2, 3: 1}
 	q = ScalarStatistical(data).normalize()
 	assert q.items() == referenceStatisticalDict.items()
+
+
+def test_FactoryChooseScalar():
+	statsitical = factory.createStatistical({1: 1, 2: 1, 3: 1})
+	assert type(statsitical) is ScalarStatistical
+
+
+def test_FactoryChooseScalarMixed():
+	statsitical = factory.createStatistical({1.5: 1, 2: 1, 3: 1})
+	assert type(statsitical) is ScalarStatistical
+
+
+def test_FactoryChooseString():
+	statsitical = factory.createStatistical({"a": 1, "b": 1, "c": 1})
+	assert type(statsitical) is StringStatistical
+
+
+def test_FactoryChooseStringMixed():
+	statsitical = factory.createStatistical(
+		{SortedString("a"): 1, "b": 1, "c": 1}
+	)
+	assert type(statsitical) is StringStatistical
+
+
+def test_FactoryChooseMixed():
+	statsitical = factory.createStatistical({"a": 1, 1: 1})
+	assert type(statsitical) is BaseStatistical

@@ -5,11 +5,6 @@ from ttstatistics.dicechanics.statisticals import ScalarStatistical
 
 
 @pytest.fixture
-def emptyDie():
-	return Die()
-
-
-@pytest.fixture
 def simpleScalarDie(simpleScalarStatistical):
 	return Die(simpleScalarStatistical)
 

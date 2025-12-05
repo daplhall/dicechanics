@@ -10,7 +10,7 @@ class StringPlot:
 		mx = max(y)
 		height = [round(i / mx * lineHeight) for i in y]
 		for key, text, w in zip(x, topText, height):
-			res += f"{key:>{pad}}" + "|" + style * w + f" {text}" + "\n"
+			res += f"{str(key):>{pad}}" + "|" + style * w + f" {text}" + "\n"
 		return res
 
 	@staticmethod

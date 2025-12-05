@@ -1,9 +1,12 @@
 from ttstatistics.dicechanics.die import Die
-from ttstatistics.dicechanics.statisticals.scalar import ScalarStatistical
+from ttstatistics.dicechanics.statisticals import (
+	ScalarStatistical,
+	StringStatistical,
+)
 
 
-def test_EmptyInit(emptyDie):
-	assert not emptyDie
+def test_EmptyInit():
+	assert not Die()
 
 
 def test_MappingMeanScalar(simpleScalarDie, simpleScalarStatistical):
@@ -208,6 +211,23 @@ def test_explode(d4):
 	assert exploded.items() == ref.items()
 
 
+def test_explodeDepth(d4):
+	exploded = d4.explode(4, depth=2)
+	ref = {
+		1: 1 / 4,
+		2: 1 / 4,
+		3: 1 / 4,
+		5: 1 / 16,
+		6: 1 / 16,
+		7: 1 / 16,
+		9: 1 / 64,
+		10: 1 / 64,
+		11: 1 / 64,
+		12: 1 / 64,
+	}
+	assert exploded.items() == ref.items()
+
+
 def test_explodeDouble(d4):
 	exploded = d4.explode(3, 4)
 	ref = {
@@ -238,7 +258,7 @@ def test_implode(d4):
 
 def test_StringReprentation(d4):
 	assert str(d4) == (
-		"Die with mu - 2.50, sigma - 2.24\n--------------------------------\n"
+		"Die with mu - 2.50, sigma - 1.12\n--------------------------------\n"
 		"1|#################### 25.00%\n2|#################### 25.00%\n"
 		"3|#################### 25.00%\n4|#################### 25.00%\n"
 	)
@@ -289,3 +309,15 @@ def test_GreaterEqualDie(d4):
 	res = d4 >= d4
 	ref = {0: 3 / 8, 1: 5 / 8}
 	assert res.items() == ref.items()
+
+
+def test_MapToString(d4):
+	def map_(outcome):
+		if outcome == 1:
+			return "F"
+		else:
+			return "S"
+
+	res = d4.map(map_)
+	assert res.dtype == StringStatistical
+	assert res.items() == {"F": 1 / 4, "S": 3 / 4}.items()

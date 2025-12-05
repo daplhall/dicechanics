@@ -18,3 +18,10 @@ def selectiveOnGroup(bag: protocols.Group, operation) -> protocols.Mapping:
 
 def regularOnGroup(bag: protocols.Group, operation) -> protocols.Mapping:
 	return basePerformOnGroup(bag, operation, RegularCombination)
+
+
+def perform(pool: protocols.Group, function) -> protocols.Mapping:
+	if pool.prepareSlice() is None:
+		return regularOnGroup(pool, function)
+	else:
+		return selectiveOnGroup(pool, function)
