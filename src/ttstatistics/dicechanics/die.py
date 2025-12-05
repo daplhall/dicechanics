@@ -167,11 +167,9 @@ class Die(GenericMapping, protocols.Die):
 
 	def __str__(self):
 		res = "Die with mu - "
-		res += (
-			f"{self.mean:.2f}, sigma - {self.std:.2f}"
-			if self.mean is not None
-			else ""
-		)
+		res += f"{self.mean:.2f}" if self.mean is not None else "n/a"
+		res += ", sigma - "
+		res += f"{self.std:.2f}" if self.std is not None else "n/a"
 		res += "\n"
 		res += "-" * (len(res) - 1) + "\n"
 		return res + StringPlot.bars(
