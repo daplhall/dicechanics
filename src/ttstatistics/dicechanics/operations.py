@@ -1,26 +1,19 @@
-from ttstatistics.core.operations import (
-	add,
-	mul,
-	regularOnGroup,
-	selectiveOnGroup,
-)
+from ttstatistics.core.operations import add, mul
 from ttstatistics.core.operations import (
 	max as max_,
 )
 from ttstatistics.core.operations import (
 	min as min_,
 )
+from ttstatistics.core.operations import perform as performCore
 from ttstatistics.dicechanics import protocols
 from ttstatistics.dicechanics.die import Die
-from ttstatistics.dicechanics.statisticals import ScalarStatistical
+from ttstatistics.dicechanics.statisticals.factory import createStatistical
 
 
 def perform(pool: protocols.Pool, function) -> protocols.Die:
-	if pool.prepareSlice() is None:
-		stats = ScalarStatistical(regularOnGroup(pool, function))
-	else:
-		stats = ScalarStatistical(selectiveOnGroup(pool, function))
-	return Die(stats)
+	statistical = createStatistical(performCore(pool, function))
+	return Die(statistical)
 
 
 def sum(pool: protocols.Pool) -> protocols.Die:

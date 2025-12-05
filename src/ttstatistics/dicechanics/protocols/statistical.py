@@ -1,6 +1,9 @@
 from abc import abstractmethod
 from collections.abc import Callable
+from numbers import Number
 from typing import Protocol, runtime_checkable
+
+from ttstatistics.core import protocols
 
 
 @runtime_checkable
@@ -20,3 +23,8 @@ class Statistical[T](Protocol):
 	@property
 	@abstractmethod
 	def std(self): ...
+
+
+class StatisticalFactory[T](Protocol):
+	@abstractmethod
+	def create(self, data: protocols.Mapping[T, Number]): ...

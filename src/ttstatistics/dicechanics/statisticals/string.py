@@ -3,19 +3,7 @@ from ttstatistics.utils.primitives import SortedString
 
 
 class StringStatistical(BaseStatistical):
-	def __init__(self, data: dict[str, float] = {}, Stringifyer=SortedString):
+	def __init__(self, data: dict[str, float] = {}, Stringifyer=str):
 		super().__init__(
 			{Stringifyer(key): value for key, value in data.items()}
 		)
-
-	@property
-	def mean(self):
-		return None
-
-	@property
-	def varians(self):
-		return None
-
-	@property
-	def std(self):
-		return None
