@@ -75,20 +75,22 @@ import ttstatistics.dicechanics as ds
 
 def CoC(outcome):
 	global skill
-	fumble = 100 if skill >= 50 else 96
-
-	if outcome >= fumble:
-		return -1
-	elif outcome == 1:
-		return 4
-	elif outcome > skill:
-		return 0
-	elif outcome <= skill // 5:
-		return 3
-	elif outcome <= skill // 2:
-		return 2
+	if skill >= 50:
+		fumble = 100
 	else:
-		return 1
+		fumble = 96
+	if outcome >= fumble:
+		return "U"
+	elif outcome == 1:
+		return "C"
+	elif outcome > skill:
+		return "F"
+	elif outcome <= skill // 5:
+		return "E"
+	elif outcome <= skill // 2:
+		return "H"
+	else:
+		return "S"
 
 
 skill = 50
@@ -97,12 +99,12 @@ print(d.map(CoC))
 ```
 Output:
 ```
-Die with mu - 1.32, sigma - 4.15
---------------------------------
- 4| 1.00%
- 3|#### 9.00%
- 2|###### 15.00%
- 1|########## 25.00%
- 0|#################### 49.00%
--1| 1.00%
+Die with mu - n/a, sigma - n/a
+------------------------------
+C| 1.00%
+E|#### 9.00%
+H|###### 15.00%
+S|########## 25.00%
+F|#################### 49.00%
+U| 1.00%
 ```
