@@ -22,7 +22,7 @@ class BaseStatistical[T](protocols.Statistical):
 	def values(self):
 		return self.probability.values()
 
-	def map(self, mapping: Callable[[T], T]) -> BaseStatistical:
+	def map(self, mapping: Callable[[T], T]) -> protocols.Statistical:
 		newInternalData = defaultdict(float)
 		for key, value in self.items():
 			newInternalData[mapping(key)] += value
@@ -32,3 +32,15 @@ class BaseStatistical[T](protocols.Statistical):
 		norm = sum(self.values())
 		self.probability = {key: value / norm for key, value in self.items()}
 		return self
+
+	@property
+	def mean(self):
+		return None
+
+	@property
+	def varians(self):
+		return None
+
+	@property
+	def std(self):
+		return None

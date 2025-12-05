@@ -5,8 +5,6 @@ from numbers import Number
 
 from ttstatistics.core.genericmapping import GenericMapping
 from ttstatistics.core.group import Group
-
-# from ttstatistics.core.operations.macro import Operators
 from ttstatistics.core.operations import (
 	add,
 	div,
@@ -16,7 +14,7 @@ from ttstatistics.core.operations import (
 	le,
 	lt,
 	mul,
-	regularOnGroup,
+	perform,
 	sub,
 )
 from ttstatistics.core.protocols.base import InputFunction, Unit
@@ -24,6 +22,7 @@ from ttstatistics.core.protocols.mapping import Mapping
 from ttstatistics.dicechanics import protocols
 from ttstatistics.dicechanics.pool import Pool
 from ttstatistics.dicechanics.protocols import Statistical
+from ttstatistics.dicechanics.statisticals.factory import createStatistical
 from ttstatistics.dicechanics.statisticals.scalar import ScalarStatistical
 from ttstatistics.dicechanics.symbolics import RerollSymbol
 from ttstatistics.utils._plot import StringPlot
@@ -33,7 +32,7 @@ type MapFunction = Callable[[Unit], Unit]
 
 class Die(GenericMapping, protocols.Die):
 	def __init__(self, data: Statistical[Unit] = ScalarStatistical()):
-		inpt = type(data)(self._expand(data))
+		inpt = self._expand(data)
 		super().__init__(inpt)
 
 	def __bool__(self):
@@ -52,21 +51,20 @@ class Die(GenericMapping, protocols.Die):
 		return self.internals.std
 
 	def map(self, mapping: MapFunction) -> protocols.Die:
-		return type(self)(self.internals.map(mapping))
+		res = defaultdict(lambda: 0)
+		for key, value in self.items():
+			res[mapping(key)] += value
+		return type(self)(createStatistical(res))
 
 	def _binaryOperaiton(self, rhs, operation: InputFunction):
 		if isinstance(rhs, Number):
-			internal = defaultdict(lambda: 0)
-			for key, prob in self.items():
-				internal[operation(key, rhs)] += prob
-			return type(self)(type(self.internals)(internal))
+			rhs = type(self)(createStatistical({rhs: 1}))
+		if rhs == self:
+			group = Group({self: 2})
 		else:
-			if rhs == self:
-				group = Group({self: 2})
-			else:
-				group = Group({self: 1, rhs: 1})
-			newMapping = type(self.internals)(regularOnGroup(group, operation))
-			return type(self)(newMapping)
+			group = Group({self: 1, rhs: 1})
+		statistical = createStatistical(perform(group, operation))
+		return type(self)(statistical)
 
 	def __add__(self, rhs):
 		return self._binaryOperaiton(rhs, add)
@@ -124,7 +122,7 @@ class Die(GenericMapping, protocols.Die):
 				mapping = die
 			for face, prob in mapping.items():
 				numbers[face] += prob * dieProb
-		return type(statistical)(numbers)
+		return createStatistical(numbers)
 
 	def count(self, *facesToCount):
 		return self.map(lambda key: key in facesToCount)
@@ -146,29 +144,35 @@ class Die(GenericMapping, protocols.Die):
 					tokeep[map_] += rerollSum
 				else:
 					tokeep.update({ops(face, newMap): rerollSum})
-			newMap = self.dtype(self._expand(tokeep))
+			newMap = type(self)(createStatistical(tokeep))
 		return newMap
 
 	def reroll(self, *faceToReroll, depth=1) -> protocols.Die:
 		rerolledMapping = self._rerollBaseline(
 			self, *faceToReroll, depth=depth, ops=lambda _, y: y
 		)
-		return type(self)(self.dtype(rerolledMapping))
+		return type(self)(rerolledMapping)
 
 	def explode(self, *faceToReroll, depth=1) -> protocols.Die:
 		rerolledMapping = self._rerollBaseline(
 			self, *faceToReroll, depth=depth, ops=add
 		)
-		return type(self)(self.dtype(rerolledMapping))
+		return type(self)(rerolledMapping)
 
 	def implode(self, *faceToReroll, depth=1) -> protocols.Die:
 		rerolledMapping = self._rerollBaseline(
 			self, *faceToReroll, depth=depth, ops=sub
 		)
-		return type(self)(self.dtype(rerolledMapping))
+		return type(self)(rerolledMapping)
 
 	def __str__(self):
-		res = f"Die with mu - {self.mean:.2f}, sigma - {self.std:.2f}\n"
+		res = "Die with mu - "
+		res += (
+			f"{self.mean:.2f}, sigma - {self.std:.2f}"
+			if self.mean is not None
+			else ""
+		)
+		res += "\n"
 		res += "-" * (len(res) - 1) + "\n"
 		return res + StringPlot.bars(
 			self.keys(),

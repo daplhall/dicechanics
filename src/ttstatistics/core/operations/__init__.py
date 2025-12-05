@@ -1,5 +1,6 @@
 from ttstatistics.core.operations.macro import (  # noqa: F401
 	basePerformOnGroup,
+	perform,
 	regularOnGroup,
 	selectiveOnGroup,
 )
