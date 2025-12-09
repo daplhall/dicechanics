@@ -18,5 +18,5 @@ help:
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
-	@$(PLANTUML) -f png --output-dir out src/**/*.puml
+	@$(PLANTUML) -f png --verbose --output-dir out src/**/*.puml
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
