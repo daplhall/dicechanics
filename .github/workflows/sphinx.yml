@@ -15,14 +15,12 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v2
-      - name: Process diagrams
-        uses: Timmy/plantuml-action@v1
-        with:
-          args: '-f png --output-dir out docs/src/**/*.puml'
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
+      - name: Generate SVG Diagrams
+        uses: holowinski/plantuml-github-action@main
+        with:
+          args: '-v -f png --output-dir out docs/src/**/*.puml'
       - name: Install dependencies
         run: |
           pip install -r docs/requirements.txt
