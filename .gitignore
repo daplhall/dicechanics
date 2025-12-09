@@ -11,4 +11,4 @@ main.py
 notes/
 profil*
 main.py
-**/out/
+**/**/out
