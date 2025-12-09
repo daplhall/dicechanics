@@ -17,19 +17,16 @@ jobs:
     steps:
       - name: Checkout Source
         uses: actions/checkout@v4
-      - name: Generate SVG Diagrams
-        uses: Timmy/plantuml-action@v1
-        with:
-          args: '-v -f png --output-dir out docs/src/**/*.puml'
-
       - uses: actions/setup-python@v5
       - name: Install dependencies
         run: |
           pip install -r docs/requirements.txt
+
       - name: Build
         run: |
           cd docs
           make html
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
