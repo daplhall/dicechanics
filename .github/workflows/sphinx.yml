@@ -23,6 +23,7 @@ jobs:
         with:
           args: '-f png --output-dir out docs/src/**/*.puml'
   docs:
+    needs: diagrams
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
