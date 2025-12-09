@@ -21,8 +21,8 @@ The project page can be found `here <https://github.com/daplhall/dicechanics>`_.
    usage/DicechanicsExamples
    API/dicechanics
 
-Development API
----------------
+Development Docs
+----------------
 .. toctree::
    :titlesonly: 
 
