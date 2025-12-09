@@ -8,7 +8,7 @@ Currently, it only contains dicechanics, which allows for statistical exploratio
 ## Documentation
 [Documentation on GitHub pages](https://daplhall.github.io/dicechanics)
 
-## Sample usage
+## Sample usage of the dicechanics submodule
 Consider you are playing your favorite tabletop roleplaying system in which you roll five six-sided dice and add the two highest, you write the following
 ```python
 import ttstatistics.dicechanics as dc
@@ -63,4 +63,9 @@ pytest-benchmark compare [ids,...]
 Tests are executed by the following:
 ```
 pytest tests
+```
+
+# Building UMl
+```
+plantuml -f png --output-dir png src/**/*.puml
 ```
