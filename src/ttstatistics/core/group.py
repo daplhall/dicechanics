@@ -5,6 +5,10 @@ from ttstatistics.core.slice import Slice
 
 
 class Group(protocols.Group):
+	"""
+	Hello world
+	"""
+
 	def __init__(self, data: dict[protocols.Mapping, int] = {}):
 		self.internalMappings = data
 		self.slice = None

@@ -1,11 +1,10 @@
 # Dicechanics getting started
 Dicechanics is a general-purpose dice probability calculator that provides an easy-to-use interface.
 
-A three-tier system of classes is exposed
+A three-tier system of immutable classes is exposed
 1. Die, the base primitive of dicechanics
 2. Pool, a group of mixed dice
 3. Bag, a pool of pools(Currently not implemented)
-All classes are immutable.
 ## Creating a die
 Creating a Die is easy; you invoke the d function.
 ```python
@@ -96,3 +95,19 @@ Die with mu - 7.00, sigma - 2.42
 12|### 2.78%
 ```
 Here, `mu` is the mean and `sigma` is the standard deviation.
+## Assessing die data
+To access the data inside a Die you use the `keys`, `values` or `items` methods.
+```
+for face, probability in d6.items():
+    print(face, probability)
+```
+output
+```
+1 0.16666666666666666
+2 0.16666666666666666
+3 0.16666666666666666
+4 0.16666666666666666
+5 0.16666666666666666
+6 0.16666666666666666
+```
+This allows you to use a plotting library to visualize the probabilities.

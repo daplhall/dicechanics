@@ -1,11 +1,10 @@
 @startuml Dicechanics
 top to bottom direction
-package "dicechancis" {
+package "Dicechanics" {
     class Die{
     }
     class "Number Statistical" as numstat
     class "String Statistical" as strstat
-    class "Cumstom Statistical" as customstat
     class "Base Statistical" as basestat
     class PoolImpl
     class BagImpl
@@ -32,12 +31,6 @@ package "dicechancis" {
         + {method} <<Operator Overloads>>
     }
     interface Bag
-    interface string{
-        Everything that subtypes\na python.string
-    }
-}
-package "Primitives"{
-    class SortedString
 }
 
 package "Core"{
@@ -49,23 +42,20 @@ package "Core"{
     class DefaultMap
 }
 
-Die ..|> die
+Die .left.|> die
 Die --> Statistical 
 die --|> mapping
 numstat .up.|> Statistical
 strstat .up.|> Statistical
-customstat .up.|> Statistical
+basestat .up.|> Statistical
 numstat -down-|> basestat: special\ncase of 
 strstat -down-|> basestat: special\ncase of
-customstat -down-|> basestat :special\ncase of
-strstat --> string
-SortedString .|> string
 Pool -left-|> group
-Pool ..> Die
+Pool ..> die
 PoolImpl .left.|> Pool
 PoolImpl -right-|> DefaultGroup
 Bag -right-|> collection
-BagImpl .down.|> Bag
+BagImpl .left.|> Bag
 BagImpl -right-|> DefaultCollection
 Bag .down.> Pool
 Die -|> DefaultMap

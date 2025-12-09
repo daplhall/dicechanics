@@ -12,10 +12,15 @@ Dicechancis API
 .. autofunction:: min
 .. autofunction:: perform
 
-Operations (ops)
-----------------------
+Operations Submodule (ops)
+--------------------------
 Submodule that defines standard functions to use with perform.
 
 
 .. automodule:: ttstatistics.dicechanics.ops
    :members:
+   
+Class methods and operations
+----------------------------
+.. autoclass:: ttstatistics.dicechanics.die.Die
+.. autoclass:: ttstatistics.dicechanics.pool.Pool
