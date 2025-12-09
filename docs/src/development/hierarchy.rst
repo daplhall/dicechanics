@@ -9,7 +9,7 @@ Core class hierarchy
    :alt: Core UML Classes
 
 Dicechanics class hierarchy
---------------------
+---------------------------
 .. figure:: diagrams/classes/out/Dicechanics.png
    :scale: 100 %
    :alt: Core UML Classes

@@ -26,7 +26,7 @@ Base classes
     :members:
 
 Operations
------------------------------
+----------
 .. automodule:: ttstatistics.core.slice
     :members:
     :undoc-members:
