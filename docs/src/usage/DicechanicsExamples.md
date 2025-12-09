@@ -26,20 +26,20 @@ As previously mentioned, the values rolled are mapped to a meaning.
 ```python
 def BitD(outcomes):
     if outcomes < 4:
-        return 0
+        return 'C'# Consequence
     elif outcomes > 5:
-        return 2
-    Else:
-        return 1
+        return 'S'# Success
+    else:
+        return 'M'# Mixed
 print(ds.max(pool).map(BitD))
 ```
 Output:
 ```
-Die with mu - 1.46, sigma - 1.62
---------------------------------
-0|## 6.25%
-1|################ 41.98%
-2|#################### 51.77%
+Die with mu - n/a, sigma - n/a
+------------------------------
+C|## 6.25%
+M|################ 41.98%
+S|#################### 51.77%
 ```
 So with 4 dice, we have a 6.25% chance of just failing, which is pretty good odds.
 

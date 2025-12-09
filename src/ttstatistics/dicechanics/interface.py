@@ -24,12 +24,25 @@ def _convertToCorrectStatistical(obj):
 	return Die(backend)
 
 
-def d(obj: int | Iterable | Mapping) -> protocols.Die:
+def d(obj: int | Iterable | str) -> protocols.Die:
+	"""
+	The default way of creating a Die
+
+	Parameters
+	----------
+	obj: int | Iterable | str
+		A python obj that is that is taken an transformed into a Die.\n
+		1. When an Int it defines the die through dice syntax eg. d(42) is a  d42.\n
+		2. When an iterable it counts the repeated faces eg. d([1,1,1,3]) becomes a die with 3 sides as 1.\n
+		3. When a string it follows a specific syntax "<start>..<end>:<repeat>, <new statement>"\n
+	Returns
+	-------
+	out: Die
+		The dice representing the input
+	"""  # noqa: E501
 	if isinstance(obj, int):
 		backend = ScalarStatistical(dict.fromkeys(range(1, obj + 1), 1 / obj))
 		return Die(backend)
-	elif isinstance(obj, Mapping):
-		return _convertToCorrectStatistical(obj)
 	elif isinstance(obj, str):
 		res = defaultdict(lambda: 0)
 		for segment in obj.split(","):
@@ -50,4 +63,14 @@ def d(obj: int | Iterable | Mapping) -> protocols.Die:
 
 
 def pool(input: dict[protocols.Die]):
+	"""
+	The default function for creating a pool. Matmult on dice is recommended over this.
+
+	Parameters
+	----------
+	input:  dict[Die]
+		A dict of dice. The values are the amount of said die in the pool.
+	Returns
+		out: Pool
+	"""  # noqa: E501
 	return Pool(input)
