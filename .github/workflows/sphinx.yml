@@ -12,8 +12,7 @@ permissions:
   contents: write
 
 jobs:
-  diagrams:
-    name: Draw diagrams
+  docs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -22,10 +21,6 @@ jobs:
         uses: Timmy/plantuml-action@v1
         with:
           args: '-f png --output-dir out docs/src/**/*.puml'
-  docs:
-    needs: diagrams
-    runs-on: ubuntu-latest
-    steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
       - name: Install dependencies
