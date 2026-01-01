@@ -12,6 +12,9 @@ regular = regularOnGroup
 
 
 def helperCompareTwoMappings(a, b):
+	if not (a and b):
+		assert 0 == 1
+
 	for (ref, refprob), (key, prob) in zip(a.items(), b.items()):
 		assert ref == key
 		assert round(refprob, 15) == round(prob, 15)
@@ -103,3 +106,24 @@ def test_Selective2Lowest():
 		10: 0.037037037037037,
 	}
 	helperCompareTwoMappings(reference, toTest)
+
+
+def test_3d6HighestTwo():
+	d = GenericMapping(dict.fromkeys(range(1, 7), 1 / 6))
+	group = Group({d: 3})
+	toTest = selective(group[-2:], add)
+	print(toTest.items())
+	res = {
+		2: 0.0046296296296296285,
+		3: 0.013888888888888888,
+		4: 0.032407407407407406,
+		5: 0.05555555555555555,
+		6: 0.08796296296296297,
+		7: 0.125,
+		8: 0.1574074074074074,
+		9: 0.16666666666666666,
+		10: 0.15740740740740738,
+		11: 0.125,
+		12: 0.07407407407407406,
+	}
+	assert res.items() == toTest.items()

@@ -2,13 +2,22 @@
 @startuml SimpleDiceCombsSorted
 
 start
-:outcomes, amount; <<input>>
-repeat
+:outcomes, operation, GroupCounts, Slicing; <<input>>
+:determine N sources of outcome (nMax); <<task>>
     repeat 
-    :Recurively\nsolve subproblem; <<task>>
-    :Combine subproblem\nwith outcome; <<task>>
-    repeat while (i < outcome count) is (true) not (false)
-repeat while(Outcomes is empty) is (no) not (yes)
+    :determine subproblem; <<task>>
+    :reduce amount by i;
+    :pop slice;
+    :solve subproblem; <<task>>
+    if (subproblem is None) then
+        :skip branch;<<task>>
+    else if (i == 0) then
+        :write subproblem to results; <<task>>
+    else
+        :calculate bionimal coeffiecnt;
+        :combine operation with popped outcome;<<task>>
+    endif 
+    repeat while (i <= nMax ) is (true) not (false)
 :Combinations; <<output>>
 end
 @enduml
