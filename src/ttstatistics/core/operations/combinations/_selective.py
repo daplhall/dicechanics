@@ -52,18 +52,12 @@ def writeOutcomeToRes(res, operation, baseValue, sub, combinations):
 			res[operation(face, baseValue)] += amount * combinations
 
 
-def anyOutcomesLeft(outcomes):
+def isOutcomesEmpty(outcomes):
 	return not outcomes
 
 
-def bottomOutcome(leftToChose):
-	return None if leftToChose else {None: 1}
-
-
-def createSubMeta(meta, idx, nChosen):
-	submeta = list(meta)
-	submeta[idx] -= nChosen
-	return tuple(submeta)
+def isGroupEmpty(leftToChose):
+	return leftToChose == 0
 
 
 def weightedBinaryCoeficients(leftToChose, nChosen, weight):
@@ -71,59 +65,18 @@ def weightedBinaryCoeficients(leftToChose, nChosen, weight):
 	return BinaryCoeficients * weight**nChosen
 
 
-class Selective:
-	def calculate(
-		self, group: protocols.Group, operation: protocols.InputFunction
-	):
-		bagSlice = group.prepareSlice()
-		outcomes, meta = getOutcomes(group)
-		slice_ = tuple(bagSlice.next() for _ in range(sum(meta)))[::-1]
-		return normalize(
-			self._evaluate(outcomes, operation, sum(meta), meta, slice_)
-		)
-
-	@cache
-	def _evaluate(self, outcomes, operation, leftToChose, meta, slicing):
-		if anyOutcomesLeft(outcomes) or leftToChose == 0:
-			return bottomOutcome(leftToChose)
-		res = defaultdict(int)
-		(outcome, idx, weight), amount = outcomes[0]
-		for nChosen in range(0, min(amount, leftToChose, meta[idx]) + 1):
-			# loop unroling?
-			subMeta = createSubMeta(meta, idx, nChosen)
-			subAmount = leftToChose - nChosen
-			sub = self._evaluate(
-				outcomes[1:], operation, subAmount, subMeta, slicing[nChosen:]
-			)
-			if sub is None:
-				pass
-			elif nChosen == 0:
-				writeSubToRes(res, sub)
-			else:
-				baseValue = combinedOutcome(
-					operation, outcome, nChosen, slicing[:nChosen]
-				)
-				coef = weightedBinaryCoeficients(leftToChose, nChosen, weight)
-				writeOutcomeToRes(res, operation, baseValue, sub, coef)
-		return res
-
-
 @dataclass(frozen=True)
 class GroupCounts:
 	memberCount: tuple[int]
 	total: int
 
-
-TOTAL = 0
-CALLS = 0
-A = 0
-N0 = 0
-BASE = 0
-ITER = 0
-from line_profiler import profile
+	def subGroup(self, idx: int, nChosen: int) -> "GroupCounts":
+		subMeta = list(self.memberCount)
+		subMeta[idx] -= nChosen
+		return GroupCounts(tuple(subMeta), self.total - nChosen)
 
 
-class SelectiveCleanup:
+class Selective:
 	def calculate(
 		self, group: protocols.Group, operation: protocols.InputFunction
 	):
@@ -135,38 +88,30 @@ class SelectiveCleanup:
 				outcomes, operation, GroupCounts(meta, sum(meta)), slice_
 			)
 		)
-		print(TOTAL, CALLS, A, BASE, N0, ITER)
 		return q
 
 	@cache
 	def _evaluate(self, outcomes, operation, counts: GroupCounts, slicing):
-		global TOTAL, CALLS, A, BASE, N0, ITER
-		CALLS += 1
-		if anyOutcomesLeft(outcomes) or counts.total == 0:
-			A += 1
-			return bottomOutcome(counts.total)
+		if isGroupEmpty(counts.total):
+			return {None: 1}
+		if isOutcomesEmpty(outcomes):
+			return None
 		res = defaultdict(int)
 		(outcome, idx, weight), amount = outcomes[0]
 		nmax = min(amount, counts.total, counts.memberCount[idx])
-		if sum(slicing) == 0:
-			TOTAL += 1
 		for nChosen in range(0, nmax + 1):
-			ITER += 1
-			subMeta = createSubMeta(counts.memberCount, idx, nChosen)
-			subAmount = counts.total - nChosen
+			subGroup = counts.subGroup(idx, nChosen)
 			sub = self._evaluate(
 				outcomes[1:],
 				operation,
-				GroupCounts(subMeta, subAmount),
+				subGroup,
 				slicing[nChosen:],
 			)
 			if sub is None:
 				pass
 			elif nChosen == 0:
-				N0 += 1
 				writeSubToRes(res, sub)
 			else:
-				BASE += 1
 				baseValue = combinedOutcome(
 					operation, outcome, nChosen, slicing[:nChosen]
 				)
