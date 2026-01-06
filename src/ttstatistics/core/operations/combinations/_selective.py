@@ -80,15 +80,29 @@ class Selective:
 	def calculate(
 		self, group: protocols.Group, operation: protocols.InputFunction
 	):
-		bagSlice = group.prepareSlice()
-		outcomes, meta = getOutcomes(group)
-		slice_ = tuple(bagSlice.next() for _ in range(sum(meta)))[::-1]
+		outcomes, meta, slice_ = self.prepare(group)
 		q = normalize(
 			self._evaluate(
 				outcomes, operation, GroupCounts(meta, sum(meta)), slice_
 			)
 		)
 		return q
+
+	def prepare(self, group: protocols.Group):
+		bagSlice = group.prepareSlice()
+		outcomes, meta = getOutcomes(group)
+		slice_ = tuple(bagSlice.next() for _ in range(sum(meta)))[::-1]
+		order = self.orientation(slice_)
+		return outcomes[::order], meta, slice_[::order]
+
+	def orientation(self, sliceList):
+		length = len(sliceList)
+		upper = sum(sliceList[length // 2 :])
+		lower = sum(sliceList[: length // 2])
+		if upper > lower:
+			return -1
+		else:
+			return 1
 
 	@cache
 	def _evaluate(self, outcomes, operation, counts: GroupCounts, slicing):

@@ -26,6 +26,7 @@ from ttstatistics.dicechanics.statisticals.factory import createStatistical
 from ttstatistics.dicechanics.statisticals.scalar import ScalarStatistical
 from ttstatistics.dicechanics.symbolics import RerollSymbol
 from ttstatistics.utils._plot import StringPlot
+from ttstatistics.utils.utils import sort_dict
 
 type MapFunction = Callable[[Unit], Unit]
 
@@ -172,10 +173,11 @@ class Die(GenericMapping, protocols.Die):
 		res += f"{self.std:.2f}" if self.std is not None else "n/a"
 		res += "\n"
 		res += "-" * (len(res) - 1) + "\n"
+		data = sort_dict(self)
 		return res + StringPlot.bars(
-			self.keys(),
-			self.values(),
-			topText=[f"{i * 100:.2f}%" for i in self.values()],
+			data.keys(),
+			data.values(),
+			topText=[f"{i * 100:.2f}%" for i in data.values()],
 		)
 
 	def __neg__(self):

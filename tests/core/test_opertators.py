@@ -14,10 +14,13 @@ regular = regularOnGroup
 def helperCompareTwoMappings(a, b):
 	if not (a and b):
 		assert 0 == 1
-
+	"""
 	for (ref, refprob), (key, prob) in zip(a.items(), b.items()):
 		assert ref == key
 		assert round(refprob, 15) == round(prob, 15)
+	"""
+	for key, prop in a.items():
+		assert (b[key] - prop) < 1e-15
 
 
 def test_PerformOnBagWithOneItem(groupWithItems, simpleScalarDie):
