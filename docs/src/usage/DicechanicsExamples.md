@@ -108,3 +108,47 @@ S|########## 25.00%
 F|#################### 49.00%
 U| 1.00%
 ```
+
+## Burning Wheel Open Ended Rolls
+In Burning Wheel you roll `Nd6` where a 4,5 or 6 on the d6 counts as a success. This can be modelled just like the Alien example. However Buring Wheel also has "open ended rolls" meaning that a 6 explodes such that each subsequent 6 counts as a hit.  
+
+So lets say we roll 4d6 that is open ended, we can model it as:
+```Python
+def openEnded(outcome):
+	if outcome % 6 == 0:
+		return outcome // 6
+	elif outcome % 4 == 0:
+		return 1 + outcome // 6
+	elif outcome % 5 == 0:
+		return 1 + outcome // 6
+	else:
+		return 0 + outcome // 6
+
+
+d6 = ds.d(6)
+exploded_d6 = d6.explode(6, depth = 3)
+print(ds.sum(4 @ exploded_d6.map(openEnded)))
+
+```
+Output:
+```
+Die with mu - 2.40, sigma - 1.37
+--------------------------------
+ 0|#### 6.25%
+ 1|############## 20.83%
+ 2|#################### 29.51%
+ 3|################ 23.77%
+ 4|######### 12.59%
+ 5|### 4.95%
+ 6|# 1.57%
+ 7| 0.41%
+ 8| 0.09%
+ 9| 0.02%
+10| 0.00%
+11| 0.00%
+12| 0.00%
+13| 0.00%
+14| 0.00%
+15| 0.00%
+16| 0.00%
+```
