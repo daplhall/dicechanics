@@ -3,6 +3,7 @@ from collections import defaultdict
 from collections.abc import Callable
 from numbers import Number
 
+from ttstatistics.core.empty import VariableCount
 from ttstatistics.core.group import Group
 from ttstatistics.core.mapping import GenericMapping, expand
 from ttstatistics.core.operations import (
@@ -37,6 +38,9 @@ class Die(GenericMapping, protocols.Die):
 
 	def __bool__(self):
 		return False
+
+	def __hash__(self):
+		return hash(tuple(self.items()) + (self.mean, self.varians))
 
 	@property
 	def mean(self):
@@ -102,6 +106,9 @@ class Die(GenericMapping, protocols.Die):
 	def __le__(self, rhs):
 		return self._binaryOperaiton(rhs, le)
 
+	def __eq__(self, rhs):
+		return hash(self) == hash(rhs)
+
 	def count(self, *facesToCount):
 		return self.map(lambda key: key in facesToCount)
 
@@ -166,7 +173,7 @@ class Die(GenericMapping, protocols.Die):
 
 	def __matmul__(self, rhs: int) -> protocols.Pool:
 		if isinstance(rhs, Die):
-			pass
+			return Pool({rhs: VariableCount(self)})
 		elif isinstance(rhs, int):
 			return Pool({self: rhs})
 		else:

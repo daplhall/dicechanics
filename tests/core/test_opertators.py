@@ -20,7 +20,7 @@ def helperCompareTwoMappings(a, b):
 		assert round(refprob, 15) == round(prob, 15)
 	"""
 	for key, prop in a.items():
-		assert (b[key] - prop) < 1e-15
+		assert abs(b[key] - prop) < 1e-15
 
 
 def test_PerformOnBagWithOneItem(groupWithItems, simpleScalarDie):

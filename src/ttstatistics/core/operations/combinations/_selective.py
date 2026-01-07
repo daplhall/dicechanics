@@ -6,20 +6,26 @@ from functools import cache
 from math import comb
 
 from ttstatistics.core import protocols
+from ttstatistics.core.empty import VariableCount
 from ttstatistics.utils.utils import normalize
 
 
 def getOutcomes(bag: protocols.Group):
 	res = defaultdict(int)
 	amountTuple = ()
+	testTuple = ()
 	for idx, (mapping, amount) in enumerate(bag.prepare()):
 		for key, probability in mapping.items():
 			res[(key, idx, probability)] += amount
-		amountTuple += (amount,)
+		if isinstance(amount, VariableCount):
+			testTuple += (((None, idx, None), amount),)
+		amountTuple += (0 + amount,)  # hack needs cleaning up
 
-	return tuple(
-		sorted(res.items(), key=lambda x: x[0], reverse=True)
-	), amountTuple
+	return (
+		tuple(sorted(res.items(), key=lambda x: x[0])),
+		amountTuple,
+		testTuple,
+	)
 
 
 def combinedOutcome(operation, face, nChosen, sliceMask):
@@ -75,25 +81,27 @@ class GroupCounts:
 		subMeta[idx] -= nChosen
 		return GroupCounts(tuple(subMeta), self.total - nChosen)
 
+	def subGroupEmpty(self, n):
+		return GroupCounts(self.memberCount, self.total - n)
+
 
 class Selective:
 	def calculate(
 		self, group: protocols.Group, operation: protocols.InputFunction
 	):
-		outcomes, meta, slice_ = self.prepare(group)
-		q = normalize(
-			self._evaluate(
-				outcomes, operation, GroupCounts(meta, sum(meta)), slice_
-			)
-		)
-		return q
+		outcomes, counts, slice_ = self.prepare(group)
+		return normalize(self._evaluate(outcomes, operation, counts, slice_))
 
 	def prepare(self, group: protocols.Group):
 		bagSlice = group.prepareSlice()
-		outcomes, meta = getOutcomes(group)
-		slice_ = tuple(bagSlice.next() for _ in range(sum(meta)))[::-1]
+		outcomes, meta, empty = getOutcomes(group)
+		slice_ = tuple(bagSlice.next() for _ in range(sum(meta)))
 		order = self.orientation(slice_)
-		return outcomes[::order], meta, slice_[::order]
+		return (
+			empty + outcomes[::order],
+			GroupCounts(meta, sum(meta)),
+			slice_[::order],
+		)
 
 	def orientation(self, sliceList):
 		length = len(sliceList)
@@ -111,24 +119,30 @@ class Selective:
 		if isOutcomesEmpty(outcomes):
 			return None
 		res = defaultdict(int)
+		amount: float | VariableCount
 		(outcome, idx, weight), amount = outcomes[0]
-		nmax = min(amount, counts.total, counts.memberCount[idx])
-		for nChosen in range(0, nmax + 1):
-			subGroup = counts.subGroup(idx, nChosen)
-			sub = self._evaluate(
-				outcomes[1:],
-				operation,
-				subGroup,
-				slicing[nChosen:],
-			)
-			if sub is None:
-				pass
-			elif nChosen == 0:
-				writeSubToRes(res, sub)
-			else:
-				baseValue = combinedOutcome(
-					operation, outcome, nChosen, slicing[:nChosen]
+		if not isinstance(amount, VariableCount):
+			nmax = min(amount, counts.total, counts.memberCount[idx])
+			for n in range(0, nmax + 1):
+				subGroup = counts.subGroup(idx, n)
+				sub = self._evaluate(
+					outcomes[1:], operation, subGroup, slicing[n:]
 				)
-				coef = weightedBinaryCoeficients(counts.total, nChosen, weight)
-				writeOutcomeToRes(res, operation, baseValue, sub, coef)
+				if sub is None:
+					pass
+				elif n == 0:
+					writeSubToRes(res, sub)
+				else:
+					baseValue = combinedOutcome(
+						operation, outcome, n, slicing[:n]
+					)
+					coef = weightedBinaryCoeficients(counts.total, n, weight)
+					writeOutcomeToRes(res, operation, baseValue, sub, coef)
+		else:
+			for n, w in amount.counts.items():
+				subGroup = counts.subGroup(idx, n)
+				sub = self._evaluate(outcomes[1:], operation, subGroup, slicing)
+				for sf, sw in sub.items():
+					res[sf] += sw * w
+
 		return res
