@@ -140,7 +140,7 @@ class Selective:
 					writeOutcomeToRes(res, operation, baseValue, sub, coef)
 		else:
 			for n, w in amount.counts.items():
-				subGroup = counts.subGroup(idx, n)
+				subGroup = counts.subGroup(idx, amount.max - n)
 				sub = self._evaluate(outcomes[1:], operation, subGroup, slicing)
 				for sf, sw in sub.items():
 					res[sf] += sw * w

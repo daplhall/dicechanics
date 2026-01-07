@@ -17,9 +17,6 @@ class DieSpy(Die):
 
 
 def compareTwoFloatDict(res, ref):
-	# for (k, v), (rk, rv) in zip(res.items(), ref.items()):
-	# assert k == rk
-	# assert abs(v - rv) < 1e-15
 	for k, v in res.items():
 		assert abs(ref[k] - v) < 1e-15
 
@@ -116,6 +113,19 @@ def test_AdBSelectiveSlice(d4, d6):
 			ops.sum((2 @ d6)[:2]): 1 / 4,
 			ops.sum((3 @ d6)[:2]): 1 / 4,
 			ops.sum((4 @ d6)[:2]): 1 / 4,
+		}
+	)
+	compareTwoFloatDict(res, DieSpy(ref).inside())
+
+
+def test_AdBRegular(d4, d6):
+	res = ops.sum(d4 @ d6)
+	ref = Die(
+		{
+			ops.sum(1 @ d6): 1 / 4,
+			ops.sum(2 @ d6): 1 / 4,
+			ops.sum(3 @ d6): 1 / 4,
+			ops.sum(4 @ d6): 1 / 4,
 		}
 	)
 	compareTwoFloatDict(res, DieSpy(ref).inside())

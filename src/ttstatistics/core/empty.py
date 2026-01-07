@@ -8,10 +8,10 @@ class VariableCount:
 
 	def __init__(self, mapping: Mapping):
 		self.max = max(mapping.keys())
-		# self.counts = mapping
-		self.counts = {
-			(self.max - key): value for key, value in mapping.items()
-		}
+		self.counts = mapping
+		# self.counts = {
+		# (self.max - key): value for key, value in mapping.items()
+		# }
 
 	def __hash__(self):
 		return hash(tuple(self.counts.items()))
