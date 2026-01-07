@@ -1,4 +1,4 @@
-from ttstatistics.core.genericmapping import GenericMapping
+from ttstatistics.core.mapping import GenericMapping
 
 
 def test_GenericMappingIsEmptyOnEmptyInit():

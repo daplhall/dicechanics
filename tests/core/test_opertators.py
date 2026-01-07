@@ -1,5 +1,5 @@
-from ttstatistics.core.genericmapping import GenericMapping
 from ttstatistics.core.group import Group
+from ttstatistics.core.mapping import GenericMapping
 from ttstatistics.core.operations import (
 	add,
 	max,

@@ -1,5 +1,6 @@
 import pytest
 
+from ttstatistics.core.empty import Empty
 from ttstatistics.dicechanics.pool import Pool
 
 

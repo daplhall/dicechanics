@@ -3,8 +3,8 @@ from collections import defaultdict
 from collections.abc import Callable
 from numbers import Number
 
-from ttstatistics.core.genericmapping import GenericMapping
 from ttstatistics.core.group import Group
+from ttstatistics.core.mapping import GenericMapping, expand
 from ttstatistics.core.operations import (
 	add,
 	div,
@@ -24,7 +24,6 @@ from ttstatistics.dicechanics.pool import Pool
 from ttstatistics.dicechanics.protocols import Statistical
 from ttstatistics.dicechanics.statisticals.factory import createStatistical
 from ttstatistics.dicechanics.statisticals.scalar import ScalarStatistical
-from ttstatistics.dicechanics.symbolics import RerollSymbol
 from ttstatistics.utils._plot import StringPlot
 from ttstatistics.utils.utils import sort_dict
 
@@ -33,7 +32,7 @@ type MapFunction = Callable[[Unit], Unit]
 
 class Die(GenericMapping, protocols.Die):
 	def __init__(self, data: Statistical[Unit] = ScalarStatistical()):
-		inpt = self._expand(data)
+		inpt = createStatistical(expand(data))
 		super().__init__(inpt)
 
 	def __bool__(self):
@@ -103,28 +102,6 @@ class Die(GenericMapping, protocols.Die):
 	def __le__(self, rhs):
 		return self._binaryOperaiton(rhs, le)
 
-	def _expand(self, statistical: Statistical):
-		dice = list(
-			filter(
-				lambda x: isinstance(x[0], (Mapping, RerollSymbol)),
-				statistical.items(),
-			)
-		)
-		numbers = defaultdict(
-			lambda: 0,
-			filter(
-				lambda x: not isinstance(x[0], (Mapping)), statistical.items()
-			),
-		)
-		for die, dieProb in dice:
-			if isinstance(die, RerollSymbol):
-				mapping = self
-			else:
-				mapping = die
-			for face, prob in mapping.items():
-				numbers[face] += prob * dieProb
-		return createStatistical(numbers)
-
 	def count(self, *facesToCount):
 		return self.map(lambda key: key in facesToCount)
 
@@ -188,9 +165,12 @@ class Die(GenericMapping, protocols.Die):
 		return type(self.internals)
 
 	def __matmul__(self, rhs: int) -> protocols.Pool:
-		if not isinstance(rhs, int):
+		if isinstance(rhs, Die):
+			pass
+		elif isinstance(rhs, int):
+			return Pool({self: rhs})
+		else:
 			raise TypeError
-		return Pool({self: rhs})
 
 	def __rmatmul__(self, rhs: int) -> protocols.Pool:
 		return self @ rhs
