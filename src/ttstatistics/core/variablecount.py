@@ -16,21 +16,6 @@ class VariableCount:
 	def __hash__(self):
 		return hash(tuple(self.counts.items()))
 
-	def __lt__(self, other):
-		return True
-
-	def __le__(self, other):
-		return True
-
-	def __gt__(self, other):
-		return False
-
-	def __ge__(self, other):
-		return False
-
-	def __eq__(self, other):
-		return False
-
 	def __add__(self, other):
 		return self.max + other
 

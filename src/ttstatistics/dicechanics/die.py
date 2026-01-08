@@ -3,7 +3,6 @@ from collections import defaultdict
 from collections.abc import Callable
 from numbers import Number
 
-from ttstatistics.core.empty import VariableCount
 from ttstatistics.core.group import Group
 from ttstatistics.core.mapping import GenericMapping, expand
 from ttstatistics.core.operations import (
@@ -20,6 +19,7 @@ from ttstatistics.core.operations import (
 )
 from ttstatistics.core.protocols.base import InputFunction, Unit
 from ttstatistics.core.protocols.mapping import Mapping
+from ttstatistics.core.variablecount import VariableCount
 from ttstatistics.dicechanics import protocols
 from ttstatistics.dicechanics.pool import Pool
 from ttstatistics.dicechanics.protocols import Statistical

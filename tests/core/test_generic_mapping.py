@@ -1,4 +1,4 @@
-from ttstatistics.core.empty import VariableCount
+from ttstatistics.core.variablecount import VariableCount
 from ttstatistics.core.mapping import GenericMapping, expand
 
 

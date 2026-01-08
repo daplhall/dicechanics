@@ -6,7 +6,7 @@ from functools import cache
 from math import comb
 
 from ttstatistics.core import protocols
-from ttstatistics.core.empty import VariableCount
+from ttstatistics.core.variablecount import VariableCount
 from ttstatistics.utils.utils import normalize
 
 

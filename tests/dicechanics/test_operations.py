@@ -129,3 +129,9 @@ def test_AdBRegular(d4, d6):
 		}
 	)
 	compareTwoFloatDict(res, DieSpy(ref).inside())
+
+
+def test_AdBRegularWithAddition(d4, d6):
+	ref = ops.sum(d4 @ d6) + d4
+	res = ops.sum(d4 @ d6 + 1 @ d4)
+	compareTwoFloatDict(res, DieSpy(ref).inside())
