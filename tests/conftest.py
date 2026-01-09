@@ -14,13 +14,19 @@ from fixtures.die import (  # noqa: F401
 	simpleStringDie,
 )
 from fixtures.group import (  # noqa: F401
+	Group2Dublicate,
+	Group2Items,
+	Group3Flat6,
 	Group4Items,
-	groupWithItems,
-	groupWithTwoItems,
+	GroupMixed,
+	GroupOddValues3,
 )
 from fixtures.mapping import (  # noqa: F401
+	AltScalarMock,
 	FlatMapping3,
 	FlatMapping4,
+	FlatMapping6,
+	FlatMappingOdd3Values,
 	emptyDict,
 	simpleScalarMock,
 )

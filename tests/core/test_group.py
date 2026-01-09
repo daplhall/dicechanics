@@ -8,8 +8,8 @@ def test_EmptyGroupIsEmpty():
 	assert not Group()
 
 
-def test_GroupNotEmpty(groupWithItems):
-	assert groupWithItems
+def test_GroupNotEmpty(Group2Dublicate):
+	assert Group2Dublicate
 
 
 def test_prepareIsCorrectFormat(Group4Items):

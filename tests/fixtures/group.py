@@ -10,15 +10,13 @@ def GroupEmpty():
 
 
 @pytest.fixture
-def groupWithItems(simpleScalarMock):
+def Group2Dublicate(simpleScalarMock):
 	return Group({simpleScalarMock: 2})
 
 
 @pytest.fixture
-def groupWithTwoItems(simpleScalarMock, alternativeReferenceDict):
-	secondSimpleScalarMock = MappingMock(alternativeReferenceDict)
-
-	return Group({simpleScalarMock: 1, secondSimpleScalarMock: 1})
+def Group2Items(simpleScalarMock, AltScalarMock):
+	return Group({simpleScalarMock: 1, AltScalarMock: 1})
 
 
 @pytest.fixture
@@ -34,3 +32,18 @@ def Group4Items(alternativeReferenceDict):
 			c: 1,
 		}
 	)
+
+
+@pytest.fixture
+def Group3Flat6(FlatMapping6):
+	return Group({FlatMapping6: 3})
+
+
+@pytest.fixture
+def GroupMixed(FlatMapping3, FlatMapping4):
+	return Group({FlatMapping3: 3, FlatMapping4: 2})
+
+
+@pytest.fixture
+def GroupOddValues3(FlatMappingOdd3Values):
+	return Group({FlatMappingOdd3Values: 3})
