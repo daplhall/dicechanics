@@ -1,6 +1,7 @@
 import pytest
 
 from ttstatistics.core import protocols
+from ttstatistics.core.mapping import GenericMapping
 
 
 class MappingMock(protocols.Mapping):
@@ -25,3 +26,13 @@ def emptyDict():
 @pytest.fixture
 def simpleScalarMock(referenceStatisticalDict):
 	return MappingMock(referenceStatisticalDict)
+
+
+@pytest.fixture
+def FlatMapping3():
+	return GenericMapping({1: 1 / 3, 2: 1 / 3, 3: 1 / 3})
+
+
+@pytest.fixture
+def FlatMapping4():
+	return GenericMapping({1: 1 / 4, 2: 1 / 4, 3: 1 / 4, 4: 1 / 4})

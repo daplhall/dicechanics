@@ -5,7 +5,7 @@ from ttstatistics.core.group import Group
 
 
 @pytest.fixture
-def emptyGroup():
+def GroupEmpty():
 	return Group()
 
 
@@ -22,15 +22,15 @@ def groupWithTwoItems(simpleScalarMock, alternativeReferenceDict):
 
 
 @pytest.fixture
-def groupWithFourItems(alternativeReferenceDict):
-	firstSimpleScalarDie = MappingMock(alternativeReferenceDict)
-	secondSimpleScalarDie = MappingMock(alternativeReferenceDict)
-	thridSimpleScalarDie = MappingMock(alternativeReferenceDict)
+def Group4Items(alternativeReferenceDict):
+	a = MappingMock(alternativeReferenceDict)
+	b = MappingMock(alternativeReferenceDict)
+	c = MappingMock(alternativeReferenceDict)
 
 	return Group(
 		{
-			firstSimpleScalarDie: 2,
-			secondSimpleScalarDie: 1,
-			thridSimpleScalarDie: 1,
+			a: 2,
+			b: 1,
+			c: 1,
 		}
 	)

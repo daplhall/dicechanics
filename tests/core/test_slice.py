@@ -15,6 +15,7 @@ def test_SliceIsNotEmptyOnInitFromList():
 	assert notEmptySlice
 
 
+# same data
 def test_SliceShiftToNextFromBitMask():
 	notEmptySlice = Slice.fromList([True, False, True, False])
 	assert notEmptySlice.next()
@@ -31,6 +32,9 @@ def test_SliceShiftToNextToMuch():
 	assert not notEmptySlice.next()
 	assert not notEmptySlice.next()
 	assert not notEmptySlice.next()
+
+
+# / saem data
 
 
 def test_SliceShiftToNextFromSliceStart():

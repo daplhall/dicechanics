@@ -1,6 +1,6 @@
 import pytest
 
-from ttstatistics.core.variablecount import VariableCount
+from ttstatistics.core.groupcount import VariableCount
 from ttstatistics.dicechanics.die import Die
 from ttstatistics.dicechanics.pool import Pool
 

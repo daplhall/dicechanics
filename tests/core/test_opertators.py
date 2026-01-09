@@ -11,7 +11,7 @@ selective = selectiveOnGroup
 regular = regularOnGroup
 
 
-def helperCompareTwoMappings(a, b):
+def compareMappings(a, b):
 	if not (a and b):
 		assert 0 == 1
 	"""
@@ -37,11 +37,11 @@ def test_PerformOnBagWithOneItem(groupWithItems, simpleScalarDie):
 def test_PerformOnBagWithTwoItem(groupWithTwoItems):
 	toTest = regular(groupWithTwoItems, add)
 	ref = {2: 0.1, 3: 0.3, 4: 0.35, 5: 0.2, 6: 0.05}
-	helperCompareTwoMappings(ref, toTest)
+	compareMappings(ref, toTest)
 
 
-def test_PerformOnBagWithFourItem(groupWithFourItems):
-	toTest = regular(groupWithFourItems, add)
+def test_PerformOnBagWithFourItem(Group4Items):
+	toTest = regular(Group4Items, add)
 	ref = {
 		4: 0.0256,
 		5: 0.1024,
@@ -53,7 +53,7 @@ def test_PerformOnBagWithFourItem(groupWithFourItems):
 		11: 0.0128,
 		12: 0.0016,
 	}
-	helperCompareTwoMappings(ref, toTest)
+	compareMappings(ref, toTest)
 
 
 def test_SelectiveAllFlat():
@@ -61,31 +61,31 @@ def test_SelectiveAllFlat():
 	group = Group({d: 2})
 	reference = regular(group, add)
 	toTest = selective(group[:], add)
-	helperCompareTwoMappings(reference, toTest)
+	compareMappings(reference, toTest)
 
 
 def test_SelectiveOnBagWithFourItem(groupWithTwoItems):
 	reference = regular(groupWithTwoItems, add)
 	toTest = selective(groupWithTwoItems[:], add)
-	helperCompareTwoMappings(reference, toTest)
+	compareMappings(reference, toTest)
 
 
 def test_SelectiveOnBagWithFourItemMax(groupWithTwoItems):
 	reference = regular(groupWithTwoItems, max)
 	toTest = selective(groupWithTwoItems[:], max)
-	helperCompareTwoMappings(toTest, reference)
+	compareMappings(toTest, reference)
 
 
 def test_SelectiveTwoItemsMaximum(groupWithTwoItems):
 	reference = regular(groupWithTwoItems, max)
 	toTest = selective(groupWithTwoItems[1:], add)
-	helperCompareTwoMappings(reference, toTest)
+	compareMappings(reference, toTest)
 
 
 def test_SelectiveTwoItemsMinumum(groupWithTwoItems):
 	reference = regular(groupWithTwoItems, min)
 	toTest = selective(groupWithTwoItems[:1], add)
-	helperCompareTwoMappings(reference, toTest)
+	compareMappings(reference, toTest)
 
 
 def test_SelectiveMixedMapping():
@@ -94,7 +94,7 @@ def test_SelectiveMixedMapping():
 	group = Group({d: 3, g: 2})
 	reference = regular(group, add)
 	toTest = selective(group[:], add)
-	helperCompareTwoMappings(toTest, reference)
+	compareMappings(toTest, reference)
 
 
 def test_Selective2Lowest():
@@ -108,14 +108,13 @@ def test_Selective2Lowest():
 		8: 0.111111111111111,
 		10: 0.037037037037037,
 	}
-	helperCompareTwoMappings(reference, toTest)
+	compareMappings(reference, toTest)
 
 
 def test_3d6HighestTwo():
 	d = GenericMapping(dict.fromkeys(range(1, 7), 1 / 6))
 	group = Group({d: 3})
 	toTest = selective(group[-2:], add)
-	print(toTest.items())
 	res = {
 		2: 0.0046296296296296285,
 		3: 0.013888888888888888,
