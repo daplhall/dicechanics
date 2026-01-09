@@ -321,3 +321,11 @@ def test_MapToString(d4):
 	res = d4.map(map_)
 	assert res.dtype == StringStatistical
 	assert res.items() == {"F": 1 / 4, "S": 3 / 4}.items()
+
+
+def test_Max(d4):
+	assert d4.max() == 4
+
+
+def test_Min(d4):
+	assert d4.min() == 1

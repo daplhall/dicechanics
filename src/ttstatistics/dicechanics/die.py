@@ -186,3 +186,9 @@ class Die(GenericMapping, protocols.Die):
 
 	def __rmatmul__(self, rhs: int) -> protocols.Pool:
 		return self @ rhs
+
+	def max(self):
+		return max(self.keys())
+
+	def min(self):
+		return min(self.keys())
