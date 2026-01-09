@@ -1,61 +1,31 @@
-__all__ = ["Selective", "getOutcomes"]
+__all__ = ["Selective"]
 
 from collections import defaultdict
+from dataclasses import dataclass
 from functools import cache
 from math import comb
 
 from ttstatistics.core import protocols
+from ttstatistics.core.protocols import GroupCount
 from ttstatistics.utils.utils import normalize
 
 
 def getOutcomes(bag: protocols.Group):
 	res = defaultdict(int)
 	amountTuple = ()
+	testTuple = ()
 	for idx, (mapping, amount) in enumerate(bag.prepare()):
+		count = max(c for c, _ in amount)
 		for key, probability in mapping.items():
-			res[(key, idx, probability)] += amount
-		amountTuple += (amount,)
-
-	return tuple(
-		sorted(res.items(), key=lambda x: x[0], reverse=True)
-	), amountTuple
-
-
-class Selective:
-	def calculate(
-		self, group: protocols.Group, operation: protocols.InputFunction
-	):
-		bagSlice = group.prepareSlice()
-		outcomes, meta = getOutcomes(group)
-		slice_ = tuple(bagSlice.next() for _ in range(sum(meta)))[::-1]
-		return normalize(
-			self._evaluate(outcomes, operation, sum(meta), meta, slice_)
-		)
-
-	@cache
-	def _evaluate(self, outcomes, operation, leftToChose, meta, slicing):
-		if anyOutcomesLeft(outcomes) or leftToChose == 0:
-			return bottomOutcome(leftToChose)
-		res = defaultdict(int)
-		(outcome, idx, weight), amount = outcomes[0]
-		for nChosen in range(0, min(amount, leftToChose, meta[idx]) + 1):
-			# loop unroling?
-			subMeta = createSubMeta(meta, idx, nChosen)
-			subAmount = leftToChose - nChosen
-			sub = self._evaluate(
-				outcomes[1:], operation, subAmount, subMeta, slicing[nChosen:]
-			)
-			if sub is None:
-				pass
-			elif nChosen == 0:
-				writeSubToRes(res, sub)
-			else:
-				baseValue = combinedOutcome(
-					operation, outcome, nChosen, slicing[:nChosen]
-				)
-				coef = weightedBinaryCoeficients(leftToChose, nChosen, weight)
-				writeOutcomeToRes(res, operation, baseValue, sub, coef)
-		return res
+			res[(key, idx, probability)] += count
+		if isinstance(amount, GroupCount):
+			testTuple += (((None, idx, None), amount),)
+		amountTuple += (count,)  # hack needs cleaning up
+	return (
+		tuple(sorted(res.items(), key=lambda x: x[0])),
+		amountTuple,
+		testTuple,
+	)
 
 
 def combinedOutcome(operation, face, nChosen, sliceMask):
@@ -88,20 +58,101 @@ def writeOutcomeToRes(res, operation, baseValue, sub, combinations):
 			res[operation(face, baseValue)] += amount * combinations
 
 
-def anyOutcomesLeft(outcomes):
+def isOutcomesEmpty(outcomes):
 	return not outcomes
 
 
-def bottomOutcome(leftToChose):
-	return None if leftToChose else {None: 1}
-
-
-def createSubMeta(meta, idx, nChosen):
-	submeta = list(meta)
-	submeta[idx] -= nChosen
-	return tuple(submeta)
+def isGroupEmpty(leftToChose):
+	return leftToChose == 0
 
 
 def weightedBinaryCoeficients(leftToChose, nChosen, weight):
 	BinaryCoeficients = comb(leftToChose, nChosen)
 	return BinaryCoeficients * weight**nChosen
+
+
+@dataclass(frozen=True)
+class GroupCounts:
+	memberCount: tuple[int]
+	total: int
+
+	def subGroup(self, idx: int, nChosen: int) -> "GroupCounts":
+		subMeta = list(self.memberCount)
+		subMeta[idx] -= nChosen
+		return GroupCounts(tuple(subMeta), self.total - nChosen)
+
+	def subGroupEmpty(self, n):
+		return GroupCounts(self.memberCount, self.total - n)
+
+
+class SelectiveImpl:
+	def calculate(
+		self, group: protocols.Group, operation: protocols.InputFunction
+	):
+		outcomes, counts, slice_ = self.prepare(group)
+		return normalize(
+			self._resolveFilling(outcomes, operation, counts, slice_)
+		)
+
+	def prepare(self, group: protocols.Group):
+		bagSlice = group.prepareSlice()
+		outcomes, meta, empty = getOutcomes(group)
+		slice_ = tuple(bagSlice.next() for _ in range(sum(meta)))
+		order = self.orientation(slice_)
+		return (
+			empty + outcomes[::order],
+			GroupCounts(meta, sum(meta)),
+			slice_[::order],
+		)
+
+	def orientation(self, sliceList):
+		length = len(sliceList)
+		upper = sum(sliceList[length // 2 :])
+		lower = sum(sliceList[: length // 2])
+		if upper > lower:
+			return -1
+		else:
+			return 1
+
+	@cache
+	def _evaluate(self, outcomes, operation, counts: GroupCounts, slicing):
+		if isGroupEmpty(counts.total):
+			return {None: 1}
+		if isOutcomesEmpty(outcomes):
+			return None
+		res = defaultdict(int)
+		amount: float | GroupCount
+		(outcome, idx, weight), amount = outcomes[0]
+		nmax = min(amount, counts.total, counts.memberCount[idx])
+		for n in range(0, nmax + 1):
+			subGroup = counts.subGroup(idx, n)
+			sub = self._evaluate(outcomes[1:], operation, subGroup, slicing[n:])
+			if sub is None:
+				pass
+			elif n == 0:
+				writeSubToRes(res, sub)
+			else:
+				baseValue = combinedOutcome(operation, outcome, n, slicing[:n])
+				coef = weightedBinaryCoeficients(counts.total, n, weight)
+				writeOutcomeToRes(res, operation, baseValue, sub, coef)
+		return res
+
+	def _resolveFilling(
+		self, outcomes, operation, counts: GroupCounts, slicing
+	):
+		(outcome, idx, weight), amount = outcomes[0]
+		res = defaultdict(int)
+		if not isinstance(amount, GroupCount):
+			res = self._evaluate(outcomes, operation, counts, slicing)
+		else:
+			for n, w in amount:
+				subGroup = counts.subGroup(idx, amount.max - n)
+				sub = self._resolveFilling(
+					outcomes[1:], operation, subGroup, slicing
+				)
+				for sf, sw in sub.items():
+					res[sf] += sw * w
+		return res
+
+
+Selective = SelectiveImpl

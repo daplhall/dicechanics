@@ -8,18 +8,23 @@ from ttstatistics.core.operations import (
 
 # from ttstatistics.dicechanics.operations import perform, sum
 from ttstatistics.dicechanics import operations as ops
+from ttstatistics.dicechanics.die import Die
+
+
+class DieSpy(Die):
+	def inside(self):
+		return self.internals.probability
 
 
 def compareTwoFloatDict(res, ref):
-	for (k, v), (rk, rv) in zip(res.items(), ref.items()):
-		assert k == rk
-		assert abs(v - rv) < 1e-15
+	for k, v in res.items():
+		assert abs(ref[k] - v) < 1e-15
 
 
 def test_PerformPoolAdd(pool3d6, d6):
 	res = ops.perform(pool3d6, add)
 	ref = d6 + d6 + d6
-	compareTwoFloatDict(res, ref)
+	compareTwoFloatDict(res, DieSpy(ref).inside())
 
 
 def test_PerformPoolMax(pool3d6, d6):
@@ -85,3 +90,48 @@ def test_MinSelective(pool3d6):
 	res = ops.min(pool)
 	ref = selectiveOnGroup(pool, min)
 	compareTwoFloatDict(res, ref)
+
+
+def test_AdBSelective(d4, d6):
+	res = ops.sum((d4 @ d6)[:])
+	ref = Die(
+		{
+			ops.sum(1 @ d6): 1 / 4,
+			ops.sum(2 @ d6): 1 / 4,
+			ops.sum(3 @ d6): 1 / 4,
+			ops.sum(4 @ d6): 1 / 4,
+		}
+	)
+	compareTwoFloatDict(res, DieSpy(ref).inside())
+
+
+def test_AdBSelectiveSlice(d4, d6):
+	res = ops.sum((d4 @ d6)[:2])
+	ref = Die(
+		{
+			ops.sum((1 @ d6)[:2]): 1 / 4,
+			ops.sum((2 @ d6)[:2]): 1 / 4,
+			ops.sum((3 @ d6)[:2]): 1 / 4,
+			ops.sum((4 @ d6)[:2]): 1 / 4,
+		}
+	)
+	compareTwoFloatDict(res, DieSpy(ref).inside())
+
+
+def test_AdBRegular(d4, d6):
+	res = ops.sum(d4 @ d6)
+	ref = Die(
+		{
+			ops.sum(1 @ d6): 1 / 4,
+			ops.sum(2 @ d6): 1 / 4,
+			ops.sum(3 @ d6): 1 / 4,
+			ops.sum(4 @ d6): 1 / 4,
+		}
+	)
+	compareTwoFloatDict(res, DieSpy(ref).inside())
+
+
+def test_AdBRegularWithAddition(d4, d6):
+	ref = ops.sum(d4 @ d6) + d4
+	res = ops.sum(d4 @ d6 + 1 @ d4)
+	compareTwoFloatDict(res, DieSpy(ref).inside())

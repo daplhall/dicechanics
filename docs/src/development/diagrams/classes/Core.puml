@@ -4,20 +4,20 @@ package "core"{
     class DefaultCollection{
     }
     interface "Collection" as collection {
-        container of bags, used for combinatorial calulations\nrelated to Group-Group interaction
+        imutable container of bags, used for combinatorial calulations\nrelated to Group-Group interaction
         bags are created seperately
         + prepare() -> Iterable[(Group, count)]
     }
     class DefaultGroup{
     }
     interface "Group" as group{
-        container of mappings, used for\nspecific combinatorial calulations
+        imutable container of mappings, used for\nspecific combinatorial calulations
         mappings are created seperatly
-        + prepare() -> Iterable[(Mapping, bool)]
+        + prepare() -> Iterable[(Mapping, GroupCount)]
         + prepareSlice() -> Slice
         + __getitem__(Python.slice):
     }
-    interface "CombinationsMapping" as mapping{
+    interface "Mapping" as mapping{
         Basic backend type for combinatorial calculations,\nif the methods are defined then its good for use.
         + items()
         + keys()
@@ -39,15 +39,27 @@ package "core"{
     class SelectiveCombinations{
         
     }
+    Interface GroupCountFactory
+    Interface GroupCount{
+        <<Iterable>> -> int
+    }
+    class GroupCountInt
+    class GroupCountMapping
 }
 
 DefaultCollection ..|> collection
 collection --> group
 DefaultGroup ..|> group
 group --> mapping
-group --> slice: for selective
-sliceClass ..|> slice
+group -left-> slice: for selective
+sliceClass .right.|> slice
 GroupCombinations --> group
 RegularCombinations ..|> GroupCombinations
 SelectiveCombinations ..|> GroupCombinations
+group -right-> GroupCountFactory 
+GroupCountFactory -->GroupCount 
+GroupCountInt .left.|> GroupCount
+GroupCountMapping .right.|> GroupCount
+GroupCountFactory ..>  GroupCountInt
+GroupCountFactory ..> GroupCountMapping
 @enduml

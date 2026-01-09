@@ -3,3 +3,7 @@ from ttstatistics.core.protocols.group import Group, GroupItems  # noqa: F401
 from ttstatistics.core.protocols.mapping import Mapping  # noqa: F401
 from ttstatistics.core.protocols.operations import combinations  # noqa:F401
 from ttstatistics.core.protocols.collection import Collection  # noqa: F401
+from ttstatistics.core.protocols.groupcount import (  # noqa: F401
+	GroupCount,
+	GroupCountFactory,
+)

@@ -3,8 +3,13 @@ from collections import defaultdict
 from collections.abc import Callable
 from numbers import Number
 
-from ttstatistics.core.genericmapping import GenericMapping
 from ttstatistics.core.group import Group
+from ttstatistics.core.groupcount import (
+	GroupCountFactory,
+	GroupCountTypes,
+	VariableCount,
+)
+from ttstatistics.core.mapping import GenericMapping, expand
 from ttstatistics.core.operations import (
 	add,
 	div,
@@ -24,19 +29,22 @@ from ttstatistics.dicechanics.pool import Pool
 from ttstatistics.dicechanics.protocols import Statistical
 from ttstatistics.dicechanics.statisticals.factory import createStatistical
 from ttstatistics.dicechanics.statisticals.scalar import ScalarStatistical
-from ttstatistics.dicechanics.symbolics import RerollSymbol
 from ttstatistics.utils._plot import StringPlot
+from ttstatistics.utils.utils import sort_dict
 
 type MapFunction = Callable[[Unit], Unit]
 
 
 class Die(GenericMapping, protocols.Die):
 	def __init__(self, data: Statistical[Unit] = ScalarStatistical()):
-		inpt = self._expand(data)
+		inpt = createStatistical(expand(data))
 		super().__init__(inpt)
 
 	def __bool__(self):
 		return False
+
+	def __hash__(self):
+		return hash(tuple(self.items()) + (self.mean, self.varians))
 
 	@property
 	def mean(self):
@@ -60,9 +68,9 @@ class Die(GenericMapping, protocols.Die):
 		if isinstance(rhs, Number):
 			rhs = type(self)(createStatistical({rhs: 1}))
 		if rhs == self:
-			group = Group({self: 2})
+			group = 2 @ self
 		else:
-			group = Group({self: 1, rhs: 1})
+			group = 1 @ self + 1 @ rhs
 		statistical = createStatistical(perform(group, operation))
 		return type(self)(statistical)
 
@@ -102,27 +110,8 @@ class Die(GenericMapping, protocols.Die):
 	def __le__(self, rhs):
 		return self._binaryOperaiton(rhs, le)
 
-	def _expand(self, statistical: Statistical):
-		dice = list(
-			filter(
-				lambda x: isinstance(x[0], (Mapping, RerollSymbol)),
-				statistical.items(),
-			)
-		)
-		numbers = defaultdict(
-			lambda: 0,
-			filter(
-				lambda x: not isinstance(x[0], (Mapping)), statistical.items()
-			),
-		)
-		for die, dieProb in dice:
-			if isinstance(die, RerollSymbol):
-				mapping = self
-			else:
-				mapping = die
-			for face, prob in mapping.items():
-				numbers[face] += prob * dieProb
-		return createStatistical(numbers)
+	def __eq__(self, rhs):
+		return hash(self) == hash(rhs)
 
 	def count(self, *facesToCount):
 		return self.map(lambda key: key in facesToCount)
@@ -172,10 +161,11 @@ class Die(GenericMapping, protocols.Die):
 		res += f"{self.std:.2f}" if self.std is not None else "n/a"
 		res += "\n"
 		res += "-" * (len(res) - 1) + "\n"
+		data = sort_dict(self)
 		return res + StringPlot.bars(
-			self.keys(),
-			self.values(),
-			topText=[f"{i * 100:.2f}%" for i in self.values()],
+			data.keys(),
+			data.values(),
+			topText=[f"{i * 100:.2f}%" for i in data.values()],
 		)
 
 	def __neg__(self):
@@ -186,9 +176,13 @@ class Die(GenericMapping, protocols.Die):
 		return type(self.internals)
 
 	def __matmul__(self, rhs: int) -> protocols.Pool:
-		if not isinstance(rhs, int):
-			raise TypeError
-		return Pool({self: rhs})
+		factory = GroupCountFactory()
+		if isinstance(rhs, Die):
+			Count = factory.create(GroupCountTypes.mapping)
+			return Pool({rhs: Count(self)})
+		elif isinstance(rhs, int):
+			Count = factory.create(GroupCountTypes.int)
+			return Pool({self: Count(rhs)})
 
 	def __rmatmul__(self, rhs: int) -> protocols.Pool:
 		return self @ rhs

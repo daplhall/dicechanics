@@ -1,5 +1,7 @@
 import pytest
 
+from ttstatistics.core.groupcount import VariableCount
+from ttstatistics.dicechanics.die import Die
 from ttstatistics.dicechanics.pool import Pool
 
 
@@ -27,3 +29,20 @@ def test_MatmultOne(d6):
 
 def test_MatmultTwo(d6):
 	assert 2 @ d6 == PoolSpy({d6: 2})
+
+
+def test_MatmultTwoDice(d4, d6):
+	assert d4 @ d6 == PoolSpy(
+		{
+			Die(
+				{
+					1: 1 / 6,
+					2: 1 / 6,
+					3: 1 / 6,
+					4: 1 / 6,
+					5: 1 / 6,
+					6: 1 / 6,
+				}
+			): VariableCount(d4)
+		}
+	)
