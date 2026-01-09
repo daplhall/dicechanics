@@ -4,7 +4,7 @@ from functools import cache
 from warnings import deprecated
 
 from ttstatistics.core import protocols
-from ttstatistics.core.variablecount import VariableCount
+from ttstatistics.core.protocols import GroupCount
 from ttstatistics.utils.reference import Reference
 
 
@@ -19,7 +19,7 @@ def updateNoSubproblem(current, res):
 	res[key] = value
 
 
-class RegularCombination:
+class RegularCombinationImpl:
 	def calculate(
 		self, group: protocols.Group, operation: protocols.InputFunction
 	):
@@ -34,22 +34,15 @@ class RegularCombination:
 		if not items:
 			return {}
 		mapping, amount = items[0]
-		if not isinstance(amount, VariableCount):
-			curr = self._accumulate(mapping, amount, operation)
+		res = defaultdict(int)
+		for n, w in amount:
+			curr = self._accumulate(mapping, n, operation)
 			if sub := self._evaluate(items[1:], operation):
-				res = self._combine(curr, sub, operation)
+				tmp = self._combine(curr, sub, operation)
 			else:
-				res = curr
-		else:
-			res = defaultdict(int)
-			for n, w in amount.counts.items():
-				curr = self._accumulate(mapping, n, operation)
-				if sub := self._evaluate(items[1:], operation):
-					tmp = self._combine(curr, sub, operation)
-				else:
-					tmp = curr
-				for key, weight in tmp.items():
-					res[key] += weight * w
+				tmp = curr
+			for key, weight in tmp.items():
+				res[key] += weight * w
 		return res
 
 	@cache
@@ -94,21 +87,16 @@ class RegularCombinationBenchmark:
 			return {}
 		res = defaultdict(int)
 		mapping, count = self.countDownAmount(items, whom)
-		if not isinstance(count, VariableCount):
-			for curr in mapping.items():
-				if sub := self._evaluate(
-					items,
-					operation,
-					self.whoIsNext(whom, count),
-					mem,
-				):
-					updateWithOperations(curr, sub, operation, res)
-				else:
-					updateNoSubproblem(curr, res)
-		else:
-			for n in count.counts.items():
-				count.max_
-				pass
+		for curr in mapping.items():
+			if sub := self._evaluate(
+				items,
+				operation,
+				self.whoIsNext(whom, count),
+				mem,
+			):
+				updateWithOperations(curr, sub, operation, res)
+			else:
+				updateNoSubproblem(curr, res)
 		mem.set(res)
 		return res
 
@@ -125,3 +113,6 @@ class RegularCombinationBenchmark:
 	@staticmethod
 	def isEndOfBranch(items: protocols.GroupItems, layer: int):
 		return layer >= len(items)
+
+
+RegularCombination = RegularCombinationImpl

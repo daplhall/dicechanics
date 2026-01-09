@@ -62,7 +62,7 @@ def d(obj: int | Iterable | str) -> protocols.Die:
 		raise TypeError("Unsupported type")
 
 
-def pool(input: dict[protocols.Die]):
+def pool(input: dict[protocols.Die, int | protocols.Die]):
 	"""
 	The default function for creating a pool. Matmult on dice is recommended over this.
 

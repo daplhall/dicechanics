@@ -2,6 +2,7 @@ import pytest
 
 from ttstatistics.core import protocols
 from ttstatistics.core.group import Group
+from ttstatistics.core.protocols.groupcount import GroupCount
 
 
 def test_EmptyGroupIsEmpty():
@@ -15,7 +16,7 @@ def test_GroupNotEmpty(Group2Dublicate):
 def test_prepareIsCorrectFormat(Group4Items):
 	for element, count in Group4Items.prepare():
 		assert isinstance(element, protocols.Mapping)
-		assert isinstance(count, int)
+		assert isinstance(count, GroupCount)
 
 
 def test_SliceNormal(Group4Items):

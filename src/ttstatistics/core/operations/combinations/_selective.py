@@ -1,4 +1,4 @@
-__all__ = ["Selective", "getOutcomes"]
+__all__ = ["Selective"]
 
 from collections import defaultdict
 from dataclasses import dataclass
@@ -6,7 +6,7 @@ from functools import cache
 from math import comb
 
 from ttstatistics.core import protocols
-from ttstatistics.core.variablecount import VariableCount
+from ttstatistics.core.protocols import GroupCount
 from ttstatistics.utils.utils import normalize
 
 
@@ -15,12 +15,12 @@ def getOutcomes(bag: protocols.Group):
 	amountTuple = ()
 	testTuple = ()
 	for idx, (mapping, amount) in enumerate(bag.prepare()):
+		count = max(c for c, _ in amount)
 		for key, probability in mapping.items():
-			res[(key, idx, probability)] += amount
-		if isinstance(amount, VariableCount):
+			res[(key, idx, probability)] += count
+		if isinstance(amount, GroupCount):
 			testTuple += (((None, idx, None), amount),)
-		amountTuple += (0 + amount,)  # hack needs cleaning up
-
+		amountTuple += (count,)  # hack needs cleaning up
 	return (
 		tuple(sorted(res.items(), key=lambda x: x[0])),
 		amountTuple,
@@ -85,7 +85,7 @@ class GroupCounts:
 		return GroupCounts(self.memberCount, self.total - n)
 
 
-class Selective:
+class SelectiveImpl:
 	def calculate(
 		self, group: protocols.Group, operation: protocols.InputFunction
 	):
@@ -119,9 +119,9 @@ class Selective:
 		if isOutcomesEmpty(outcomes):
 			return None
 		res = defaultdict(int)
-		amount: float | VariableCount
+		amount: float | GroupCount
 		(outcome, idx, weight), amount = outcomes[0]
-		if not isinstance(amount, VariableCount):
+		if not isinstance(amount, GroupCount):
 			nmax = min(amount, counts.total, counts.memberCount[idx])
 			for n in range(0, nmax + 1):
 				subGroup = counts.subGroup(idx, n)
@@ -139,10 +139,13 @@ class Selective:
 					coef = weightedBinaryCoeficients(counts.total, n, weight)
 					writeOutcomeToRes(res, operation, baseValue, sub, coef)
 		else:
-			for n, w in amount.counts.items():
+			for n, w in amount:
 				subGroup = counts.subGroup(idx, amount.max - n)
 				sub = self._evaluate(outcomes[1:], operation, subGroup, slicing)
 				for sf, sw in sub.items():
 					res[sf] += sw * w
 
 		return res
+
+
+Selective = SelectiveImpl

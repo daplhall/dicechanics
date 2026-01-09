@@ -1,6 +1,7 @@
 import pytest
 
 from ttstatistics.core.group import Group
+from ttstatistics.core.groupcount import GroupCountFactory, GroupCountTypes
 from ttstatistics.core.mapping import GenericMapping
 from ttstatistics.core.operations import (
 	add,
@@ -52,9 +53,9 @@ def test_PerformOnBag(request, Group, Ref):
 	compareMappings(regular(group, add), Ref)
 
 
-def test_SelectiveAllFlat():
-	d = GenericMapping(dict.fromkeys(range(1, 7), 1 / 6))
-	group = Group({d: 2})
+def test_SelectiveAllFlat(FlatMapping6):
+	Count = GroupCountFactory().create(GroupCountTypes.int)
+	group = Group({FlatMapping6: Count(2)})
 	reference = regular(group, add)
 	toTest = selective(group[:], add)
 	compareMappings(reference, toTest)

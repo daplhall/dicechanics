@@ -4,6 +4,11 @@ from collections.abc import Callable
 from numbers import Number
 
 from ttstatistics.core.group import Group
+from ttstatistics.core.groupcount import (
+	GroupCountFactory,
+	GroupCountTypes,
+	VariableCount,
+)
 from ttstatistics.core.mapping import GenericMapping, expand
 from ttstatistics.core.operations import (
 	add,
@@ -19,7 +24,6 @@ from ttstatistics.core.operations import (
 )
 from ttstatistics.core.protocols.base import InputFunction, Unit
 from ttstatistics.core.protocols.mapping import Mapping
-from ttstatistics.core.variablecount import VariableCount
 from ttstatistics.dicechanics import protocols
 from ttstatistics.dicechanics.pool import Pool
 from ttstatistics.dicechanics.protocols import Statistical
@@ -64,9 +68,9 @@ class Die(GenericMapping, protocols.Die):
 		if isinstance(rhs, Number):
 			rhs = type(self)(createStatistical({rhs: 1}))
 		if rhs == self:
-			group = Group({self: 2})
+			group = 2 @ self
 		else:
-			group = Group({self: 1, rhs: 1})
+			group = 1 @ self + 1 @ rhs
 		statistical = createStatistical(perform(group, operation))
 		return type(self)(statistical)
 
@@ -172,12 +176,13 @@ class Die(GenericMapping, protocols.Die):
 		return type(self.internals)
 
 	def __matmul__(self, rhs: int) -> protocols.Pool:
+		factory = GroupCountFactory()
 		if isinstance(rhs, Die):
-			return Pool({rhs: VariableCount(self)})
+			Count = factory.create(GroupCountTypes.mapping)
+			return Pool({rhs: Count(self)})
 		elif isinstance(rhs, int):
-			return Pool({self: rhs})
-		else:
-			raise TypeError
+			Count = factory.create(GroupCountTypes.int)
+			return Pool({self: Count(rhs)})
 
 	def __rmatmul__(self, rhs: int) -> protocols.Pool:
 		return self @ rhs

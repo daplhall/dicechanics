@@ -9,7 +9,9 @@ class Group(protocols.Group):
 	Hello world
 	"""
 
-	def __init__(self, data: dict[protocols.Mapping, int] = {}):
+	def __init__(
+		self, data: dict[protocols.Mapping, protocols.GroupCount] = {}
+	):
 		self.internalMappings = data
 		self.slice = None
 
@@ -20,8 +22,12 @@ class Group(protocols.Group):
 	def withSlice(cls, data, slicing):
 		self = cls(data)
 		if isinstance(slicing, slice):
-			# self.slice = Slice.fromSlice(slicing)
-			keep = [0] * sum(self.internalMappings.values())
+			keep = [
+				0
+			] * sum(  # TODO This is also in select which we pass in, it smells
+				max((c for c, _ in value))
+				for value in self.internalMappings.values()
+			)
 			keep[slicing] = [1] * len(keep[slicing])
 			slicing = keep
 		self.slice = Slice.fromList(slicing)
@@ -50,7 +56,11 @@ class Group(protocols.Group):
 			raise TypeError
 
 	def _select(self, indexes, *, default):
-		mask = [default] * sum(self.internalMappings.values())
+		# mask = [default] * sum(self.internalMappings.values())
+		mask = [default] * sum(
+			max((c for c, _ in value))
+			for value in self.internalMappings.values()
+		)
 		for i in indexes:
 			if i < len(mask) and i >= -len(mask):
 				mask[i] = not default
