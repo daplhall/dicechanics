@@ -25,8 +25,7 @@ class Group(protocols.Group):
 			keep = [
 				0
 			] * sum(  # TODO This is also in select which we pass in, it smells
-				max((c for c, _ in value))
-				for value in self.internalMappings.values()
+				value.max for value in self.internalMappings.values()
 			)
 			keep[slicing] = [1] * len(keep[slicing])
 			slicing = keep
@@ -58,8 +57,7 @@ class Group(protocols.Group):
 	def _select(self, indexes, *, default):
 		# mask = [default] * sum(self.internalMappings.values())
 		mask = [default] * sum(
-			max((c for c, _ in value))
-			for value in self.internalMappings.values()
+			value.max for value in self.internalMappings.values()
 		)
 		for i in indexes:
 			if i < len(mask) and i >= -len(mask):

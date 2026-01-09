@@ -90,7 +90,9 @@ class SelectiveImpl:
 		self, group: protocols.Group, operation: protocols.InputFunction
 	):
 		outcomes, counts, slice_ = self.prepare(group)
-		return normalize(self._evaluate(outcomes, operation, counts, slice_))
+		return normalize(
+			self._resolveFilling(outcomes, operation, counts, slice_)
+		)
 
 	def prepare(self, group: protocols.Group):
 		bagSlice = group.prepareSlice()
@@ -121,30 +123,35 @@ class SelectiveImpl:
 		res = defaultdict(int)
 		amount: float | GroupCount
 		(outcome, idx, weight), amount = outcomes[0]
+		nmax = min(amount, counts.total, counts.memberCount[idx])
+		for n in range(0, nmax + 1):
+			subGroup = counts.subGroup(idx, n)
+			sub = self._evaluate(outcomes[1:], operation, subGroup, slicing[n:])
+			if sub is None:
+				pass
+			elif n == 0:
+				writeSubToRes(res, sub)
+			else:
+				baseValue = combinedOutcome(operation, outcome, n, slicing[:n])
+				coef = weightedBinaryCoeficients(counts.total, n, weight)
+				writeOutcomeToRes(res, operation, baseValue, sub, coef)
+		return res
+
+	def _resolveFilling(
+		self, outcomes, operation, counts: GroupCounts, slicing
+	):
+		(outcome, idx, weight), amount = outcomes[0]
+		res = defaultdict(int)
 		if not isinstance(amount, GroupCount):
-			nmax = min(amount, counts.total, counts.memberCount[idx])
-			for n in range(0, nmax + 1):
-				subGroup = counts.subGroup(idx, n)
-				sub = self._evaluate(
-					outcomes[1:], operation, subGroup, slicing[n:]
-				)
-				if sub is None:
-					pass
-				elif n == 0:
-					writeSubToRes(res, sub)
-				else:
-					baseValue = combinedOutcome(
-						operation, outcome, n, slicing[:n]
-					)
-					coef = weightedBinaryCoeficients(counts.total, n, weight)
-					writeOutcomeToRes(res, operation, baseValue, sub, coef)
+			res = self._evaluate(outcomes, operation, counts, slicing)
 		else:
 			for n, w in amount:
 				subGroup = counts.subGroup(idx, amount.max - n)
-				sub = self._evaluate(outcomes[1:], operation, subGroup, slicing)
+				sub = self._resolveFilling(
+					outcomes[1:], operation, subGroup, slicing
+				)
 				for sf, sw in sub.items():
 					res[sf] += sw * w
-
 		return res
 
 
