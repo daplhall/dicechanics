@@ -10,7 +10,7 @@ build/
 main.py
 notes/
 profil*
-main.py
+main*.py
 **/**/out
 *.svg
 *.prof

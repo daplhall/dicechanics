@@ -22,7 +22,7 @@ Base classes
 .. automodule:: ttstatistics.core.group
     :members:
 
-.. automodule:: ttstatistics.core.genericmapping
+.. automodule:: ttstatistics.core.mapping
     :members:
 
 Operations

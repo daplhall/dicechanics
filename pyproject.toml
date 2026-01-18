@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = 'dicechanics'
-version = '2.0.0'
+version = '3.0.0'
 authors = [
     {name = 'Daniel Hall', email = 'blankemail@email.com'},
 ]
@@ -27,6 +27,8 @@ Issues = "https://github.com/daplhall/DiceStatistics/issues"
 
 [tool.hatch.build.targets.sdist]
 include = [
-  "src/dicechanics/*",
+  "src/ttstatistics/*",
   "tests/*"
 ]
+[tool.hatch.build.targets.wheel]
+packages = ["ttstatistics"]
