@@ -1,7 +1,6 @@
 __all__ = ["RegularCombination"]
 from collections import defaultdict
 from functools import cache
-from warnings import deprecated
 
 from ttstatistics.core import protocols
 from ttstatistics.core.protocols import GroupCount
@@ -65,7 +64,6 @@ class RegularCombinationImpl:
 		return res
 
 
-@deprecated("This is an older regular, but it is the fastes it has been")
 class RegularCombinationBenchmark:
 	def calculate(
 		self, group: protocols.Group, operation: protocols.InputFunction
