@@ -17,7 +17,7 @@ pool = 5 @ ds.d(6)
 print(ds.sum(pool[-2:]))
 ```
 Output:
-```cmd
+```
 Die with mu - 9.93, sigma - 14.30
 ---------------------------------
  2| 0.01%
